@@ -1,7 +1,3 @@
-// ============================================================
-// js/main.js — Listado de vehículos, filtros y búsqueda
-// ============================================================
-
 let allVehiculos = [];
 
 async function loadVehiculos() {

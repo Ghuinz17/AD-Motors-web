@@ -1,7 +1,3 @@
-// ============================================================
-// js/detalle.js — Galería, compra, solicitud de visita
-// ============================================================
-
 let vehiculo   = null;
 let imagenes   = [];
 let currentImg = 0;

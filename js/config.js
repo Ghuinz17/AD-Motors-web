@@ -3,8 +3,6 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
  
 const EMAILJS_PUBLIC_KEY            = 'UM986XzXpgyzXW_vs';
 const EMAILJS_SERVICE_ID            = 'service\_afa48tb ';
-const EMAILJS_TEMPLATE_COMPRA       = 'TU_TEMPLATE_COMPRA_ID';
-const EMAILJS_TEMPLATE_VISITA_CLIENTE = 'TU_TEMPLATE_VISITA_CLIENTE_ID';
 const EMAILJS_TEMPLATE_VISITA_ADMIN = 'template_du605di';
 const ADMIN_EMAIL                   = 'moleroprogramador@gmail.com';
  

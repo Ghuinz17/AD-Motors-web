@@ -1,6 +1,3 @@
-// ============================================================
-// js/auth.js — Registro, Login, OTP, validación contraseña
-// ============================================================
 
 const PW_RULES = [
   { id: 'req-len',   test: v => v.length >= 8 },

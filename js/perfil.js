@@ -1,7 +1,3 @@
-// ============================================================
-// js/perfil.js — Pedidos, solicitudes y ajustes de cuenta
-// ============================================================
-
 async function initPerfil() {
   const { data: { user } } = await db.auth.getUser();
   if (!user) { window.location.href = 'auth.html?redirect=perfil.html'; return; }
