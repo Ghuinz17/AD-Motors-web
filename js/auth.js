@@ -133,7 +133,7 @@ function validateRegister() {
     const suggestion = checkEmailTypo(email);
     if (suggestion) {
       const user = email.split('@')[0];
-      showError('regEmail', `¿Quisiste decir ${user}@${suggestion}?`);
+      showError('regEmail', `No es correcto @${suggestion}`);
       ok = false;
     }
   }
