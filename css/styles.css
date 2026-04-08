@@ -27,7 +27,7 @@
   --t:           all 0.25s cubic-bezier(.4,0,.2,1);
 }
 
-/* --- Variables tema oscuro --- */
+/* --- Variables tema oscuro (colores de la app) --- */
 [data-theme="dark"] {
   --bg:          #0d0d0d;
   --bg2:         #1a1a1a;
@@ -795,3 +795,180 @@ ul{list-style:none}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
 ::-webkit-scrollbar-thumb:hover{background:var(--text3)}
+
+/* RESPONSIVE COMPLETO */
+
+/* ---- FIX AUTH: ocultar panel izquierdo siempre en móvil/tablet ---- */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+  background: var(--bg2); /* sin gradiente azul en móvil */
+}
+
+/* Panel izquierdo: solo visible en escritorio */
+.auth-left {
+  display: none;
+}
+@media(min-width:960px) {
+  .auth-left {
+    display: flex;
+    flex: 1;
+  }
+  .auth-page {
+    background: linear-gradient(135deg,#0d0d0d 0%,#1a1a2e 50%,#0d0d0d 100%);
+  }
+}
+
+/* Panel derecho: siempre ocupa todo el ancho en móvil */
+.auth-right {
+  flex: 1;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  background: var(--bg2);
+  min-height: 100vh;
+  overflow-y: auto;
+}
+@media(min-width:960px) {
+  .auth-right {
+    width: 480px;
+    flex: none;
+    max-width: 480px;
+  }
+}
+
+.auth-box {
+  width: 100%;
+  max-width: 420px;
+  animation: scaleIn .4s ease both;
+}
+
+/* Logo móvil: visible por defecto, oculto en escritorio */
+.auth-logo-mobile { display: flex; justify-content: center; margin-bottom: 1.75rem; }
+.auth-logo-mobile img { width: 72px; border-radius: 12px; }
+@media(min-width:960px) { .auth-logo-mobile { display: none; } }
+
+/* ---- TABLET (< 900px) ---- */
+@media(max-width:900px) {
+  .detail-layout   { grid-template-columns: 1fr !important; }
+  .payment-layout  { grid-template-columns: 1fr !important; }
+  .detail-price-card { position: static !important; }
+  .order-summary   { position: static; }
+  .profile-tabs    { overflow-x: auto; }
+  .hero-stats      { gap: 1.25rem; }
+  .vehicles-grid   { grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); }
+  .header-inner    { padding: 0 1rem; }
+}
+
+/* ---- MÓVIL (< 640px) ---- */
+@media(max-width:640px) {
+  /* Header */
+  .header-inner    { height: 56px; padding: 0 .875rem; gap: .5rem; }
+  .logo            { font-size: 1rem; gap: .5rem; }
+  .logo img        { width: 30px; height: 30px; }
+  .btn-header-login { display: none; }
+  .btn-icon        { width: 36px; height: 36px; font-size: 1rem; }
+
+  /* Hero */
+  .hero            { padding: 2.5rem 1rem 2rem; }
+  .hero-eyebrow    { font-size: .7rem; padding: .3rem .7rem; }
+  .hero-title      { font-size: 1.9rem; letter-spacing: -.5px; }
+  .hero-sub        { font-size: .875rem; margin-bottom: 1.5rem; }
+  .search-bar      { flex-direction: column; gap: .375rem; padding: .5rem; border-radius: 12px; }
+  .search-input    { padding: .625rem .75rem; }
+  .btn-search      { width: 100%; padding: .75rem; border-radius: 8px; }
+  .hero-stats      { gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 1.75rem; }
+  .hero-stat-num   { font-size: 1.4rem; }
+  .hero-stat-label { font-size: .7rem; }
+
+  /* Main */
+  .main            { padding: 1.25rem .875rem; }
+
+  /* Filtros */
+  .filters-bar     { padding: 1rem .875rem; }
+  .filters-row     { flex-direction: column; gap: .75rem; }
+  .filter-group    { min-width: 100%; flex: none; }
+
+  /* Vehículos */
+  .vehicles-grid   { grid-template-columns: 1fr; gap: 1rem; }
+  .vehicle-body    { padding: 1rem; }
+  .vehicle-name    { font-size: 1.1rem; }
+
+  /* Auth */
+  .auth-right      { padding: 2rem .875rem; justify-content: flex-start; padding-top: 2.5rem; }
+  .auth-box        { max-width: 100%; }
+  .auth-tabs       { margin-bottom: 1.5rem; }
+  .auth-tab        { font-size: .8rem; padding: .5rem .25rem; }
+  .auth-title      { font-size: 1.5rem; }
+  .otp-inputs      { gap: .375rem; }
+  .otp-input       { width: 42px; height: 50px; font-size: 1.25rem; }
+  .pw-reqs         { grid-template-columns: 1fr; }
+
+  /* Galería */
+  .gallery-main    { height: 230px; }
+  .gallery-thumbs  { gap: .5rem; padding: .75rem; }
+  .gallery-thumb   { width: 62px; height: 48px; }
+  .gallery-btn     { width: 36px; height: 36px; font-size: 1rem; }
+
+  /* Detalle */
+  .detail-specs-card { padding: 1rem; }
+  .detail-price-card { padding: 1.25rem; }
+  .detail-price-val  { font-size: 1.9rem; }
+  .detail-actions    { gap: .5rem; }
+  .spec-row          { padding: .75rem 0; }
+
+  /* Pago */
+  .payment-card      { padding: 1.25rem .875rem; }
+  .payment-title     { font-size: 1.25rem; }
+  .card-visual       { min-height: 140px; padding: 1.25rem; }
+  .card-number-display { font-size: 1rem; letter-spacing: 1.5px; }
+  .card-input-group  { grid-template-columns: 1fr; }
+
+  /* Perfil */
+  .profile-header    { flex-direction: column; text-align: center; padding: 1.25rem; gap: .875rem; }
+  .profile-avatar-big { width: 60px; height: 60px; font-size: 1.5rem; }
+  .profile-name      { font-size: 1.3rem; }
+  .profile-tabs      { gap: 2px; padding: 3px; }
+  .profile-tab       { font-size: .72rem; padding: .55rem .375rem; min-width: 80px; }
+  .settings-section  { padding: 1.125rem; }
+  .pedido-card       { flex-direction: column; gap: .75rem; }
+  .pedido-card > div:last-child { align-self: flex-start; }
+  .section-title     { font-size: 1.35rem; }
+
+  /* Botones */
+  .btn-lg            { padding: .875rem 1.25rem; font-size: .9rem; }
+  .btn               { font-size: .875rem; }
+
+  /* Modal */
+  .modal             { padding: 1.5rem 1.125rem; border-radius: var(--r); }
+  .modal-title       { font-size: 1rem; }
+  .modal-overlay     { padding: .75rem; align-items: flex-end; }
+  .modal-overlay .modal { border-radius: var(--r-lg) var(--r-lg) 0 0; max-height: 92vh; }
+
+  /* Drawer */
+  .drawer            { width: 285px; }
+
+  /* Footer */
+  .footer            { padding: 1.75rem .875rem; margin-top: 2.5rem; }
+
+  /* Form */
+  .form-input        { font-size: .875rem; padding: .75rem .875rem .75rem 2.5rem; }
+  .form-label        { font-size: .825rem; }
+}
+
+/* ---- MUY PEQUEÑO (< 400px) ---- */
+@media(max-width:400px) {
+  .otp-input         { width: 38px; height: 46px; font-size: 1.1rem; }
+  .otp-inputs        { gap: .3rem; }
+  .hero-stats        { gap: .625rem; }
+  .hero-stat-num     { font-size: 1.25rem; }
+  .auth-right        { padding: 1.5rem .75rem; }
+  .vehicle-specs     { flex-wrap: wrap; gap: .5rem; }
+  .profile-tab       { font-size: .68rem; padding: .5rem .25rem; min-width: 70px; }
+  .drawer            { width: 260px; }
+}
