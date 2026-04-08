@@ -1,0 +1,140 @@
+/*
+   Configuración de la pasarela de pago, tarjeta visual, resumen de pedido
+*/
+
+.payment-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+@media (min-width: 760px) {
+  .payment-layout {
+    grid-template-columns: 1fr 360px;
+  }
+}
+
+.payment-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 2rem;
+  box-shadow: var(--shadow-md);
+  animation: fadeInUp 0.4s ease both;
+}
+.payment-title {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+}
+
+.card-input-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Tarjeta visual */
+.card-visual {
+  background: linear-gradient(135deg, #1e3a5f, #0d1a2d);
+  border-radius: var(--r);
+  padding: 1.5rem;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  min-height: 160px;
+}
+.card-visual::before {
+  content: "";
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.15);
+  top: -60px;
+  right: -60px;
+}
+.card-chip {
+  width: 40px;
+  height: 30px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+}
+.card-number-display {
+  font-family: monospace;
+  font-size: 1.2rem;
+  letter-spacing: 3px;
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+.card-info-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+.card-info-val {
+  font-size: 0.9rem;
+  color: #fff;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* Resumen del pedido */
+.order-summary {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 1.5rem;
+  position: sticky;
+  top: 80px;
+  box-shadow: var(--shadow);
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.625rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+.summary-row:last-child {
+  border-bottom: none;
+}
+.summary-total {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+/* --- Responsive pago --- */
+@media (max-width: 900px) {
+  .payment-layout {
+    grid-template-columns: 1fr;
+  }
+  .order-summary {
+    position: static;
+  }
+}
+@media (max-width: 640px) {
+  .payment-card {
+    padding: 1.25rem 0.875rem;
+  }
+  .payment-title {
+    font-size: 1.25rem;
+  }
+  .card-visual {
+    min-height: 140px;
+    padding: 1.25rem;
+  }
+  .card-number-display {
+    font-size: 1rem;
+    letter-spacing: 1.5px;
+  }
+  .card-input-group {
+    grid-template-columns: 1fr;
+  }
+}

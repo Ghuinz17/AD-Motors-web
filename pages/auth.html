@@ -1,251 +1,234 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Acceder — AD Motors</title>
   <link rel="icon" href="../assets/admotors.png">
-  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/auth.css">
   <style>
-    .hidden {
-      display: none !important;
-    }
-
-    body {
-      background: var(--bg2);
-    }
-
-    /* evita el fondo azul en móvil */
+    .hidden { display: none !important; }
   </style>
 </head>
-
 <body>
 
-  <!-- Panel izquierdo decorativo -->
-  <div class="auth-left">
-    <div class="auth-left-content">
-      <img src="../assets/admotors.png" alt="AD Motors" class="auth-left-logo">
-      <p class="auth-left-title">Tu próximo vehículo<br>te está esperando</p>
-      <p class="auth-left-sub">Accede a tu cuenta para gestionar tus pedidos, solicitar visitas y mucho más.</p>
-      <div style="margin-top:2.5rem;display:flex;flex-direction:column;gap:.875rem">
-        <div style="display:flex;align-items:center;gap:.75rem;color:#94a3b8;font-size:.9rem">
-          <span
-            style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">✅</span>
-          Compra 100% segura
-        </div>
-        <div style="display:flex;align-items:center;gap:.75rem;color:#94a3b8;font-size:.9rem">
-          <span
-            style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">📅</span>
-          Visitas personales concertadas
-        </div>
-        <div style="display:flex;align-items:center;gap:.75rem;color:#94a3b8;font-size:.9rem">
-          <span
-            style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">🚗</span>
-          Amplio catálogo de vehículos
-        </div>
+<!-- Panel izquierdo decorativo -->
+<div class="auth-left">
+  <div class="auth-left-content">
+    <img src="../assets/admotors.png" alt="AD Motors" class="auth-left-logo">
+    <p class="auth-left-title">Tu próximo vehículo<br>te está esperando</p>
+    <p class="auth-left-sub">Accede a tu cuenta para gestionar tus pedidos, solicitar visitas y mucho más.</p>
+    <div style="margin-top:2.5rem;display:flex;flex-direction:column;gap:.875rem">
+      <div style="display:flex;align-items:center;gap:.75rem;color:#94a3b8;font-size:.9rem">
+        <span style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">✅</span>
+        Compra 100% segura
+      </div>
+      <div style="display:flex;align-items:center;gap:.75rem;color:#94a3b8;font-size:.9rem">
+        <span style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">📅</span>
+        Visitas personales concertadas
+      </div>
+      <div style="display:flex;align-items:center;gap:.75rem;color:#94a3b8;font-size:.9rem">
+        <span style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">🚗</span>
+        Amplio catálogo de vehículos
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Panel derecho: formulario -->
-  <div class="auth-right">
-    <div class="auth-box">
+<!-- Panel derecho: formulario -->
+<div class="auth-right">
 
-      <!-- Logo móvil -->
-      <div class="auth-logo-mobile">
-        <img src="../assets/admotors.png" alt="AD Motors" style="width:72px;border-radius:12px">
-      </div>
+  <!-- Botón volver -->
+  <a href="../index.html" class="auth-back" title="Volver al inicio">←</a>
 
-      <!-- ======== TABS ======== -->
-      <div class="auth-tabs">
-        <button id="tabLogin" class="auth-tab active">Iniciar sesión</button>
-        <button id="tabRegister" class="auth-tab">Registrarse</button>
-      </div>
+  <div class="auth-box">
 
-      <!-- ======== FORM LOGIN ======== -->
-      <form id="formLogin" novalidate>
-        <h2 class="auth-title">Bienvenido</h2>
-        <p class="auth-sub">Introduce tus credenciales para acceder</p>
-
-        <div class="form-group">
-          <label class="form-label" for="loginEmail">Correo electrónico <span>*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon">✉️</span>
-            <input type="email" id="loginEmail" class="form-input" placeholder="tu@email.com" autocomplete="email">
-          </div>
-          <div class="form-error" id="loginEmailError"></div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="loginPassword">Contraseña <span>*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon">🔒</span>
-            <input type="password" id="loginPassword" class="form-input" placeholder="Tu contraseña"
-              autocomplete="current-password">
-            <span class="input-suffix" data-toggle-pw="loginPassword">👁️</span>
-          </div>
-          <div class="form-error" id="loginPasswordError"></div>
-        </div>
-
-        <button type="submit" id="btnLogin" class="btn btn-primary btn-full btn-lg" style="margin-top:.5rem">
-          Iniciar sesión
-        </button>
-
-        <p style="text-align:center;margin-top:1.25rem;font-size:.875rem;color:var(--text2)">
-          ¿No tienes cuenta?
-          <a href="#" onclick="setMode('register');return false"
-            style="color:var(--primary);font-weight:700">Regístrate</a>
-        </p>
-      </form>
-
-      <!--  FORM REGISTRO  -->
-      <form id="formRegister" class="hidden" novalidate>
-        <h2 class="auth-title">Crear cuenta</h2>
-        <p class="auth-sub">Rellena el formulario para registrarte</p>
-
-        <div class="form-group">
-          <label class="form-label" for="regNombre">Nombre completo <span>*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon">👤</span>
-            <input type="text" id="regNombre" class="form-input" placeholder="Tu nombre completo" autocomplete="name">
-          </div>
-          <div class="form-error" id="regNombreError"></div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="regEmail">Correo electrónico <span>*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon">✉️</span>
-            <input type="email" id="regEmail" class="form-input" placeholder="tu@email.com" autocomplete="email">
-          </div>
-          <div class="form-error" id="regEmailError"></div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="regTelefono">Teléfono <span>*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon">📱</span>
-            <input type="tel" id="regTelefono" class="form-input" placeholder="+34 600 000 000" autocomplete="tel">
-          </div>
-          <div class="form-error" id="regTelefonoError"></div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="regPassword">Contraseña <span>*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon">🔒</span>
-            <input type="password" id="regPassword" class="form-input" placeholder="Crea una contraseña segura"
-              autocomplete="new-password">
-            <span class="input-suffix" data-toggle-pw="regPassword">👁️</span>
-          </div>
-          <div class="form-error" id="regPasswordError"></div>
-
-          <!-- Barra de fortaleza -->
-          <div class="pw-strength">
-            <div class="pw-bar-track">
-              <div class="pw-bar-fill" id="pwBar"></div>
-            </div>
-            <span class="pw-label" id="pwLabel"></span>
-          </div>
-
-          <!-- Requisitos -->
-          <div class="pw-reqs" style="margin-top:.5rem">
-            <div class="pw-req" id="req-len">Mínimo 8 caracteres</div>
-            <div class="pw-req" id="req-upper">Una mayúscula</div>
-            <div class="pw-req" id="req-lower">Una minúscula</div>
-            <div class="pw-req" id="req-num">Un número</div>
-            <div class="pw-req" id="req-spec">Un carácter especial</div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="regPassword2">Confirmar contraseña <span>*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon">🔒</span>
-            <input type="password" id="regPassword2" class="form-input" placeholder="Repite tu contraseña"
-              autocomplete="new-password">
-            <span class="input-suffix" data-toggle-pw="regPassword2">👁️</span>
-          </div>
-          <div class="form-error" id="regPassword2Error"></div>
-        </div>
-
-        <div class="form-group">
-          <label class="checkbox-wrap">
-            <input type="checkbox" id="regTerms">
-            <span class="checkbox-label">
-              He leído y acepto los
-              <a href="terminos.html" target="_blank">Términos y Condiciones</a>
-              y la
-              <a href="terminos.html" target="_blank">Política de Privacidad</a>
-              <span>*</span>
-            </span>
-          </label>
-        </div>
-
-        <button type="submit" id="btnRegister" class="btn btn-primary btn-full btn-lg">
-          Crear cuenta
-        </button>
-
-        <p style="text-align:center;margin-top:1.25rem;font-size:.875rem;color:var(--text2)">
-          ¿Ya tienes cuenta?
-          <a href="#" onclick="setMode('login');return false" style="color:var(--primary);font-weight:700">Iniciar
-            sesión</a>
-        </p>
-      </form>
-
-      <!--  PASO OTP  -->
-      <div id="stepOtp" class="hidden">
-        <div style="text-align:center;margin-bottom:2rem">
-          <div style="font-size:3rem;margin-bottom:1rem;animation:float 2s ease infinite">📩</div>
-          <h2 class="auth-title">Verifica tu email</h2>
-          <p class="auth-sub">
-            Hemos enviado un código de 6 dígitos a<br>
-            <strong id="otpEmailDisplay" style="color:var(--primary)"></strong>
-          </p>
-        </div>
-
-        <form id="formOtp" novalidate>
-          <div class="otp-inputs">
-            <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
-            <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
-            <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
-            <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
-            <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
-            <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
-          </div>
-
-          <button type="submit" id="btnVerifyOtp" class="btn btn-primary btn-full btn-lg" disabled>
-            Verificar código
-          </button>
-        </form>
-
-        <div style="text-align:center;margin-top:1.25rem;display:flex;flex-direction:column;gap:.75rem">
-          <button id="btnResendOtp" class="btn btn-secondary btn-sm">
-            Reenviar código
-          </button>
-          <button id="btnBackFromOtp"
-            style="background:none;border:none;color:var(--text2);font-size:.875rem;cursor:pointer">
-            ← Volver
-          </button>
-        </div>
-      </div>
-
-      <!-- Botón tema -->
-      <div style="text-align:center;margin-top:2rem">
-        <button id="btnTheme" class="btn-icon" style="margin:0 auto" title="Cambiar tema">🌙</button>
-      </div>
-
+    <!-- Logo móvil -->
+    <div class="auth-logo-mobile">
+      <img src="../assets/admotors.png" alt="AD Motors" style="width:72px;border-radius:12px">
     </div>
-  </div>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <script src="../js/config.js"></script>
-  <script src="../js/ui.js"></script>
-  <script src="../js/auth.js"></script>
+    <!--  TABS  -->
+    <div class="auth-tabs">
+      <button id="tabLogin"    class="auth-tab active">Iniciar sesión</button>
+      <button id="tabRegister" class="auth-tab">Registrarse</button>
+    </div>
+
+    <!--  FORM LOGIN  -->
+    <form id="formLogin" novalidate>
+      <h2 class="auth-title">Bienvenido</h2>
+      <p class="auth-sub">Introduce tus credenciales para acceder</p>
+
+      <div class="form-group">
+        <label class="form-label" for="loginEmail">Correo electrónico <span>*</span></label>
+        <div class="input-wrap">
+          <span class="input-icon">✉️</span>
+          <input type="email" id="loginEmail" class="form-input" placeholder="tu@email.com" autocomplete="email">
+        </div>
+        <div class="form-error" id="loginEmailError"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="loginPassword">Contraseña <span>*</span></label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="loginPassword" class="form-input" placeholder="Tu contraseña" autocomplete="current-password">
+          <span class="input-suffix" data-toggle-pw="loginPassword">👁️</span>
+        </div>
+        <div class="form-error" id="loginPasswordError"></div>
+      </div>
+
+      <button type="submit" id="btnLogin" class="btn btn-primary btn-full btn-lg" style="margin-top:.5rem">
+        Iniciar sesión
+      </button>
+
+      <p style="text-align:center;margin-top:1.25rem;font-size:.875rem;color:var(--text2)">
+        ¿No tienes cuenta?
+        <a href="#" onclick="setMode('register');return false" style="color:var(--primary);font-weight:700">Regístrate</a>
+      </p>
+    </form>
+
+    <!--  FORM REGISTRO  -->
+    <form id="formRegister" class="hidden" novalidate>
+      <h2 class="auth-title">Crear cuenta</h2>
+      <p class="auth-sub">Rellena el formulario para registrarte</p>
+
+      <div class="form-group">
+        <label class="form-label" for="regNombre">Nombre completo <span>*</span></label>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" id="regNombre" class="form-input" placeholder="Tu nombre completo" autocomplete="name">
+        </div>
+        <div class="form-error" id="regNombreError"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="regEmail">Correo electrónico <span>*</span></label>
+        <div class="input-wrap">
+          <span class="input-icon">✉️</span>
+          <input type="email" id="regEmail" class="form-input" placeholder="tu@email.com" autocomplete="email">
+        </div>
+        <div class="form-error" id="regEmailError"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="regTelefono">Teléfono <span>*</span></label>
+        <div class="input-wrap">
+          <span class="input-icon">📱</span>
+          <input type="tel" id="regTelefono" class="form-input" placeholder="+34 600 000 000" autocomplete="tel">
+        </div>
+        <div class="form-error" id="regTelefonoError"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="regPassword">Contraseña <span>*</span></label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="regPassword" class="form-input" placeholder="Crea una contraseña segura" autocomplete="new-password">
+          <span class="input-suffix" data-toggle-pw="regPassword">👁️</span>
+        </div>
+        <div class="form-error" id="regPasswordError"></div>
+
+        <!-- Barra de fortaleza -->
+        <div class="pw-strength">
+          <div class="pw-bar-track"><div class="pw-bar-fill" id="pwBar"></div></div>
+          <span class="pw-label" id="pwLabel"></span>
+        </div>
+
+        <!-- Requisitos -->
+        <div class="pw-reqs" style="margin-top:.5rem">
+          <div class="pw-req" id="req-len">Mínimo 8 caracteres</div>
+          <div class="pw-req" id="req-upper">Una mayúscula</div>
+          <div class="pw-req" id="req-lower">Una minúscula</div>
+          <div class="pw-req" id="req-num">Un número</div>
+          <div class="pw-req" id="req-spec">Un carácter especial</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="regPassword2">Confirmar contraseña <span>*</span></label>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="regPassword2" class="form-input" placeholder="Repite tu contraseña" autocomplete="new-password">
+          <span class="input-suffix" data-toggle-pw="regPassword2">👁️</span>
+        </div>
+        <div class="form-error" id="regPassword2Error"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-wrap">
+          <input type="checkbox" id="regTerms">
+          <span class="checkbox-label">
+            He leído y acepto los
+            <a href="terminos.html" target="_blank">Términos y Condiciones</a>
+            y la
+            <a href="terminos.html" target="_blank">Política de Privacidad</a>
+            <span>*</span>
+          </span>
+        </label>
+      </div>
+
+      <button type="submit" id="btnRegister" class="btn btn-primary btn-full btn-lg">
+        Crear cuenta
+      </button>
+
+      <p style="text-align:center;margin-top:1.25rem;font-size:.875rem;color:var(--text2)">
+        ¿Ya tienes cuenta?
+        <a href="#" onclick="setMode('login');return false" style="color:var(--primary);font-weight:700">Iniciar sesión</a>
+      </p>
+    </form>
+
+    <!--  PASO OTP  -->
+    <div id="stepOtp" class="hidden">
+      <div style="text-align:center;margin-bottom:2rem">
+        <div style="font-size:3rem;margin-bottom:1rem;animation:float 2s ease infinite">📩</div>
+        <h2 class="auth-title">Verifica tu email</h2>
+        <p class="auth-sub">
+          Hemos enviado un código de 6 dígitos a<br>
+          <strong id="otpEmailDisplay" style="color:var(--primary)"></strong>
+        </p>
+      </div>
+
+      <form id="formOtp" novalidate>
+        <div class="otp-inputs">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
+          <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
+        </div>
+
+        <button type="submit" id="btnVerifyOtp" class="btn btn-primary btn-full btn-lg" disabled>
+          Verificar código
+        </button>
+      </form>
+
+      <div style="text-align:center;margin-top:1.25rem;display:flex;flex-direction:column;gap:.75rem">
+        <button id="btnResendOtp" class="btn btn-secondary btn-sm">
+          Reenviar código
+        </button>
+        <button id="btnBackFromOtp" style="background:none;border:none;color:var(--text2);font-size:.875rem;cursor:pointer">
+          ← Volver
+        </button>
+      </div>
+    </div>
+
+    <!-- Botón tema -->
+    <div style="text-align:center;margin-top:2rem">
+      <button id="btnTheme" class="btn-icon" style="margin:0 auto" title="Cambiar tema">🌙</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/ui.js"></script>
+<script src="../js/auth.js"></script>
 
 </body>
-
 </html>

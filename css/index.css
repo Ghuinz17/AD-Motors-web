@@ -1,0 +1,390 @@
+/*
+    Configuración del hero, barra de búsqueda, filtros, cards de vehículos
+*/
+
+/* --- Hero --- */
+.hero {
+  background: linear-gradient(135deg, #1e3a5f 0%, #0d1a2d 50%, #0d0d0d 100%);
+  padding: 5rem 1.5rem 4rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.hero-eyebrow {
+  display: inline-block;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #93c5fd;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 0.35rem 0.875rem;
+  border-radius: 20px;
+  margin-bottom: 1.25rem;
+  animation: fadeInDown 0.5s ease both;
+}
+.hero-title {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -1px;
+  line-height: 1.05;
+  margin-bottom: 1rem;
+  animation: fadeInUp 0.5s 0.1s ease both;
+}
+.hero-title span {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-sub {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  max-width: 480px;
+  margin: 0 auto 2.5rem;
+  animation: fadeInUp 0.5s 0.2s ease both;
+}
+
+.search-bar {
+  max-width: 580px;
+  margin: 0 auto;
+  display: flex;
+  gap: 0.5rem;
+  background: #fff;
+  border-radius: var(--r);
+  padding: 0.375rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 0.5s 0.3s ease both;
+}
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.9rem;
+  color: #111;
+  min-width: 0;
+  font-family: "Barlow", sans-serif;
+}
+.search-input::placeholder {
+  color: #9ca3af;
+}
+.btn-search {
+  padding: 0.625rem 1.4rem;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: var(--t);
+  white-space: nowrap;
+}
+.btn-search:hover {
+  background: var(--primary-h);
+}
+
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-top: 2.5rem;
+  animation: fadeInUp 0.5s 0.4s ease both;
+}
+.hero-stat-num {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+}
+.hero-stat-label {
+  font-size: 0.78rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+/* --- Filtros --- */
+.filters-bar {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+  animation: fadeInUp 0.4s ease both;
+}
+.filters-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.875rem;
+  align-items: flex-end;
+}
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  flex: 1;
+  min-width: 160px;
+}
+.filter-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.filter-select,
+.filter-input {
+  padding: 0.625rem 0.875rem;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  color: var(--text);
+  font-size: 0.875rem;
+  transition: var(--t);
+  width: 100%;
+}
+.filter-select:focus,
+.filter-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+.btn-clear-filters {
+  padding: 0.625rem 1.1rem;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  border-radius: var(--r-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: var(--t);
+}
+.btn-clear-filters:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+/* --- Grid de vehículos --- */
+.vehicles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.vehicle-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: var(--t);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  animation: fadeInUp 0.5s ease both;
+}
+.vehicle-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-5px);
+  border-color: var(--primary);
+}
+
+.vehicle-img-wrap {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  background: var(--bg3);
+}
+.vehicle-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.vehicle-card:hover .vehicle-img-wrap img {
+  transform: scale(1.06);
+}
+.vehicle-badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+}
+.vehicle-reserved {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  backdrop-filter: blur(3px);
+}
+.vehicle-reserved-text {
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+.vehicle-body {
+  padding: 1.25rem;
+}
+.vehicle-name {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+  line-height: 1.2;
+}
+.vehicle-year {
+  font-size: 0.78rem;
+  color: var(--text3);
+  font-weight: 600;
+}
+.vehicle-specs {
+  display: flex;
+  gap: 1rem;
+  margin: 0.875rem 0;
+  flex-wrap: wrap;
+}
+.vehicle-spec {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.8rem;
+  color: var(--text2);
+}
+.vehicle-price {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+.vehicle-price-sub {
+  font-size: 0.75rem;
+  color: var(--text3);
+  font-weight: 400;
+}
+
+/* Sin resultados */
+.no-results {
+  text-align: center;
+  padding: 4rem 1rem;
+  animation: fadeIn 0.4s ease;
+}
+.no-results-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+.no-results-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+.no-results-sub {
+  font-size: 0.875rem;
+  color: var(--text2);
+}
+
+/* --- Responsive index --- */
+@media (max-width: 900px) {
+  .vehicles-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+  .hero-stats {
+    gap: 1.25rem;
+  }
+}
+@media (max-width: 640px) {
+  .hero {
+    padding: 2.5rem 1rem 2rem;
+  }
+  .hero-eyebrow {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.7rem;
+  }
+  .hero-title {
+    font-size: 1.9rem;
+    letter-spacing: -0.5px;
+  }
+  .hero-sub {
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+  }
+  .search-bar {
+    flex-direction: column;
+    gap: 0.375rem;
+    padding: 0.5rem;
+    border-radius: 12px;
+  }
+  .search-input {
+    padding: 0.625rem 0.75rem;
+  }
+  .btn-search {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+  }
+  .hero-stats {
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 1.75rem;
+  }
+  .hero-stat-num {
+    font-size: 1.4rem;
+  }
+  .hero-stat-label {
+    font-size: 0.7rem;
+  }
+  .filters-bar {
+    padding: 1rem 0.875rem;
+  }
+  .filters-row {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .filter-group {
+    min-width: 100%;
+    flex: none;
+  }
+  .vehicles-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .vehicle-body {
+    padding: 1rem;
+  }
+  .vehicle-name {
+    font-size: 1.1rem;
+  }
+}
+@media (max-width: 400px) {
+  .hero-stats {
+    gap: 0.625rem;
+  }
+  .hero-stat-num {
+    font-size: 1.25rem;
+  }
+  .vehicle-specs {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}

@@ -1,0 +1,275 @@
+/*
+   Configuración de la galería, especificaciones, precio, lightbox
+*/
+
+/* --- Galería --- */
+.detail-gallery {
+  background: var(--bg2);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-md);
+}
+
+.gallery-main {
+  position: relative;
+  height: 420px;
+  overflow: hidden;
+  background: var(--bg3);
+  cursor: zoom-in;
+}
+.gallery-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.gallery-main:hover img {
+  transform: scale(1.03);
+}
+
+.gallery-counter {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+}
+
+.gallery-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  transition: var(--t);
+  backdrop-filter: blur(4px);
+}
+.gallery-btn:hover {
+  background: var(--primary);
+  transform: translateY(-50%) scale(1.1);
+}
+.gallery-btn-prev {
+  left: 1rem;
+}
+.gallery-btn-next {
+  right: 1rem;
+}
+
+.gallery-thumbs {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem;
+  overflow-x: auto;
+  background: var(--bg3);
+}
+.gallery-thumbs::-webkit-scrollbar {
+  height: 4px;
+}
+.gallery-thumbs::-webkit-scrollbar-track {
+  background: var(--border);
+}
+.gallery-thumbs::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+.gallery-thumb {
+  width: 80px;
+  height: 60px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--t);
+}
+.gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gallery-thumb.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+.gallery-thumb:hover {
+  border-color: var(--text2);
+}
+
+/* --- Layout detalle --- */
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+@media (min-width: 900px) {
+  .detail-layout {
+    grid-template-columns: 1fr 360px;
+  }
+}
+
+/* --- Card de specs --- */
+.detail-specs-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.spec-row:last-child {
+  border-bottom: none;
+}
+.spec-label {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.875rem;
+  color: var(--text2);
+  font-weight: 600;
+}
+.spec-value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* --- Card de precio --- */
+.detail-price-card {
+  background: linear-gradient(135deg, var(--primary-lt), var(--bg2));
+  border: 1px solid var(--primary);
+  border-radius: var(--r);
+  padding: 1.5rem;
+  position: sticky;
+  top: 80px;
+  box-shadow: var(--shadow-md);
+}
+.detail-price-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.375rem;
+}
+.detail-price-val {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1;
+}
+.detail-price-iva {
+  font-size: 0.8rem;
+  color: var(--text3);
+  margin-top: 0.25rem;
+}
+.detail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* --- Lightbox --- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.92);
+  z-index: 500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+.lightbox.open {
+  display: flex;
+  animation: fadeIn 0.2s ease;
+}
+.lightbox img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.lightbox-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--t);
+}
+.lightbox-close:hover {
+  background: var(--danger);
+}
+
+/* --- Responsive detalle --- */
+@media (max-width: 900px) {
+  .detail-layout {
+    grid-template-columns: 1fr;
+  }
+  .detail-price-card {
+    position: static;
+  }
+}
+@media (max-width: 640px) {
+  .gallery-main {
+    height: 230px;
+  }
+  .gallery-thumbs {
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+  .gallery-thumb {
+    width: 62px;
+    height: 48px;
+  }
+  .gallery-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+  .detail-specs-card {
+    padding: 1rem;
+  }
+  .detail-price-card {
+    padding: 1.25rem;
+  }
+  .detail-price-val {
+    font-size: 1.9rem;
+  }
+  .detail-actions {
+    gap: 0.5rem;
+  }
+  .spec-row {
+    padding: 0.75rem 0;
+  }
+}
