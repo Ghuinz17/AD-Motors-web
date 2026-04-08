@@ -16,17 +16,17 @@
   <div class="header-inner">
     <a href="../index.html" class="logo"><img src="../assets/admotors.png" alt="AD Motors">AD <span>Motors</span></a>
     <div class="header-actions">
-      <button id="btnTheme" class="btn-icon">🌙</button>
+      <button id="btnTheme" class="btn-icon"><i class="fa-solid fa-moon"></i></button>
       <a href="auth.html" id="headerLoginBtn" class="btn-header-login hidden">Acceder</a>
       <div id="userAvatar" class="user-avatar">U</div>
-      <button id="btnMenu" class="btn-icon">☰</button>
+      <button id="btnMenu" class="btn-icon"><i class="fa-solid fa-bars"></i></button>
     </div>
   </div>
 </header>
 
 <div id="drawerOverlay" class="drawer-overlay"></div>
 <aside id="drawer" class="drawer">
-  <div class="drawer-header"><span class="drawer-title">Menú</span><button id="btnCloseDrawer" class="btn-icon">✕</button></div>
+  <div class="drawer-header"><span class="drawer-title">Menú</span><button id="btnCloseDrawer" class="btn-icon"><i class="fa-solid fa-xmark"></i></button></div>
   <div class="drawer-user">
     <div id="drawerInitials" class="drawer-avatar">U</div>
     <div class="drawer-user-info">
@@ -35,12 +35,12 @@
     </div>
   </div>
   <nav class="drawer-nav">
-    <div class="drawer-nav-item" data-href="index.html"><span class="ni">🏠</span> Inicio</div>
-    <div class="drawer-nav-item active" data-page="perfil"><span class="ni">📦</span> Mis pedidos</div>
-    <div class="drawer-nav-item" data-page="solicitudes"><span class="ni">📅</span> Mis solicitudes</div>
-    <div class="drawer-nav-item" data-page="cuenta"><span class="ni">⚙️</span> Mi cuenta</div>
+    <div class="drawer-nav-item" data-href="index.html"><span class="ni"><i class="fa-solid fa-house"></i></span> Inicio</div>
+    <div class="drawer-nav-item active" data-page="perfil"><span class="ni"><i class="fa-solid fa-box"></i></span> Mis pedidos</div>
+    <div class="drawer-nav-item" data-page="solicitudes"><span class="ni"><i class="fa-solid fa-calendar-days"></i></span> Mis solicitudes</div>
+    <div class="drawer-nav-item" data-page="cuenta"><span class="ni"><i class="fa-solid fa-gear"></i></span> Mi cuenta</div>
   </nav>
-  <div class="drawer-footer"><button id="btnLogout" class="btn-logout">🚪 Cerrar sesión</button></div>
+  <div class="drawer-footer"><button id="btnLogout" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button></div>
 </aside>
 
 <main class="main">
@@ -56,9 +56,9 @@
 
   <!-- TABS -->
   <div class="profile-tabs">
-    <button class="profile-tab" data-tab="pedidos">📦 Mis pedidos</button>
-    <button class="profile-tab" data-tab="solicitudes">📅 Solicitudes</button>
-    <button class="profile-tab" data-tab="cuenta">⚙️ Mi cuenta</button>
+    <button class="profile-tab" data-tab="pedidos"><i class="fa-solid fa-box"></i> Mis pedidos</button>
+    <button class="profile-tab" data-tab="solicitudes"><i class="fa-regular fa-calendar-days"></i> Solicitudes</button>
+    <button class="profile-tab" data-tab="cuenta"><i class="fa-solid fa-gear"></i> Mi cuenta</button>
   </div>
 
   <!-- TAB PEDIDOS -->
@@ -79,15 +79,15 @@
 
     <!-- Datos personales -->
     <div class="settings-section">
-      <div class="settings-section-title">👤 Datos personales</div>
+      <div class="settings-section-title"><i class="fa-regular fa-user"></i> Datos personales</div>
       <form id="formUpdatePerfil" novalidate>
         <div class="form-group">
           <label class="form-label">Nombre completo</label>
-          <div class="input-wrap"><span class="input-icon">👤</span><input type="text" id="settingNombre" class="form-input" placeholder="Tu nombre"></div>
+          <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-user"></i></span><input type="text" id="settingNombre" class="form-input" placeholder="Tu nombre"></div>
         </div>
         <div class="form-group">
           <label class="form-label">Teléfono</label>
-          <div class="input-wrap"><span class="input-icon">📱</span><input type="tel" id="settingTelefono" class="form-input" placeholder="+34 600 000 000"></div>
+          <div class="input-wrap"><span class="input-icon"><i class="fa-solid fa-mobile-screen-button"></i></span><input type="tel" id="settingTelefono" class="form-input" placeholder="+34 600 000 000"></div>
         </div>
         <button type="submit" id="btnUpdatePerfil" class="btn btn-primary">Guardar cambios</button>
       </form>
@@ -95,11 +95,11 @@
 
     <!-- Cambiar email -->
     <div class="settings-section">
-      <div class="settings-section-title">✉️ Cambiar correo electrónico</div>
+      <div class="settings-section-title"><i class="fa-regular fa-envelope"></i> Cambiar correo electrónico</div>
       <form id="formUpdateEmail" novalidate>
         <div class="form-group">
           <label class="form-label">Nuevo correo</label>
-          <div class="input-wrap"><span class="input-icon">✉️</span><input type="email" id="settingEmail" class="form-input" placeholder="nuevo@email.com"></div>
+          <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-envelope"></i></span><input type="email" id="settingEmail" class="form-input" placeholder="nuevo@email.com"></div>
           <div class="form-hint">Se enviará un enlace de confirmación al nuevo correo.</div>
         </div>
         <button type="submit" id="btnUpdateEmail" class="btn btn-primary">Cambiar correo</button>
@@ -108,23 +108,23 @@
 
     <!-- Cambiar contraseña -->
     <div class="settings-section">
-      <div class="settings-section-title">🔒 Cambiar contraseña</div>
+      <div class="settings-section-title"><i class="fa-solid fa-lock"></i> Cambiar contraseña</div>
       <form id="formUpdatePassword" novalidate>
         <div class="form-group">
           <label class="form-label">Nueva contraseña</label>
           <div class="input-wrap">
-            <span class="input-icon">🔒</span>
+            <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
             <input type="password" id="settingPassword" class="form-input" placeholder="Nueva contraseña segura">
-            <span class="input-suffix" data-toggle-pw="settingPassword">👁️</span>
+            <span class="input-suffix" data-toggle-pw="settingPassword"><i class="fa-regular fa-eye"></i></span>
           </div>
           <div class="form-hint">Mín. 8 caracteres, mayúscula, minúscula, número y carácter especial.</div>
         </div>
         <div class="form-group">
           <label class="form-label">Confirmar contraseña</label>
           <div class="input-wrap">
-            <span class="input-icon">🔒</span>
+            <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
             <input type="password" id="settingPassword2" class="form-input" placeholder="Repite la contraseña">
-            <span class="input-suffix" data-toggle-pw="settingPassword2">👁️</span>
+            <span class="input-suffix" data-toggle-pw="settingPassword2"><i class="fa-regular fa-eye"></i></span>
           </div>
         </div>
         <button type="submit" id="btnUpdatePassword" class="btn btn-primary">Cambiar contraseña</button>
@@ -133,11 +133,11 @@
 
     <!-- Zona peligrosa -->
     <div class="danger-zone">
-      <div class="settings-section-title" style="color:var(--danger)">⚠️ Zona de peligro</div>
+      <div class="settings-section-title" style="color:var(--danger)"><i class="fa-solid fa-triangle-exclamation"></i> Zona de peligro</div>
       <p style="font-size:.875rem;color:var(--text2);margin-bottom:1rem">
         Eliminar tu cuenta es una acción irreversible. Se borrarán todos tus datos, pedidos y solicitudes.
       </p>
-      <button id="btnDeleteAccount" class="btn btn-danger btn-sm">🗑️ Eliminar mi cuenta</button>
+      <button id="btnDeleteAccount" class="btn btn-danger btn-sm"><i class="fa-regular fa-trash-can"></i> Eliminar mi cuenta</button>
     </div>
   </div>
 
@@ -147,7 +147,7 @@
 <div id="modalDeleteAccount" class="modal-overlay">
   <div class="modal">
     <div style="text-align:center;margin-bottom:1.5rem">
-      <div style="font-size:3rem;margin-bottom:.75rem">⚠️</div>
+      <div style="margin-bottom:.75rem"><i class="fa-solid fa-triangle-exclamation" style="font-size:3rem;color:var(--danger)"></i></div>
       <h3 class="modal-title">¿Eliminar cuenta?</h3>
       <p class="modal-subtitle">Esta acción es irreversible. Todos tus datos serán eliminados permanentemente.</p>
     </div>
@@ -157,7 +157,7 @@
     </div>
     <div style="display:flex;gap:.75rem">
       <button id="btnCancelDelete" class="btn btn-secondary btn-full">Cancelar</button>
-      <button id="btnDeleteConfirm" class="btn btn-danger btn-full">🗑️ Eliminar</button>
+      <button id="btnDeleteConfirm" class="btn btn-danger btn-full"><i class="fa-regular fa-trash-can"></i> Eliminar</button>
     </div>
   </div>
 </div>
@@ -176,7 +176,7 @@
       const t = document.getElementById(btn.dataset.togglePw);
       if (!t) return;
       t.type = t.type === 'text' ? 'password' : 'text';
-      btn.textContent = t.type === 'text' ? '🙈' : '👁️';
+      btn.innerHTML = t.type === 'text' ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>';
     });
   });
 </script>

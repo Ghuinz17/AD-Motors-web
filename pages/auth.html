@@ -7,13 +7,10 @@
   <link rel="icon" href="../assets/admotors.png">
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/auth.css">
-  <style>
-    .hidden { display: none !important; }
-  </style>
+  <style>.hidden { display: none !important; }</style>
 </head>
 <body>
 
-<!-- Panel izquierdo decorativo -->
 <div class="auth-left">
   <div class="auth-left-content">
     <img src="../assets/admotors.png" alt="AD Motors" class="auth-left-logo">
@@ -21,41 +18,45 @@
     <p class="auth-left-sub">Accede a tu cuenta para gestionar tus pedidos, solicitar visitas y mucho más.</p>
     <div style="margin-top:2.5rem;display:flex;flex-direction:column;gap:.875rem">
       <div style="display:flex;align-items:center;gap:.75rem;color:#94a3b8;font-size:.9rem">
-        <span style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">✅</span>
+        <span style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">
+          <i class="fa-solid fa-shield-halved" style="color:#93c5fd;font-size:.875rem"></i>
+        </span>
         Compra 100% segura
       </div>
       <div style="display:flex;align-items:center;gap:.75rem;color:#94a3b8;font-size:.9rem">
-        <span style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">📅</span>
+        <span style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">
+          <i class="fa-solid fa-calendar-check" style="color:#93c5fd;font-size:.875rem"></i>
+        </span>
         Visitas personales concertadas
       </div>
       <div style="display:flex;align-items:center;gap:.75rem;color:#94a3b8;font-size:.9rem">
-        <span style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">🚗</span>
+        <span style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">
+          <i class="fa-solid fa-car" style="color:#93c5fd;font-size:.875rem"></i>
+        </span>
         Amplio catálogo de vehículos
       </div>
     </div>
   </div>
 </div>
 
-<!-- Panel derecho: formulario -->
 <div class="auth-right">
-
-  <!-- Botón volver -->
-  <a href="../index.html" class="auth-back" title="Volver al inicio">←</a>
-
   <div class="auth-box">
 
-    <!-- Logo móvil -->
+    <a href="../index.html" class="auth-back">
+      <span class="auth-back-icon"><i class="fa-solid fa-arrow-left"></i></span>
+      <span>Volver al inicio</span>
+    </a>
+
     <div class="auth-logo-mobile">
       <img src="../assets/admotors.png" alt="AD Motors" style="width:72px;border-radius:12px">
     </div>
 
-    <!--  TABS  -->
     <div class="auth-tabs">
       <button id="tabLogin"    class="auth-tab active">Iniciar sesión</button>
       <button id="tabRegister" class="auth-tab">Registrarse</button>
     </div>
 
-    <!--  FORM LOGIN  -->
+    <!-- LOGIN -->
     <form id="formLogin" novalidate>
       <h2 class="auth-title">Bienvenido</h2>
       <p class="auth-sub">Introduce tus credenciales para acceder</p>
@@ -63,7 +64,7 @@
       <div class="form-group">
         <label class="form-label" for="loginEmail">Correo electrónico <span>*</span></label>
         <div class="input-wrap">
-          <span class="input-icon">✉️</span>
+          <span class="input-icon"><i class="fa-regular fa-envelope"></i></span>
           <input type="email" id="loginEmail" class="form-input" placeholder="tu@email.com" autocomplete="email">
         </div>
         <div class="form-error" id="loginEmailError"></div>
@@ -72,9 +73,9 @@
       <div class="form-group">
         <label class="form-label" for="loginPassword">Contraseña <span>*</span></label>
         <div class="input-wrap">
-          <span class="input-icon">🔒</span>
+          <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
           <input type="password" id="loginPassword" class="form-input" placeholder="Tu contraseña" autocomplete="current-password">
-          <span class="input-suffix" data-toggle-pw="loginPassword">👁️</span>
+          <span class="input-suffix" data-toggle-pw="loginPassword"><i class="fa-regular fa-eye"></i></span>
         </div>
         <div class="form-error" id="loginPasswordError"></div>
       </div>
@@ -82,14 +83,13 @@
       <button type="submit" id="btnLogin" class="btn btn-primary btn-full btn-lg" style="margin-top:.5rem">
         Iniciar sesión
       </button>
-
       <p style="text-align:center;margin-top:1.25rem;font-size:.875rem;color:var(--text2)">
         ¿No tienes cuenta?
         <a href="#" onclick="setMode('register');return false" style="color:var(--primary);font-weight:700">Regístrate</a>
       </p>
     </form>
 
-    <!--  FORM REGISTRO  -->
+    <!-- REGISTRO -->
     <form id="formRegister" class="hidden" novalidate>
       <h2 class="auth-title">Crear cuenta</h2>
       <p class="auth-sub">Rellena el formulario para registrarte</p>
@@ -97,7 +97,7 @@
       <div class="form-group">
         <label class="form-label" for="regNombre">Nombre completo <span>*</span></label>
         <div class="input-wrap">
-          <span class="input-icon">👤</span>
+          <span class="input-icon"><i class="fa-regular fa-user"></i></span>
           <input type="text" id="regNombre" class="form-input" placeholder="Tu nombre completo" autocomplete="name">
         </div>
         <div class="form-error" id="regNombreError"></div>
@@ -106,7 +106,7 @@
       <div class="form-group">
         <label class="form-label" for="regEmail">Correo electrónico <span>*</span></label>
         <div class="input-wrap">
-          <span class="input-icon">✉️</span>
+          <span class="input-icon"><i class="fa-regular fa-envelope"></i></span>
           <input type="email" id="regEmail" class="form-input" placeholder="tu@email.com" autocomplete="email">
         </div>
         <div class="form-error" id="regEmailError"></div>
@@ -115,7 +115,7 @@
       <div class="form-group">
         <label class="form-label" for="regTelefono">Teléfono <span>*</span></label>
         <div class="input-wrap">
-          <span class="input-icon">📱</span>
+          <span class="input-icon"><i class="fa-solid fa-mobile-screen-button"></i></span>
           <input type="tel" id="regTelefono" class="form-input" placeholder="+34 600 000 000" autocomplete="tel">
         </div>
         <div class="form-error" id="regTelefonoError"></div>
@@ -124,19 +124,15 @@
       <div class="form-group">
         <label class="form-label" for="regPassword">Contraseña <span>*</span></label>
         <div class="input-wrap">
-          <span class="input-icon">🔒</span>
+          <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
           <input type="password" id="regPassword" class="form-input" placeholder="Crea una contraseña segura" autocomplete="new-password">
-          <span class="input-suffix" data-toggle-pw="regPassword">👁️</span>
+          <span class="input-suffix" data-toggle-pw="regPassword"><i class="fa-regular fa-eye"></i></span>
         </div>
         <div class="form-error" id="regPasswordError"></div>
-
-        <!-- Barra de fortaleza -->
         <div class="pw-strength">
           <div class="pw-bar-track"><div class="pw-bar-fill" id="pwBar"></div></div>
           <span class="pw-label" id="pwLabel"></span>
         </div>
-
-        <!-- Requisitos -->
         <div class="pw-reqs" style="margin-top:.5rem">
           <div class="pw-req" id="req-len">Mínimo 8 caracteres</div>
           <div class="pw-req" id="req-upper">Una mayúscula</div>
@@ -149,9 +145,9 @@
       <div class="form-group">
         <label class="form-label" for="regPassword2">Confirmar contraseña <span>*</span></label>
         <div class="input-wrap">
-          <span class="input-icon">🔒</span>
+          <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
           <input type="password" id="regPassword2" class="form-input" placeholder="Repite tu contraseña" autocomplete="new-password">
-          <span class="input-suffix" data-toggle-pw="regPassword2">👁️</span>
+          <span class="input-suffix" data-toggle-pw="regPassword2"><i class="fa-regular fa-eye"></i></span>
         </div>
         <div class="form-error" id="regPassword2Error"></div>
       </div>
@@ -172,24 +168,24 @@
       <button type="submit" id="btnRegister" class="btn btn-primary btn-full btn-lg">
         Crear cuenta
       </button>
-
       <p style="text-align:center;margin-top:1.25rem;font-size:.875rem;color:var(--text2)">
         ¿Ya tienes cuenta?
         <a href="#" onclick="setMode('login');return false" style="color:var(--primary);font-weight:700">Iniciar sesión</a>
       </p>
     </form>
 
-    <!--  PASO OTP  -->
+    <!-- OTP -->
     <div id="stepOtp" class="hidden">
       <div style="text-align:center;margin-bottom:2rem">
-        <div style="font-size:3rem;margin-bottom:1rem;animation:float 2s ease infinite">📩</div>
+        <div style="margin-bottom:1.25rem;animation:float 2s ease infinite">
+          <i class="fa-regular fa-envelope" style="font-size:3rem;color:var(--primary)"></i>
+        </div>
         <h2 class="auth-title">Verifica tu email</h2>
         <p class="auth-sub">
           Hemos enviado un código de 6 dígitos a<br>
           <strong id="otpEmailDisplay" style="color:var(--primary)"></strong>
         </p>
       </div>
-
       <form id="formOtp" novalidate>
         <div class="otp-inputs">
           <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
@@ -199,36 +195,27 @@
           <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
           <input type="text" class="otp-input" maxlength="1" inputmode="numeric" pattern="[0-9]">
         </div>
-
         <button type="submit" id="btnVerifyOtp" class="btn btn-primary btn-full btn-lg" disabled>
-          Verificar código
+          <i class="fa-solid fa-check"></i> Verificar código
         </button>
       </form>
-
       <div style="text-align:center;margin-top:1.25rem;display:flex;flex-direction:column;gap:.75rem">
         <button id="btnResendOtp" class="btn btn-secondary btn-sm">
-          Reenviar código
+          <i class="fa-solid fa-rotate-right"></i> Reenviar código
         </button>
-        <button id="btnBackFromOtp" style="background:none;border:none;color:var(--text2);font-size:.875rem;cursor:pointer">
-          ← Volver
+        <button id="btnBackFromOtp" style="background:none;border:none;color:var(--text2);font-size:.875rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:.5rem">
+          <i class="fa-solid fa-arrow-left"></i> Volver
         </button>
       </div>
-    </div>
-
-    <!-- Botón tema -->
-    <div style="text-align:center;margin-top:2rem">
-      <button id="btnTheme" class="btn-icon" style="margin:0 auto" title="Cambiar tema">🌙</button>
     </div>
 
   </div>
 </div>
 
-<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script src="../js/config.js"></script>
 <script src="../js/ui.js"></script>
 <script src="../js/auth.js"></script>
-
 </body>
 </html>

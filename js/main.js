@@ -1,3 +1,5 @@
+// Listado de vehículos, filtros y búsqueda
+
 let allVehiculos = [];
 
 async function loadVehiculos() {
@@ -107,15 +109,15 @@ function renderVehiculos(list) {
             ${v.color ? `<span style="font-size:.76rem;background:var(--bg3);padding:2px 8px;border-radius:20px;color:var(--text2)">${v.color}</span>` : ''}
           </div>
           <div class="vehicle-specs">
-            <div class="vehicle-spec">🏎️ ${v.kilometraje?.toLocaleString()} km</div>
-            <div class="vehicle-spec">⛽ ${v.tipo_combustible}</div>
+            <div class="vehicle-spec"><i class="fa-solid fa-gauge-high"></i> ${v.kilometraje?.toLocaleString()} km</div>
+            <div class="vehicle-spec"><i class="fa-solid fa-gas-pump"></i> ${v.tipo_combustible}</div>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:flex-end">
             <div>
               <div class="vehicle-price">${v.precio?.toLocaleString('es-ES')} €</div>
               <div class="vehicle-price-sub">IVA incluido</div>
             </div>
-            <span style="color:var(--primary);font-size:.85rem;font-weight:700">Ver más →</span>
+            <span style="color:var(--primary);font-size:.85rem;font-weight:700">Ver más <i class="fa-solid fa-chevron-right"></i></span>
           </div>
         </div>
       </article>`;
@@ -137,10 +139,10 @@ function getImageUrl(v) {
 
 function getCombustibleBadge(tipo) {
   const map = {
-    GASOLINA: { cls: 'badge-warning', label: '⛽ Gasolina' },
-    DIESEL:   { cls: 'badge-neutral', label: '🛢️ Diésel' },
-    ELECTRICO:{ cls: 'badge-success', label: '⚡ Eléctrico' },
-    HIBRIDO:  { cls: 'badge-primary', label: '🔋 Híbrido' },
+    GASOLINA:  { cls: 'badge-warning', label: 'Gasolina' },
+    DIESEL:    { cls: 'badge-neutral', label: 'Diésel' },
+    ELECTRICO: { cls: 'badge-success', label: 'Eléctrico' },
+    HIBRIDO:   { cls: 'badge-primary', label: 'Híbrido' },
   };
   return map[tipo] || { cls: 'badge-neutral', label: tipo };
 }

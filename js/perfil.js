@@ -1,3 +1,5 @@
+// Pedidos, solicitudes y ajustes de cuenta
+
 async function initPerfil() {
   const { data: { user } } = await db.auth.getUser();
   if (!user) { window.location.href = 'auth.html?redirect=perfil.html'; return; }
@@ -54,11 +56,11 @@ async function loadPedidos(userId) {
     const estadoBadge = getEstadoBadge(p.estado);
     return `
       <div class="pedido-card">
-        <div class="pedido-icon">🚗</div>
+        <div class="pedido-icon"><i class="fa-solid fa-car"></i></div>
         <div style="flex:1">
           <div class="pedido-title">Pedido #${p.id_compra?.slice(0,8).toUpperCase()}</div>
           <div class="pedido-sub">Vehículo: ${detalle?.id_vehiculo || '—'}</div>
-          <div class="pedido-date">📅 ${new Date(p.fecha).toLocaleDateString('es-ES', { year:'numeric',month:'long',day:'numeric' })}</div>
+          <div class="pedido-date"><i class="fa-regular fa-calendar"></i> ${new Date(p.fecha).toLocaleDateString('es-ES', { year:'numeric',month:'long',day:'numeric' })}</div>
         </div>
         <div style="text-align:right">
           <span class="badge ${estadoBadge.cls}">${estadoBadge.label}</span>
@@ -87,11 +89,11 @@ async function loadSolicitudes(userId) {
     const estadoBadge = getEstadoBadge(s.estado);
     return `
       <div class="pedido-card">
-        <div class="pedido-icon">📅</div>
+        <div class="pedido-icon"><i class="fa-solid fa-calendar-days"></i></div>
         <div style="flex:1">
           <div class="pedido-title">${s.marca_modelo || 'Vehículo'}</div>
-          <div class="pedido-sub">👤 ${s.nombre_asistente} · 📱 ${s.telefono}</div>
-          <div class="pedido-date">📅 ${formatFecha(s.fecha_visita)} a las ${s.hora_visita?.slice(0,5) || '—'}</div>
+          <div class="pedido-sub"><i class="fa-regular fa-user"></i> ${s.nombre_asistente} &nbsp;·&nbsp; <i class="fa-solid fa-mobile-screen-button"></i> ${s.telefono}</div>
+          <div class="pedido-date"><i class="fa-regular fa-calendar"></i> ${formatFecha(s.fecha_visita)} a las ${s.hora_visita?.slice(0,5) || '—'}</div>
         </div>
         <div>
           <span class="badge ${estadoBadge.cls}">${estadoBadge.label}</span>
@@ -107,11 +109,11 @@ function formatFecha(fecha) {
 
 function getEstadoBadge(estado) {
   const map = {
-    PENDIENTE:        { cls:'badge-warning', label:'⏳ Pendiente' },
-    PENDIENTE_PAGO:   { cls:'badge-warning', label:'💳 Pend. pago' },
-    CONFIRMADA:       { cls:'badge-success', label:'✅ Confirmada' },
-    COMPLETADA:       { cls:'badge-success', label:'✅ Completada' },
-    CANCELADA:        { cls:'badge-danger',  label:'❌ Cancelada' },
+    PENDIENTE:       { cls:'badge-warning', label:'Pendiente' },
+    PENDIENTE_PAGO:  { cls:'badge-warning', label:'Pend. pago' },
+    CONFIRMADA:      { cls:'badge-success', label:'Confirmada' },
+    COMPLETADA:      { cls:'badge-success', label:'Completada' },
+    CANCELADA:       { cls:'badge-danger',  label:'Cancelada' },
   };
   return map[estado] || { cls:'badge-neutral', label: estado };
 }

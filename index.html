@@ -12,6 +12,7 @@
     .hidden { display: none !important; }
     .loading-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); gap: 1.5rem; }
     .skel-card { height: 340px; border-radius: 12px; }
+    /* Asegura que el hero no deje espacio azul en móvil */
     body { overflow-x: hidden; }
   </style>
 </head>
@@ -25,10 +26,10 @@
       AD <span>Motors</span>
     </a>
     <div class="header-actions">
-      <button id="btnTheme" class="btn-icon" title="Cambiar tema">🌙</button>
+      <button id="btnTheme" class="btn-icon" title="Cambiar tema"><i class="fa-solid fa-moon"></i></button>
       <a href="pages/auth.html" id="headerLoginBtn" class="btn-header-login">Acceder</a>
       <div id="userAvatar" class="user-avatar hidden">U</div>
-      <button id="btnMenu" class="btn-icon" title="Menú">☰</button>
+      <button id="btnMenu" class="btn-icon" title="Menú"><i class="fa-solid fa-bars"></i></button>
     </div>
   </div>
 </header>
@@ -38,7 +39,7 @@
 <aside id="drawer" class="drawer">
   <div class="drawer-header">
     <span class="drawer-title">Menú</span>
-    <button id="btnCloseDrawer" class="btn-close-drawer btn-icon">✕</button>
+    <button id="btnCloseDrawer" class="btn-close-drawer btn-icon"><i class="fa-solid fa-xmark"></i></button>
   </div>
   <div class="drawer-user">
     <div id="drawerInitials" class="drawer-avatar">U</div>
@@ -49,36 +50,36 @@
   </div>
   <nav class="drawer-nav">
     <div class="drawer-nav-item" data-href="index.html" data-page="index">
-      <span class="ni">🏠</span> Inicio
+      <span class="ni"><i class="fa-solid fa-house"></i></span> Inicio
     </div>
     <div class="drawer-nav-item" data-href="pages/perfil.html?tab=pedidos" data-page="perfil">
-      <span class="ni">📦</span> Mis pedidos
+      <span class="ni"><i class="fa-solid fa-box"></i></span> Mis pedidos
     </div>
     <div class="drawer-nav-item" data-href="pages/perfil.html?tab=solicitudes" data-page="solicitudes">
-      <span class="ni">📅</span> Mis solicitudes de visita
+      <span class="ni"><i class="fa-solid fa-calendar-days"></i></span> Mis solicitudes de visita
     </div>
     <div class="drawer-nav-item" data-href="pages/perfil.html?tab=cuenta" data-page="cuenta">
-      <span class="ni">⚙️</span> Mi cuenta
+      <span class="ni"><i class="fa-solid fa-gear"></i></span> Mi cuenta
     </div>
     <div class="drawer-nav-item" data-href="pages/terminos.html">
-      <span class="ni">📄</span> Términos y condiciones
+      <span class="ni"><i class="fa-solid fa-file-lines"></i></span> Términos y condiciones
     </div>
   </nav>
   <div class="drawer-footer">
-    <button id="btnLogout" class="btn-logout">🚪 Cerrar sesión</button>
+    <button id="btnLogout" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
   </div>
 </aside>
 
 <!--  HERO  -->
 <section class="hero">
   <div class="hero-inner">
-    <span class="hero-eyebrow">🚗 Concesionario oficial</span>
+    <span class="hero-eyebrow"><i class="fa-solid fa-car"></i> Concesionario oficial</span>
     <h1 class="hero-title">Encuentra tu<br><span>vehículo ideal</span></h1>
     <p class="hero-sub">Más de <strong>50 vehículos</strong> de ocasión con garantía. Precios transparentes, sin sorpresas.</p>
 
     <div class="search-bar">
       <input type="text" id="searchInput" class="search-input" placeholder="Buscar por marca o modelo...">
-      <button class="btn-search" onclick="applyFilters()">🔍 Buscar</button>
+      <button class="btn-search" onclick="applyFilters()"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
     </div>
 
     <div class="hero-stats">
@@ -137,7 +138,7 @@
         </select>
       </div>
       <div class="filter-group" style="justify-content:flex-end;flex-direction:row;align-items:flex-end">
-        <button class="btn-clear-filters" onclick="clearFilters()">✕ Limpiar</button>
+        <button class="btn-clear-filters" onclick="clearFilters()"><i class="fa-solid fa-xmark"></i> Limpiar</button>
       </div>
     </div>
     <div style="margin-top:.75rem;font-size:.8rem;color:var(--text3)" id="filterCount"></div>

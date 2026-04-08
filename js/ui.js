@@ -1,3 +1,5 @@
+// Tema, Header, Toast (compartido en todas las páginas)
+
 /* ---- TEMA ---- */
 function initTheme() {
   const saved = localStorage.getItem('adm-theme') || 'dark';
@@ -15,7 +17,9 @@ function toggleTheme() {
 
 function updateThemeIcon(theme) {
   const btn = document.getElementById('btnTheme');
-  if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+  if (btn) btn.innerHTML = theme === 'dark'
+    ? '<i class="fa-solid fa-sun"></i>'
+    : '<i class="fa-solid fa-moon"></i>';
 }
 
 /* ---- TOAST ---- */
@@ -27,12 +31,16 @@ function showToast(msg, type = 'info', duration = 3500) {
     container.className = 'toast-container';
     document.body.appendChild(container);
   }
-  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+  const icons = {
+    success: '<i class="fa-solid fa-circle-check" style="color:var(--success)"></i>',
+    error:   '<i class="fa-solid fa-circle-xmark" style="color:var(--danger)"></i>',
+    info:    '<i class="fa-solid fa-circle-info"  style="color:var(--primary)"></i>'
+  };
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${msg}</span>`;
+  toast.innerHTML = `<span>${icons[type] || icons.info}</span><span>${msg}</span>`;
   container.appendChild(toast);
-  setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(100%)'; toast.style.transition = 'all .3s ease'; setTimeout(() => toast.remove(), 300); }, duration);
+  setTimeout(() => { toast.style.opacity='0'; toast.style.transform='translateX(100%)'; toast.style.transition='all .3s ease'; setTimeout(()=>toast.remove(),300); }, duration);
 }
 
 /* ---- DRAWER / MENÚ ---- */

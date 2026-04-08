@@ -1,3 +1,4 @@
+// Registro, Login, OTP, validación contraseña
 
 const PW_RULES = [
   { id: 'req-len',   test: v => v.length >= 8 },
@@ -28,9 +29,20 @@ function renderPwStrength(val) {
 }
 
 function showError(id, msg) {
-  document.getElementById(id)?.classList.add('error');
-  const e = document.getElementById(id+'Error');
-  if (e) { e.textContent = msg; e.classList.add('show'); }
+  const input = document.getElementById(id);
+  const err   = document.getElementById(id + 'Error');
+
+  if (input) {
+    // Quitar y volver a añadir la clase para que la animación shake se reinicie
+    input.classList.remove('error');
+    void input.offsetWidth; // fuerza reflow
+    input.classList.add('error');
+  }
+
+  if (err) {
+    err.textContent = msg;
+    err.classList.add('show');
+  }
 }
 function clearError(id) {
   document.getElementById(id)?.classList.remove('error');
@@ -228,8 +240,10 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', () => {
       const t = document.getElementById(btn.dataset.togglePw);
       if (!t) return;
-      t.type = t.type==='text' ? 'password' : 'text';
-      btn.textContent = t.type==='text' ? '🙈' : '👁️';
+      t.type = t.type === 'text' ? 'password' : 'text';
+      btn.innerHTML = t.type === 'text'
+        ? '<i class="fa-regular fa-eye-slash"></i>'
+        : '<i class="fa-regular fa-eye"></i>';
     });
   });
 

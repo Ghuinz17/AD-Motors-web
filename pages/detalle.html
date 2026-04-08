@@ -1,388 +1,212 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es" data-theme="dark">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Detalle — AD Motors</title>
-    <link rel="icon" href="../assets/admotors.png" />
-    <link rel="stylesheet" href="../css/base.css" />
-    <link rel="stylesheet" href="../css/header.css" />
-    <link rel="stylesheet" href="../css/detalle.css" />
-    <style>
-      .hidden {
-        display: none !important;
-      }
-      #galleryMainImg {
-        transition: opacity 0.15s ease;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- HEADER -->
-    <header class="header">
-      <div class="header-inner">
-        <a href="../index.html" class="logo"
-          ><img src="../assets/admotors.png" alt="AD Motors" />AD
-          <span>Motors</span></a
-        >
-        <div class="header-actions">
-          <button id="btnTheme" class="btn-icon">🌙</button>
-          <a href="auth.html" id="headerLoginBtn" class="btn-header-login"
-            >Acceder</a
-          >
-          <div id="userAvatar" class="user-avatar hidden">U</div>
-          <button id="btnMenu" class="btn-icon">☰</button>
-        </div>
-      </div>
-    </header>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Detalle — AD Motors</title>
+  <link rel="icon" href="../assets/admotors.png">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/header.css">
+  <link rel="stylesheet" href="../css/detalle.css">
+  <style>
+    .hidden { display: none !important; }
+    #galleryMainImg { transition: opacity .15s ease; }
+  </style>
+</head>
+<body>
 
-    <!-- DRAWER -->
-    <div id="drawerOverlay" class="drawer-overlay"></div>
-    <aside id="drawer" class="drawer">
-      <div class="drawer-header">
-        <span class="drawer-title">Menú</span
-        ><button id="btnCloseDrawer" class="btn-icon">✕</button>
-      </div>
-      <div class="drawer-user">
-        <div id="drawerInitials" class="drawer-avatar">U</div>
-        <div class="drawer-user-info">
-          <div id="drawerName" class="drawer-user-name">Invitado</div>
-          <div id="drawerEmail" class="drawer-user-email">Inicia sesión</div>
-        </div>
-      </div>
-      <nav class="drawer-nav">
-        <div class="drawer-nav-item" data-href="index.html">
-          <span class="ni">🏠</span> Inicio
-        </div>
-        <div class="drawer-nav-item" data-href="pages/perfil.html?tab=pedidos">
-          <span class="ni">📦</span> Mis pedidos
-        </div>
-        <div
-          class="drawer-nav-item"
-          data-href="pages/perfil.html?tab=solicitudes"
-        >
-          <span class="ni">📅</span> Mis solicitudes
-        </div>
-        <div class="drawer-nav-item" data-href="pages/perfil.html?tab=cuenta">
-          <span class="ni">⚙️</span> Mi cuenta
-        </div>
-      </nav>
-      <div class="drawer-footer">
-        <button id="btnLogout" class="btn-logout">🚪 Cerrar sesión</button>
-      </div>
-    </aside>
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo"><img src="../assets/admotors.png" alt="AD Motors">AD <span>Motors</span></a>
+    <div class="header-actions">
+      <button id="btnTheme" class="btn-icon"><i class="fa-solid fa-moon"></i></button>
+      <a href="auth.html" id="headerLoginBtn" class="btn-header-login">Acceder</a>
+      <div id="userAvatar" class="user-avatar hidden">U</div>
+      <button id="btnMenu" class="btn-icon"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </div>
+</header>
 
-    <main class="main">
-      <!-- Breadcrumb -->
-      <nav
-        style="
-          font-size: 0.8rem;
-          color: var(--text2);
-          margin-bottom: 1.5rem;
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-        "
-        class="anim-fade"
-      >
-        <a href="../index.html" style="color: var(--primary)">Inicio</a>
-        <span>›</span>
-        <span id="breadcrumbName">Vehículo</span>
-      </nav>
+<!-- DRAWER -->
+<div id="drawerOverlay" class="drawer-overlay"></div>
+<aside id="drawer" class="drawer">
+  <div class="drawer-header"><span class="drawer-title">Menú</span><button id="btnCloseDrawer" class="btn-icon"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="drawer-user">
+    <div id="drawerInitials" class="drawer-avatar">U</div>
+    <div class="drawer-user-info">
+      <div id="drawerName" class="drawer-user-name">Invitado</div>
+      <div id="drawerEmail" class="drawer-user-email">Inicia sesión</div>
+    </div>
+  </div>
+  <nav class="drawer-nav">
+    <div class="drawer-nav-item" data-href="index.html"><span class="ni"><i class="fa-solid fa-house"></i></span> Inicio</div>
+    <div class="drawer-nav-item" data-href="pages/perfil.html?tab=pedidos"><span class="ni"><i class="fa-solid fa-box"></i></span> Mis pedidos</div>
+    <div class="drawer-nav-item" data-href="pages/perfil.html?tab=solicitudes"><span class="ni"><i class="fa-solid fa-calendar-days"></i></span> Mis solicitudes</div>
+    <div class="drawer-nav-item" data-href="pages/perfil.html?tab=cuenta"><span class="ni"><i class="fa-solid fa-gear"></i></span> Mi cuenta</div>
+  </nav>
+  <div class="drawer-footer"><button id="btnLogout" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button></div>
+</aside>
 
-      <!-- Badge reservado -->
-      <div id="reservadoBadge" class="hidden" style="margin-bottom: 1rem">
-        <span
-          class="badge badge-danger"
-          style="font-size: 0.85rem; padding: 0.5rem 1rem"
-          >🔒 Vehículo reservado — No disponible para compra</span
-        >
+<main class="main">
+
+  <!-- Breadcrumb -->
+  <nav style="font-size:.8rem;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem" class="anim-fade">
+    <a href="../index.html" style="color:var(--primary)">Inicio</a>
+    <span><i class="fa-solid fa-chevron-right" style="font-size:.7rem"></i></span>
+    <span id="breadcrumbName">Vehículo</span>
+  </nav>
+
+  <!-- Badge reservado -->
+  <div id="reservadoBadge" class="hidden" style="margin-bottom:1rem">
+    <span class="badge badge-danger" style="font-size:.85rem;padding:.5rem 1rem"><i class="fa-solid fa-lock"></i> Vehículo reservado — No disponible para compra</span>
+  </div>
+
+  <!-- GALERÍA -->
+  <div class="detail-gallery anim-up">
+    <div class="gallery-main">
+      <img id="galleryMainImg" src="" alt="Vehículo" title="Clic para ampliar">
+      <button class="gallery-btn gallery-btn-prev" onclick="prevImage()"><i class="fa-solid fa-chevron-left"></i></button>
+      <button class="gallery-btn gallery-btn-next" onclick="nextImage()"><i class="fa-solid fa-chevron-right"></i></button>
+      <div class="gallery-counter" id="galleryCounter">1 / 1</div>
+    </div>
+    <div class="gallery-thumbs" id="galleryThumbs"></div>
+  </div>
+
+  <!-- LAYOUT DETALLE -->
+  <div class="detail-layout">
+
+    <!-- Columna izquierda -->
+    <div>
+      <div class="detail-specs-card anim-up delay-1" style="margin-bottom:1.5rem">
+        <div style="margin-bottom:1.25rem">
+          <h1 id="detailName" style="font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:800;color:var(--text)">—</h1>
+          <span id="detailYear" style="font-size:.875rem;color:var(--text2)"></span>
+        </div>
+        <div id="specsList"></div>
       </div>
 
-      <!-- GALERÍA -->
-      <div class="detail-gallery anim-up">
-        <div class="gallery-main">
-          <img
-            id="galleryMainImg"
-            src=""
-            alt="Vehículo"
-            title="Clic para ampliar"
-          />
-          <button class="gallery-btn gallery-btn-prev" onclick="prevImage()">
-            ‹
-          </button>
-          <button class="gallery-btn gallery-btn-next" onclick="nextImage()">
-            ›
-          </button>
-          <div class="gallery-counter" id="galleryCounter">1 / 1</div>
+      <!-- Descripción -->
+      <div class="detail-specs-card anim-up delay-2">
+        <div style="display:flex;align-items:center;gap:.625rem;margin-bottom:1rem">
+          <span><i class="fa-regular fa-file-lines" style="font-size:1.1rem;color:var(--primary)"></i></span>
+          <span style="font-size:.78rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:1px">Descripción</span>
         </div>
-        <div class="gallery-thumbs" id="galleryThumbs"></div>
-      </div>
-
-      <!-- LAYOUT DETALLE -->
-      <div class="detail-layout">
-        <!-- Columna izquierda -->
-        <div>
-          <div
-            class="detail-specs-card anim-up delay-1"
-            style="margin-bottom: 1.5rem"
-          >
-            <div style="margin-bottom: 1.25rem">
-              <h1
-                id="detailName"
-                style="
-                  font-family: &quot;Barlow Condensed&quot;, sans-serif;
-                  font-size: 2rem;
-                  font-weight: 800;
-                  color: var(--text);
-                "
-              >
-                —
-              </h1>
-              <span
-                id="detailYear"
-                style="font-size: 0.875rem; color: var(--text2)"
-              ></span>
-            </div>
-            <div id="specsList"></div>
-          </div>
-
-          <!-- Descripción -->
-          <div class="detail-specs-card anim-up delay-2">
-            <div
-              style="
-                display: flex;
-                align-items: center;
-                gap: 0.625rem;
-                margin-bottom: 1rem;
-              "
-            >
-              <span style="font-size: 1.1rem">📄</span>
-              <span
-                style="
-                  font-size: 0.78rem;
-                  font-weight: 800;
-                  color: var(--text2);
-                  text-transform: uppercase;
-                  letter-spacing: 1px;
-                "
-                >Descripción</span
-              >
-            </div>
-            <p
-              id="detailDescripcion"
-              style="font-size: 0.9rem; color: var(--text2); line-height: 1.7"
-            ></p>
-          </div>
-        </div>
-
-        <!-- Columna derecha — precio y acciones -->
-        <div>
-          <div class="detail-price-card anim-up delay-2">
-            <div class="detail-price-label">Precio</div>
-            <div class="detail-price-val" id="detailPrice">—</div>
-            <div class="detail-price-iva">IVA incluido</div>
-
-            <div class="detail-actions">
-              <!-- Botón comprar (va a pasarela de pago) -->
-              <button id="btnComprar" class="btn btn-primary btn-full btn-lg">
-                💳 Ir a pagar
-              </button>
-
-              <!-- Botón realizar compra directa -->
-              <button id="btnRealizarCompra" class="btn btn-success btn-full">
-                ✅ Realizar compra
-              </button>
-
-              <!-- Botón solicitar visita -->
-              <button id="btnSolicitarVisita" class="btn btn-outline btn-full">
-                📅 Solicitar visita
-              </button>
-            </div>
-
-            <p
-              style="
-                font-size: 0.72rem;
-                color: var(--text3);
-                text-align: center;
-                margin-top: 1rem;
-                line-height: 1.6;
-              "
-            >
-              🔒 Transacción segura · 🛡️ Datos protegidos
-            </p>
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <!--  MODAL CONFIRMAR COMPRA  -->
-    <div id="modalConfirmarCompra" class="modal-overlay">
-      <div class="modal">
-        <div style="text-align: center; margin-bottom: 1.5rem">
-          <div style="font-size: 3rem; margin-bottom: 0.75rem">🛒</div>
-          <h3 class="modal-title">Confirmar compra</h3>
-          <p class="modal-subtitle">
-            ¿Estás seguro de que quieres comprar este vehículo? Una vez
-            confirmado, quedará reservado a tu nombre.
-          </p>
-        </div>
-        <div
-          style="
-            background: var(--bg3);
-            border-radius: var(--r-sm);
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-          "
-        >
-          <span style="color: var(--text2)">Total a pagar</span>
-          <strong
-            id="detailPrice"
-            style="color: var(--primary); font-size: 1.1rem"
-          ></strong>
-        </div>
-        <div style="display: flex; gap: 0.75rem">
-          <button
-            class="btn btn-secondary btn-full"
-            onclick="closeModal('modalConfirmarCompra')"
-          >
-            Cancelar
-          </button>
-          <button id="btnConfirmarCompra" class="btn btn-success btn-full">
-            ✅ Confirmar
-          </button>
-        </div>
+        <p id="detailDescripcion" style="font-size:.9rem;color:var(--text2);line-height:1.7"></p>
       </div>
     </div>
 
-    <!--  MODAL SOLICITAR VISITA  -->
-    <div id="modalVisita" class="modal-overlay">
-      <div class="modal">
-        <h3 class="modal-title">📅 Solicitar visita</h3>
-        <p class="modal-subtitle">
-          Rellena los datos para concertar una visita para ver el vehículo en
-          persona.
+    <!-- Columna derecha — precio y acciones -->
+    <div>
+      <div class="detail-price-card anim-up delay-2">
+        <div class="detail-price-label">Precio</div>
+        <div class="detail-price-val" id="detailPrice">—</div>
+        <div class="detail-price-iva">IVA incluido</div>
+
+        <div class="detail-actions">
+          <!-- Botón comprar (va a pasarela de pago) -->
+          <button id="btnComprar" class="btn btn-primary btn-full btn-lg">
+            <i class="fa-regular fa-credit-card"></i> Ir a pagar
+          </button>
+
+          <!-- Botón realizar compra directa -->
+          <button id="btnRealizarCompra" class="btn btn-success btn-full">
+            <i class="fa-solid fa-check"></i> Realizar compra
+          </button>
+
+          <!-- Botón solicitar visita -->
+          <button id="btnSolicitarVisita" class="btn btn-outline btn-full">
+            <i class="fa-regular fa-calendar-days"></i> Solicitar visita
+          </button>
+        </div>
+
+        <p style="font-size:.72rem;color:var(--text3);text-align:center;margin-top:1rem;line-height:1.6">
+          <i class="fa-solid fa-lock"></i> Transacción segura &nbsp;·&nbsp; <i class="fa-solid fa-shield-halved"></i> Datos protegidos
         </p>
-        <form id="formVisita" novalidate>
-          <div class="form-group">
-            <label class="form-label"
-              >Nombre del asistente <span>*</span></label
-            >
-            <div class="input-wrap">
-              <span class="input-icon">👤</span
-              ><input
-                type="text"
-                id="visitaNombre"
-                class="form-input"
-                placeholder="Tu nombre completo"
-              />
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label"
-              >Teléfono de contacto <span>*</span></label
-            >
-            <div class="input-wrap">
-              <span class="input-icon">📱</span
-              ><input
-                type="tel"
-                id="visitaTelefono"
-                class="form-input"
-                placeholder="+34 600 000 000"
-              />
-            </div>
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem">
-            <div class="form-group">
-              <label class="form-label">Fecha <span>*</span></label>
-              <input type="date" id="visitaFecha" class="form-input no-icon" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Hora <span>*</span></label>
-              <input
-                type="time"
-                id="visitaHora"
-                class="form-input no-icon"
-                min="09:00"
-                max="20:00"
-              />
-            </div>
-          </div>
-          <div
-            style="
-              background: var(--primary-lt);
-              border-radius: var(--r-sm);
-              padding: 0.875rem;
-              margin-bottom: 1.25rem;
-              font-size: 0.8rem;
-              color: var(--primary);
-            "
-          >
-            ℹ️ Nos pondremos en contacto contigo para confirmar la
-            disponibilidad.
-          </div>
-          <div style="display: flex; gap: 0.75rem">
-            <button
-              type="button"
-              class="btn btn-secondary btn-full"
-              onclick="closeModal('modalVisita')"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              id="btnSubmitVisita"
-              class="btn btn-primary btn-full"
-            >
-              📅 Solicitar
-            </button>
-          </div>
-        </form>
       </div>
     </div>
+  </div>
 
-    <!--  MODAL VISITA CONFIRMADA  -->
-    <div id="modalVisitaConfirmada" class="modal-overlay">
-      <div class="modal" style="text-align: center">
-        <div
-          style="
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            animation: float 2s ease infinite;
-          "
-        >
-          ✅
+</main>
+
+<!--  MODAL CONFIRMAR COMPRA  -->
+<div id="modalConfirmarCompra" class="modal-overlay">
+  <div class="modal">
+    <div style="text-align:center;margin-bottom:1.5rem">
+      <div style="margin-bottom:.75rem"><i class="fa-solid fa-cart-shopping" style="font-size:3rem;color:var(--primary)"></i></div>
+      <h3 class="modal-title">Confirmar compra</h3>
+      <p class="modal-subtitle">¿Estás seguro de que quieres comprar este vehículo? Una vez confirmado, quedará reservado a tu nombre.</p>
+    </div>
+    <div style="background:var(--bg3);border-radius:var(--r-sm);padding:1rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;font-size:.9rem">
+      <span style="color:var(--text2)">Total a pagar</span>
+      <strong id="detailPrice" style="color:var(--primary);font-size:1.1rem"></strong>
+    </div>
+    <div style="display:flex;gap:.75rem">
+      <button class="btn btn-secondary btn-full" onclick="closeModal('modalConfirmarCompra')">Cancelar</button>
+      <button id="btnConfirmarCompra" class="btn btn-success btn-full"><i class="fa-solid fa-check"></i> Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!--  MODAL SOLICITAR VISITA  -->
+<div id="modalVisita" class="modal-overlay">
+  <div class="modal">
+    <h3 class="modal-title"><i class="fa-regular fa-calendar-days"></i> Solicitar visita</h3>
+    <p class="modal-subtitle">Rellena los datos para concertar una visita para ver el vehículo en persona.</p>
+    <form id="formVisita" novalidate>
+      <div class="form-group">
+        <label class="form-label">Nombre del asistente <span>*</span></label>
+        <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-user"></i></span><input type="text" id="visitaNombre" class="form-input" placeholder="Tu nombre completo"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Teléfono de contacto <span>*</span></label>
+        <div class="input-wrap"><span class="input-icon"><i class="fa-solid fa-mobile-screen-button"></i></span><input type="tel" id="visitaTelefono" class="form-input" placeholder="+34 600 000 000"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group">
+          <label class="form-label">Fecha <span>*</span></label>
+          <input type="date" id="visitaFecha" class="form-input no-icon"> 
         </div>
-        <h3 class="modal-title">¡Solicitud enviada!</h3>
-        <p class="modal-subtitle" style="margin-bottom: 1.5rem">
-          Hemos recibido tu solicitud. En breve nos pondremos en contacto
-          contigo para confirmar los detalles de la visita. Revisa tu correo
-          electrónico.
-        </p>
-        <button
-          class="btn btn-primary btn-full"
-          onclick="closeModal('modalVisitaConfirmada')"
-        >
-          Entendido
-        </button>
+        <div class="form-group">
+          <label class="form-label">Hora <span>*</span></label>
+          <input type="time" id="visitaHora" class="form-input no-icon" min="09:00" max="20:00">
+        </div>
       </div>
-    </div>
+      <div style="background:var(--primary-lt);border-radius:var(--r-sm);padding:.875rem;margin-bottom:1.25rem;font-size:.8rem;color:var(--primary)">
+        ℹ️ Nos pondremos en contacto contigo para confirmar la disponibilidad.
+      </div>
+      <div style="display:flex;gap:.75rem">
+        <button type="button" class="btn btn-secondary btn-full" onclick="closeModal('modalVisita')">Cancelar</button>
+        <button type="submit" id="btnSubmitVisita" class="btn btn-primary btn-full"><i class="fa-regular fa-calendar-plus"></i> Solicitar</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-    <!-- Lightbox -->
-    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
-      <img id="lightboxImg" src="" alt="Imagen ampliada" />
-      <div class="lightbox-close" onclick="closeLightbox()">✕</div>
-    </div>
+<!--  MODAL VISITA CONFIRMADA  -->
+<div id="modalVisitaConfirmada" class="modal-overlay">
+  <div class="modal" style="text-align:center">
+    <div style="margin-bottom:1rem;animation:float 2s ease infinite"><i class="fa-solid fa-circle-check" style="font-size:3.5rem;color:var(--success)"></i></div>
+    <h3 class="modal-title">¡Solicitud enviada!</h3>
+    <p class="modal-subtitle" style="margin-bottom:1.5rem">
+      Hemos recibido tu solicitud. En breve nos pondremos en contacto contigo para confirmar los detalles de la visita. Revisa tu correo electrónico.
+    </p>
+    <button class="btn btn-primary btn-full" onclick="closeModal('modalVisitaConfirmada')">Entendido</button>
+  </div>
+</div>
 
-    <div id="toastContainer" class="toast-container"></div>
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="Imagen ampliada">
+  <div class="lightbox-close" onclick="closeLightbox()"><i class="fa-solid fa-xmark"></i></div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script src="../js/config.js"></script>
-    <script src="../js/ui.js"></script>
-    <script src="../js/detalle.js"></script>
-  </body>
+<div id="toastContainer" class="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/ui.js"></script>
+<script src="../js/detalle.js"></script>
+</body>
 </html>

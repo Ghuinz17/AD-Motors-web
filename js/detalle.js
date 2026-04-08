@@ -1,3 +1,5 @@
+// Galería, compra, solicitud de visita
+
 let vehiculo   = null;
 let imagenes   = [];
 let currentImg = 0;
@@ -55,15 +57,15 @@ function renderPage() {
 
   // Specs
   const specs = [
-    { icon: '📅', label: 'Año',         value: vehiculo.ano_fabricacion },
-    { icon: '🏎️', label: 'Kilometraje', value: vehiculo.kilometraje?.toLocaleString('es-ES') + ' km' },
-    { icon: '⛽', label: 'Combustible', value: vehiculo.tipo_combustible },
-    { icon: '🎨', label: 'Color',       value: vehiculo.color || '—' },
+    { icon: 'fa-calendar',    label: 'Año',         value: vehiculo.ano_fabricacion },
+    { icon: 'fa-gauge-high',  label: 'Kilometraje', value: vehiculo.kilometraje?.toLocaleString('es-ES') + ' km' },
+    { icon: 'fa-gas-pump',    label: 'Combustible', value: vehiculo.tipo_combustible },
+    { icon: 'fa-palette',     label: 'Color',       value: vehiculo.color || '—' },
   ];
   const specsCont = document.getElementById('specsList');
   if (specsCont) specsCont.innerHTML = specs.map(s => `
     <div class="spec-row">
-      <div class="spec-label"><span>${s.icon}</span>${s.label}</div>
+      <div class="spec-label"><i class="fa-solid fa-${s.icon}"></i>${s.label}</div>
       <div class="spec-value">${s.value}</div>
     </div>`).join('');
 
@@ -238,20 +240,17 @@ async function handleSubmitVisita(e) {
     const fechaFormateada = new Date(fecha).toLocaleDateString('es-ES', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
     const now = new Date().toLocaleString('es-ES');
 
-    // Email al cliente
+    // Un solo envío con todos los datos — la plantilla incluye both recipients
+    // Se envía con reply_to del cliente para que el admin pueda responder directamente
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_VISITA_CLIENTE, {
-      nombre, vehiculo: vehiculo.marca_modelo,
-      fecha: fechaFormateada, hora,
-      telefono: tel, to_email: currentUser.email,
-    });
-
-    // Email al admin
-    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_VISITA_ADMIN, {
-      nombre, telefono: tel,
-      vehiculo: vehiculo.marca_modelo,
-      fecha: fechaFormateada, hora,
+      nombre,
+      vehiculo:        vehiculo.marca_modelo,
+      fecha:           fechaFormateada,
+      hora,
+      telefono:        tel,
+      to_email:        currentUser.email,   // correo del cliente
+      admin_email:     ADMIN_EMAIL,          // correo del admin (añadir en la plantilla como CC o segundo destinatario)
       fecha_solicitud: now,
-      to_email: ADMIN_EMAIL,
     });
 
     closeModal('modalVisita');
