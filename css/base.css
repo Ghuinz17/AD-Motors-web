@@ -418,9 +418,18 @@ ul {
 .form-input::placeholder {
   color: var(--text3);
 }
+/* Error tiene prioridad sobre focus */
 .form-input.error {
-  border-color: var(--danger);
+  border-color: var(--danger) !important;
   animation: shake 0.4s ease;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12) !important;
+}
+.form-input.error:focus {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+.input-wrap:focus-within .form-input.error {
+  border-color: var(--danger) !important;
 }
 .form-input.valid {
   border-color: var(--success);

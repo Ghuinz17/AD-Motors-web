@@ -31,26 +31,33 @@ function renderPwStrength(val) {
 function showError(id, msg) {
   const input = document.getElementById(id);
   const err   = document.getElementById(id + 'Error');
+  const icon  = input?.closest('.input-wrap')?.querySelector('.input-icon');
 
   if (input) {
-    // Quitar y volver a añadir la clase para que la animación shake se reinicie
     input.classList.remove('error');
-    void input.offsetWidth; // fuerza reflow
+    void input.offsetWidth; // reinicia animación shake
     input.classList.add('error');
   }
-
-  if (err) {
-    err.textContent = msg;
-    err.classList.add('show');
-  }
+  if (icon) icon.style.color = 'var(--danger)';
+  if (err)  { err.textContent = msg; err.classList.add('show'); }
 }
+
 function clearError(id) {
-  document.getElementById(id)?.classList.remove('error');
-  document.getElementById(id+'Error')?.classList.remove('show');
+  const input = document.getElementById(id);
+  const err   = document.getElementById(id + 'Error');
+  const icon  = input?.closest('.input-wrap')?.querySelector('.input-icon');
+
+  input?.classList.remove('error');
+  if (icon) icon.style.color = '';
+  err?.classList.remove('show');
 }
 function clearAllErrors() {
-  document.querySelectorAll('.form-input').forEach(i=>i.classList.remove('error'));
-  document.querySelectorAll('.form-error').forEach(e=>e.classList.remove('show'));
+  document.querySelectorAll('.form-input').forEach(i => {
+    i.classList.remove('error');
+    const icon = i.closest('.input-wrap')?.querySelector('.input-icon');
+    if (icon) icon.style.color = '';
+  });
+  document.querySelectorAll('.form-error').forEach(e => e.classList.remove('show'));
 }
 
 let currentMode = 'login';
