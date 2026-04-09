@@ -48,7 +48,7 @@ async function loadPedidos(userId) {
     .order('fecha', { ascending: false });
 
   if (error || !data?.length) {
-    cont.innerHTML = emptyState('📦', 'Sin pedidos', 'Aquí aparecerán tus compras realizadas'); return;
+    cont.innerHTML = emptyState('<i class="fa-solid fa-box"></i>', 'Sin pedidos', 'Aquí aparecerán tus compras realizadas'); return;
   }
 
   cont.innerHTML = data.map(p => {
@@ -82,7 +82,7 @@ async function loadSolicitudes(userId) {
     .order('fecha_creacion', { ascending: false });
 
   if (error || !data?.length) {
-    cont.innerHTML = emptyState('📅', 'Sin solicitudes', 'Aquí aparecerán tus solicitudes de visita'); return;
+    cont.innerHTML = emptyState('<i class="fa-regular fa-calendar-days"></i>', 'Sin solicitudes', 'Aquí aparecerán tus solicitudes de visita'); return;
   }
 
   cont.innerHTML = data.map(s => {
@@ -120,7 +120,7 @@ function getEstadoBadge(estado) {
 
 function emptyState(icon, title, sub) {
   return `<div class="no-results" style="padding:2.5rem 1rem">
-    <div class="no-results-icon">${icon}</div>
+    <div class="no-results-icon" style="font-size:2.5rem;color:var(--primary)">${icon}</div>
     <div class="no-results-title">${title}</div>
     <div class="no-results-sub">${sub}</div>
   </div>`;
@@ -140,7 +140,7 @@ async function handleUpdatePerfil(e) {
     const { data: { user } } = await db.auth.getUser();
     await db.from('usuario').update({ nombre, phone: tel }).eq('id_usuario', user.id);
     setValue('profileName', nombre);
-    showToast('Perfil actualizado ✅', 'success');
+    showToast('Perfil actualizado', 'success');
   } catch { showToast('Error al actualizar', 'error'); }
   finally  { setLoading(btn, false); }
 }
@@ -179,7 +179,7 @@ async function handleUpdatePassword(e) {
     if (error) throw error;
     document.getElementById('settingPassword').value  = '';
     document.getElementById('settingPassword2').value = '';
-    showToast('Contraseña actualizada ✅', 'success');
+    showToast('Contraseña actualizada', 'success');
   } catch(err) { showToast('Error: ' + err.message, 'error'); }
   finally      { setLoading(btn, false); }
 }
@@ -193,12 +193,17 @@ async function handleDeleteAccount() {
   setLoading(btn, true);
   try {
     const { data: { user } } = await db.auth.getUser();
+    // 1. Borrar de tabla usuario → el trigger borra también de auth.users
     await db.from('usuario').delete().eq('id_usuario', user.id);
+    // 2. Cerrar sesión localmente
     await db.auth.signOut();
     showToast('Cuenta eliminada correctamente', 'info');
     setTimeout(() => window.location.href = '../index.html', 1500);
-  } catch(err) { showToast('Error al eliminar: ' + err.message, 'error'); }
-  finally      { setLoading(btn, false); }
+  } catch(err) {
+    showToast('Error al eliminar: ' + err.message, 'error');
+  } finally {
+    setLoading(btn, false);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
