@@ -1,4 +1,4 @@
-// Galería, compra, solicitud de visita
+//Galería, compra, solicitud de visita
 
 let vehiculo   = null;
 let imagenes   = [];
@@ -171,14 +171,21 @@ async function confirmarCompra() {
     // 3. Marcar vehículo como reservado
     await db.from('vehiculo').update({ reservado: true, fecha_reserva: new Date().toISOString() }).eq('id_vehiculo', vehiculoId);
 
-    // 4. Enviar email de confirmación
+    // 4. Enviar email de confirmación de compra
     const { data: userData } = await db.from('usuario').select('nombre, email').eq('id_usuario', currentUser.id).single();
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_COMPRA, {
-      nombre:    userData?.nombre || currentUser.email,
-      vehiculo:  vehiculo.marca_modelo,
-      precio:    vehiculo.precio?.toLocaleString('es-ES') + ' €',
-      id_compra: compraData.id_compra,
-      to_email:  currentUser.email,
+      to_email:      currentUser.email,
+      nombre:        userData?.nombre || currentUser.email,
+      vehiculo:      vehiculo.marca_modelo,
+      icono:         '✓',
+      titulo:        '¡Compra confirmada!',
+      subtitulo:     'Gracias por confiar en AD Motors',
+      mensaje:       'Hemos registrado tu compra correctamente. Nuestro equipo revisará tu pedido en las próximas 24h y se pondrá en contacto contigo para coordinar la entrega.',
+      campo1_label:  'Número de pedido',
+      campo1_valor:  compraData.id_compra?.slice(0,8).toUpperCase(),
+      campo2_label:  'Precio total',
+      campo2_valor:  vehiculo.precio?.toLocaleString('es-ES') + ' €',
+      nota_final:    'Si tienes alguna pregunta no dudes en contactarnos respondiendo a este correo.',
     });
 
     closeModal('modalConfirmarCompra');
@@ -213,16 +220,85 @@ async function handleSolicitarVisita() {
   if (fechaInp) fechaInp.min = minDate.toISOString().split('T')[0];
 
   openModal('modalVisita');
+  clearAllFieldErrors();
+}
+
+// --- Helpers de validación para el modal de visita ---
+function showFieldError(inputId, msg) {
+  const input = document.getElementById(inputId);
+  const icon  = input?.closest('.input-wrap')?.querySelector('.input-icon');
+  if (input) {
+    input.classList.remove('error');
+    void input.offsetWidth;
+    input.classList.add('error');
+    input.style.setProperty('border-color', '#ef4444', 'important');
+    input.style.setProperty('box-shadow',   '0 0 0 3px rgba(239,68,68,.18)', 'important');
+    input.style.setProperty('background',   'rgba(239,68,68,.04)', 'important');
+  }
+  if (icon) icon.style.color = '#ef4444';
+  // Añadir o actualizar mensaje de error debajo del campo
+  let errEl = document.getElementById(inputId + 'VisitaError');
+  if (!errEl) {
+    errEl = document.createElement('div');
+    errEl.id = inputId + 'VisitaError';
+    errEl.style.cssText = 'font-size:.76rem;color:#ef4444;margin-top:.3rem';
+    input?.parentElement?.insertAdjacentElement('afterend', errEl);
+  }
+  errEl.textContent = msg;
+}
+
+function clearFieldError(inputId) {
+  const input = document.getElementById(inputId);
+  const icon  = input?.closest('.input-wrap')?.querySelector('.input-icon');
+  if (input) {
+    input.classList.remove('error');
+    input.style.removeProperty('border-color');
+    input.style.removeProperty('box-shadow');
+    input.style.removeProperty('background');
+  }
+  if (icon) icon.style.color = '';
+  const errEl = document.getElementById(inputId + 'VisitaError');
+  if (errEl) errEl.textContent = '';
+}
+
+function clearAllFieldErrors() {
+  ['visitaNombre','visitaTelefono','visitaFecha','visitaHora'].forEach(clearFieldError);
 }
 
 async function handleSubmitVisita(e) {
   e.preventDefault();
+  clearAllFieldErrors();
+
   const nombre = document.getElementById('visitaNombre')?.value.trim();
   const tel    = document.getElementById('visitaTelefono')?.value.trim();
   const fecha  = document.getElementById('visitaFecha')?.value;
   const hora   = document.getElementById('visitaHora')?.value;
 
-  if (!nombre || !tel || !fecha || !hora) { showToast('Rellena todos los campos', 'error'); return; }
+  // Validar todos los campos y marcar en rojo los que fallen
+  let ok = true;
+  if (!nombre || nombre.length < 2) {
+    showFieldError('visitaNombre', 'Introduce el nombre del asistente'); ok = false;
+  }
+  if (!tel || !/^[0-9+\s]{9,15}$/.test(tel)) {
+    showFieldError('visitaTelefono', 'Introduce un teléfono válido'); ok = false;
+  }
+  if (!fecha) {
+    showFieldError('visitaFecha', 'Selecciona una fecha'); ok = false;
+  }
+  if (!hora) {
+    showFieldError('visitaHora', 'Selecciona una hora'); ok = false;
+  }
+  if (!ok) return;
+
+  // Limpiar errores si todo OK y lanzar inputs en verde
+  ['visitaNombre','visitaTelefono','visitaFecha','visitaHora'].forEach(id => {
+    const input = document.getElementById(id);
+    if (input) {
+      input.style.setProperty('border-color', 'var(--success)', 'important');
+      input.style.removeProperty('box-shadow');
+      input.style.removeProperty('background');
+    }
+  });
 
   const btn = document.getElementById('btnSubmitVisita');
   setLoading(btn, true);
@@ -240,16 +316,21 @@ async function handleSubmitVisita(e) {
     const fechaFormateada = new Date(fecha).toLocaleDateString('es-ES', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
     const now = new Date().toLocaleString('es-ES');
 
-    // Un solo envío con todos los datos — la plantilla incluye both recipients
-    // Se envía con reply_to del cliente para que el admin pueda responder directamente
+    // Plantilla unificada con variables dinámicas
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_VISITA_CLIENTE, {
+      to_email:       currentUser.email,
+      admin_email:    ADMIN_EMAIL,
       nombre,
-      vehiculo:        vehiculo.marca_modelo,
-      fecha:           fechaFormateada,
-      hora,
-      telefono:        tel,
-      to_email:        currentUser.email,   // correo del cliente
-      admin_email:     ADMIN_EMAIL,          // correo del admin (añadir en la plantilla como CC o segundo destinatario)
+      vehiculo:       vehiculo.marca_modelo,
+      icono:          '📅',
+      titulo:         'Solicitud de visita registrada',
+      subtitulo:      'Te contactaremos para confirmar',
+      mensaje:        `Hemos recibido tu solicitud para ver el vehículo en persona. Nos pondremos en contacto contigo a la mayor brevedad posible para confirmar los detalles.`,
+      campo1_label:   'Fecha solicitada',
+      campo1_valor:   fechaFormateada,
+      campo2_label:   'Hora solicitada',
+      campo2_valor:   hora,
+      nota_final:     `Teléfono de contacto: ${tel}. Si necesitas modificar la visita responde a este correo.`,
       fecha_solicitud: now,
     });
 
