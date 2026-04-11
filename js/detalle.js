@@ -1,4 +1,4 @@
-//Galería, compra, solicitud de visita
+// Galería, compra, solicitud de visita
 
 let vehiculo = null;
 let imagenes = [];
@@ -51,17 +51,17 @@ async function loadVehiculo() {
 
 function renderPage() {
   // Título
-  document.title = `${vehiculo.marca_modelo} — AD Motors`;
+  document.title = `${`${vehiculo.marca} ${vehiculo.modelo}`} — AD Motors`;
 
   // Breadcrumb
   const bc = document.getElementById("breadcrumbName");
-  if (bc) bc.textContent = vehiculo.marca_modelo;
+  if (bc) bc.textContent = `${vehiculo.marca} ${vehiculo.modelo}`;
 
   // Galería
   renderGallery();
 
   // Info
-  setValue("detailName", vehiculo.marca_modelo);
+  setValue("detailName", `${vehiculo.marca} ${vehiculo.modelo}`);
   setValue("detailYear", vehiculo.ano_fabricacion);
   setValue("detailPrice", vehiculo.precio?.toLocaleString("es-ES") + " €");
   setValue(
@@ -209,7 +209,7 @@ async function confirmarCompra() {
   const btn = document.getElementById("btnConfirmarCompra");
   setLoading(btn, true);
   try {
-    // 1. Crear compra
+    // Crear compra
     const { data: compraData, error: compraError } = await db
       .from("compra")
       .insert([
@@ -224,7 +224,7 @@ async function confirmarCompra() {
       .single();
     if (compraError) throw compraError;
 
-    // 2. Crear detalle
+    // Crear detalle
     await db.from("detallecompra").insert([
       {
         id_compra: compraData.id_compra,
@@ -234,13 +234,13 @@ async function confirmarCompra() {
       },
     ]);
 
-    // 3. Marcar vehículo como reservado
+    // Marcar vehículo como reservado
     await db
       .from("vehiculo")
       .update({ reservado: true, fecha_reserva: new Date().toISOString() })
       .eq("id_vehiculo", vehiculoId);
 
-    // 4. Enviar email de confirmación de compra
+    // Enviar email de confirmación de compra
     const { data: userData } = await db
       .from("usuario")
       .select("nombre, email")
@@ -249,7 +249,7 @@ async function confirmarCompra() {
     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_COMPRA, {
       to_email: currentUser.email,
       nombre: userData?.nombre || currentUser.email,
-      vehiculo: vehiculo.marca_modelo,
+      vehiculo: `${vehiculo.marca} ${vehiculo.modelo}`,
       icono: "✓",
       titulo: "¡Reserva confirmada!",
       subtitulo: "Gracias por confiar en AD Motor's",
@@ -269,7 +269,7 @@ async function confirmarCompra() {
     });
 
     closeModal("modalConfirmarCompra");
-    showToast("¡Compra realizada! Revisa tu correo 📧", "success");
+    showToast("¡Compra realizada! Revisa tu correo", "success");
     setTimeout(() => (window.location.href = "../index.html"), 2500);
   } catch (err) {
     showToast("Error al procesar la compra: " + err.message, "error");
@@ -408,7 +408,8 @@ async function handleSubmitVisita(e) {
     await db.from("solicitudes_revision").insert([
       {
         id_vehiculo: vehiculoId,
-        marca_modelo: vehiculo.marca_modelo,
+        marca: vehiculo.marca,
+        modelo: vehiculo.modelo,
         nombre_asistente: nombre,
         telefono: tel,
         fecha_visita: fecha,
@@ -429,7 +430,7 @@ async function handleSubmitVisita(e) {
       to_email: currentUser.email,
       admin_email: ADMIN_EMAIL,
       nombre,
-      vehiculo: vehiculo.marca_modelo,
+      vehiculo: `${vehiculo.marca} ${vehiculo.modelo}`,
       icono: "📅",
       titulo: "Solicitud de visita registrada",
       subtitulo: "Te contactaremos para confirmar",
