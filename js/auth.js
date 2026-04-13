@@ -22,6 +22,7 @@ const COMMON_DOMAINS = [
   "outlook.es",
   "yahoo.es",
   "gmail.es",
+  "g.educaand.es"
 ];
 
 function checkEmailTypo(email) {
@@ -235,7 +236,7 @@ async function handleRegister(e) {
         .upsert({ id_usuario: data.user.id, nombre, email, phone: tel });
     }
     showOtpStep();
-    showToast("Código enviado a tu correo 📧", "success");
+    showToast("Código enviado a tu correo", "success");
   } catch (err) {
     if (err.message?.includes("already registered"))
       showError("regEmail", "Este email ya está registrado");
@@ -255,7 +256,7 @@ async function handleLogin(e) {
   try {
     const { error } = await db.auth.signInWithPassword({ email, password: pw });
     if (error) throw error;
-    showToast("¡Bienvenido de vuelta! ✅", "success");
+    showToast("¡Bienvenido de vuelta!", "success");
     setTimeout(() => {
       const r = new URLSearchParams(window.location.search).get("redirect");
       window.location.href = r || "../index.html";
@@ -330,7 +331,7 @@ async function handleVerifyOtp(e) {
       type: "email",
     });
     if (error) throw error;
-    showToast("¡Verificación completada! ✅", "success");
+    showToast("¡Verificación completada!", "success");
     setTimeout(() => {
       const r = new URLSearchParams(window.location.search).get("redirect");
       window.location.href = r || "../index.html";
@@ -352,7 +353,7 @@ async function handleResendOtp() {
   btn.disabled = true;
   try {
     await db.auth.resend({ type: "signup", email: pendingEmail });
-    showToast("Código reenviado 📧", "success");
+    showToast("Código reenviado", "success");
     let s = 60;
     btn.textContent = `Reenviar (${s}s)`;
     const iv = setInterval(() => {
