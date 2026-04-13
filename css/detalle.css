@@ -273,3 +273,34 @@
     padding: 0.75rem 0;
   }
 }
+
+/* --- Métodos de pago --- */
+.pay-method {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 0.5rem;
+  border-radius: var(--r-sm);
+  border: 2px solid var(--border);
+  background: var(--bg3);
+  cursor: pointer;
+  transition: var(--t);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text2);
+}
+.pay-method i {
+  font-size: 1.4rem;
+}
+.pay-method:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-lt);
+}
+.pay-method.active {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-lt);
+}

@@ -73,8 +73,8 @@ async function loadPedidos(userId) {
   if (error || !data?.length) {
     cont.innerHTML = emptyState(
       '<i class="fa-solid fa-box"></i>',
-      "Sin pedidos",
-      "Aquí aparecerán tus compras realizadas",
+      "No se ha realizado ningún pedido",
+      "Cuando reserves un vehículo aparecerá aquí",
     );
     return;
   }
@@ -117,8 +117,8 @@ async function loadSolicitudes(userId) {
   if (error || !data?.length) {
     cont.innerHTML = emptyState(
       '<i class="fa-regular fa-calendar-days"></i>',
-      "Sin solicitudes",
-      "Aquí aparecerán tus solicitudes de visita",
+      "No se ha realizado ninguna solicitud",
+      "Cuando solicites ver un vehículo en persona aparecerá aquí",
     );
     return;
   }
@@ -199,3 +199,122 @@ async function handleUpdatePerfil(e) {
     setLoading(btn, false);
   }
 }
+
+// ---- CAMBIAR EMAIL ----
+async function handleUpdateEmail(e) {
+  e.preventDefault();
+  const btn = document.getElementById("btnUpdateEmail");
+  const email = document.getElementById("settingEmail")?.value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showToast("Email no válido", "error");
+    return;
+  }
+  setLoading(btn, true);
+  try {
+    const { error } = await db.auth.updateUser({ email });
+    if (error) throw error;
+    showToast(
+      "Se ha enviado un enlace de confirmación al nuevo email 📧",
+      "success",
+    );
+  } catch (err) {
+    showToast("Error: " + err.message, "error");
+  } finally {
+    setLoading(btn, false);
+  }
+}
+
+// ---- CAMBIAR CONTRASEÑA ----
+async function handleUpdatePassword(e) {
+  e.preventDefault();
+  const btn = document.getElementById("btnUpdatePassword");
+  const pw = document.getElementById("settingPassword")?.value;
+  const pw2 = document.getElementById("settingPassword2")?.value;
+
+  if (!pw || pw.length < 8) {
+    showToast("La contraseña debe tener al menos 8 caracteres", "error");
+    return;
+  }
+  if (
+    !/[A-Z]/.test(pw) ||
+    !/[a-z]/.test(pw) ||
+    !/\d/.test(pw) ||
+    !/[!@#$%^&*]/.test(pw)
+  ) {
+    showToast("La contraseña no cumple los requisitos de seguridad", "error");
+    return;
+  }
+  if (pw !== pw2) {
+    showToast("Las contraseñas no coinciden", "error");
+    return;
+  }
+
+  setLoading(btn, true);
+  try {
+    const { error } = await db.auth.updateUser({ password: pw });
+    if (error) throw error;
+    document.getElementById("settingPassword").value = "";
+    document.getElementById("settingPassword2").value = "";
+    showToast("Contraseña actualizada", "success");
+  } catch (err) {
+    showToast("Error: " + err.message, "error");
+  } finally {
+    setLoading(btn, false);
+  }
+}
+
+// ---- ELIMINAR CUENTA ----
+async function handleDeleteAccount() {
+  const confirmText = document
+    .getElementById("deleteConfirmInput")
+    ?.value.trim();
+  if (confirmText !== "ELIMINAR") {
+    showToast("Escribe ELIMINAR para confirmar", "error");
+    return;
+  }
+
+  const btn = document.getElementById("btnDeleteConfirm");
+  setLoading(btn, true);
+  try {
+    const {
+      data: { user },
+    } = await db.auth.getUser();
+    // 1. Borrar de tabla usuario → el trigger borra también de auth.users
+    await db.from("usuario").delete().eq("id_usuario", user.id);
+    // 2. Cerrar sesión localmente
+    await db.auth.signOut();
+    showToast("Cuenta eliminada correctamente", "info");
+    setTimeout(() => (window.location.href = "../index.html"), 1500);
+  } catch (err) {
+    showToast("Error al eliminar: " + err.message, "error");
+  } finally {
+    setLoading(btn, false);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  initPerfil();
+
+  document.querySelectorAll(".profile-tab").forEach((tab) => {
+    tab.addEventListener("click", () => switchTab(tab.dataset.tab));
+  });
+
+  document
+    .getElementById("formUpdatePerfil")
+    ?.addEventListener("submit", handleUpdatePerfil);
+  document
+    .getElementById("formUpdateEmail")
+    ?.addEventListener("submit", handleUpdateEmail);
+  document
+    .getElementById("formUpdatePassword")
+    ?.addEventListener("submit", handleUpdatePassword);
+  document
+    .getElementById("btnDeleteAccount")
+    ?.addEventListener("click", () => openModal("modalDeleteAccount"));
+  document
+    .getElementById("btnDeleteConfirm")
+    ?.addEventListener("click", handleDeleteAccount);
+  document
+    .getElementById("btnCancelDelete")
+    ?.addEventListener("click", () => closeModal("modalDeleteAccount"));
+});
