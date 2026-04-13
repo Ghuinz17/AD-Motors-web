@@ -8,10 +8,10 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const EMAILJS_PUBLIC_KEY            = 'UM986XzXpgyzXW_vs';
 const EMAILJS_SERVICE_ID            = 'service\_afa48tb ';
 
-// Plantilla 1 — Confirmación de reserva (se envía al cliente al reservar)
+// Confirmación de reserva (se envía al cliente al reservar)
 const EMAILJS_TEMPLATE_COMPRA     = 'template_ge0ovyp';
 
-// Plantilla 2 — Solicitud de visita (se envía al cliente + CC al admin)
+//Solicitud de visita (se envía al cliente + CC al admin)
 const EMAILJS_TEMPLATE_VISITA_CLIENTE = 'template_du605di';
 
 // Email del administrador (recibe copia de las solicitudes de visita)

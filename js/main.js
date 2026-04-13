@@ -42,8 +42,9 @@ function applyFilters() {
 
   let filtered = allVehiculos.filter((v) => {
     if (v.reservado) return false;
-    if (search && !`${v.marca} ${v.modelo}`?.toLowerCase().includes(search))
-      return false;
+    const vNombre =
+      v.marca && v.modelo ? `${v.marca} ${v.modelo}` : v.marca_modelo || "";
+    if (search && !vNombre.toLowerCase().includes(search)) return false;
     if (combustible && v.tipo_combustible !== combustible) return false;
     if (color && !v.color?.toLowerCase().includes(color)) return false;
     if (anoMin && v.ano_fabricacion < anoMin) return false;
@@ -103,10 +104,14 @@ function renderVehiculos(list) {
     .map((v, i) => {
       const img = getImageUrl(v);
       const badge = getCombustibleBadge(v.tipo_combustible);
+      const nombre =
+        v.marca && v.modelo
+          ? `${v.marca} ${v.modelo}`
+          : v.marca_modelo || "Vehículo";
       return `
       <article class="vehicle-card" style="animation-delay:${i * 0.06}s" onclick="goToDetail('${v.id_vehiculo}')">
         <div class="vehicle-img-wrap">
-          <img src="${img}" alt="${`${v.marca} ${v.modelo}`}" loading="lazy"
+          <img src="${img}" alt="${nombre}" loading="lazy"
                onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'200\\'><rect fill=\\'%23242424\\' width=\\'300\\' height=\\'200\\'/><text fill=\\'%23555\\' font-size=\\'14\\' x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\'>Sin imagen</text></svg>'">
           <div class="vehicle-badge">
             <span class="badge ${badge.cls}">${badge.label}</span>
@@ -115,7 +120,7 @@ function renderVehiculos(list) {
         <div class="vehicle-body">
           <div style="display:flex;justify-content:space-between;align-items:flex-start">
             <div>
-              <div class="vehicle-name">${`${v.marca} ${v.modelo}`}</div>
+              <div class="vehicle-name">${nombre}</div>
               <div class="vehicle-year">${v.ano_fabricacion}</div>
             </div>
             ${v.color ? `<span style="font-size:.76rem;background:var(--bg3);padding:2px 8px;border-radius:20px;color:var(--text2)">${v.color}</span>` : ""}

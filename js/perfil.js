@@ -279,9 +279,9 @@ async function handleDeleteAccount() {
     const {
       data: { user },
     } = await db.auth.getUser();
-    // 1. Borrar de tabla usuario → el trigger borra también de auth.users
+    // Borrar de tabla usuario → el trigger borra también de auth.users
     await db.from("usuario").delete().eq("id_usuario", user.id);
-    // 2. Cerrar sesión localmente
+    // Cerrar sesión localmente
     await db.auth.signOut();
     showToast("Cuenta eliminada correctamente", "info");
     setTimeout(() => (window.location.href = "../index.html"), 1500);
