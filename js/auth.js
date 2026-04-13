@@ -223,6 +223,7 @@ let pendingTel = "";
 async function handleRegister(e) {
   e.preventDefault();
   if (!validateRegister()) return;
+
   const btn = document.getElementById("btnRegister");
   const nombre = document.getElementById("regNombre").value.trim();
   const email = document.getElementById("regEmail").value.trim();
@@ -232,13 +233,16 @@ async function handleRegister(e) {
   // Guardar para usar tras el OTP
   pendingNombre = nombre;
   pendingTel = tel;
+  pendingEmail = email;
 
   setLoading(btn, true);
   try {
     const { data, error } = await db.auth.signUp({
       email,
       password: pw,
-      options: { data: { nombre, phone: tel } },
+      options: {
+        data: { nombre, phone: tel },
+      },
     });
 
     if (error) {
@@ -249,8 +253,6 @@ async function handleRegister(e) {
       }
       throw error;
     }
-
-    pendingEmail = email;
 
     // Si el usuario ya existía sin confirmar, Supabase devuelve identities vacío
     // En ese caso reenviar el OTP manualmente
@@ -307,37 +309,46 @@ function showOtpStep() {
 
 function initOtpInputs() {
   const inputs = document.querySelectorAll(".otp-input");
+  const btn = document.getElementById("btnVerifyOtp");
+
   inputs.forEach((inp, i) => {
     inp.addEventListener("input", (e) => {
       const val = e.target.value.replace(/\D/g, "");
       e.target.value = val.slice(-1);
+
       if (val && i < inputs.length - 1) inputs[i + 1].focus();
       e.target.classList.toggle("filled", !!val);
-      const full = [...inputs].map((x) => x.value).join("");
-      const btn = document.getElementById("btnVerifyOtp");
-      if (btn) btn.disabled = full.length < 8;
+
+      // Verificación de longitud para habilitar botón
+      const fullCode = [...inputs].map((x) => x.value).join("");
+      if (btn) btn.disabled = fullCode.length !== 8; // Habilitar solo con 8 dígitos
     });
+
     inp.addEventListener("keydown", (e) => {
-      if (e.key === "Backspace" && !inp.value && i > 0) inputs[i - 1].focus();
+      if (e.key === "Backspace" && !inp.value && i > 0) {
+        inputs[i - 1].focus();
+      }
     });
+
     inp.addEventListener("paste", (e) => {
       e.preventDefault();
       const paste = (e.clipboardData || window.clipboardData)
         .getData("text")
         .replace(/\D/g, "")
         .slice(0, 8);
+
       paste.split("").forEach((c, j) => {
         if (inputs[j]) {
           inputs[j].value = c;
           inputs[j].classList.add("filled");
         }
       });
+
       const nextIdx = Math.min(paste.length, inputs.length - 1);
       if (inputs[nextIdx]) inputs[nextIdx].focus();
-      // Comprobar si ya están todos rellenos
-      const full = [...inputs].map((i) => i.value).join("");
-      const btn = document.getElementById("btnVerifyOtp");
-      if (btn) btn.disabled = full.length < 8;
+
+      const fullCode = [...inputs].map((x) => x.value).join("");
+      if (btn) btn.disabled = fullCode.length !== 8;
     });
   });
 }
@@ -347,27 +358,32 @@ async function handleVerifyOtp(e) {
   const code = [...document.querySelectorAll(".otp-input")]
     .map((i) => i.value)
     .join("");
+
   if (code.length < 8) return;
   const btn = document.getElementById("btnVerifyOtp");
   setLoading(btn, true);
+
   try {
     const { data, error } = await db.auth.verifyOtp({
       email: pendingEmail,
       token: code,
       type: "email",
     });
+
     if (error) throw error;
 
-    // Usuario confirmado — guardar en tabla usuario
     const user = data?.user;
     if (user) {
-      const nombre = pendingNombre || user.user_metadata?.nombre || "";
-      const tel = pendingTel || user.user_metadata?.phone || "";
+      // Usamos las variables globales o 
+      const nombreFinal = pendingNombre || user.user_metadata?.nombre || "";
+      const telFinal = pendingTel || user.user_metadata?.phone || "";
+
+      // Inserción en la tabla de base de datos
       await db.from("usuario").upsert({
-        id_usuario: user.id,
-        nombre,
+        id_usuario: user.id, // Sincroniza con el UID de Auth
+        nombre: nombreFinal,
         email: user.email,
-        phone: tel,
+        phone: telFinal,
       });
     }
 
@@ -376,16 +392,59 @@ async function handleVerifyOtp(e) {
       const r = new URLSearchParams(window.location.search).get("redirect");
       window.location.href = r || "../index.html";
     }, 1200);
-  } catch {
+  } catch (err) {
     showToast("Código incorrecto o expirado", "error");
     document.querySelectorAll(".otp-input").forEach((i) => {
       i.value = "";
       i.classList.remove("filled");
     });
     document.querySelector(".otp-input")?.focus();
+    if (btn) btn.disabled = true;
   } finally {
     setLoading(btn, false);
   }
+}
+
+e.preventDefault();
+const code = [...document.querySelectorAll(".otp-input")]
+  .map((i) => i.value)
+  .join("");
+
+if (code.length < 8) return;
+const btn = document.getElementById("btnVerifyOtp");
+setLoading(btn, true);
+
+try {
+  const { data, error } = await db.auth.verifyOtp({
+    email: pendingEmail,
+    token: code,
+    type: "email",
+  });
+
+  if (error) throw error;
+
+  const user = data?.user;
+  if (user) {
+    const nombre = pendingNombre || user.user_metadata?.nombre;
+    const tel = pendingTel || user.user_metadata?.phone;
+
+    const { error: dbError } = await db.from("usuario").upsert({
+      id_usuario: user.id,
+      nombre: nombre,
+      email: user.email,
+      phone: tel,
+    });
+
+    if (dbError) {
+      console.error("Error guardando datos adicionales:", dbError);
+    }
+  }
+
+  showToast("¡Cuenta verificada!", "success");
+} catch (err) {
+  showToast("Código incorrecto o expirado", "error");
+} finally {
+  setLoading(btn, false);
 }
 
 async function handleResendOtp() {
@@ -417,6 +476,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const r = new URLSearchParams(window.location.search).get("redirect");
       window.location.href = r || "../index.html";
     }
+    initOtpInputs();
   });
 
   document
