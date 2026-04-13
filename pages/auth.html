@@ -127,7 +127,9 @@
           <label class="form-label" for="regTelefono">Teléfono <span>*</span></label>
           <div class="input-wrap">
             <span class="input-icon"><i class="fa-solid fa-mobile-screen-button"></i></span>
-            <input type="tel" id="regTelefono" class="form-input" placeholder="+34 600 000 000" autocomplete="tel">
+            <input type="tel" id="regTelefono" class="form-input" placeholder="+34 600 000 000" autocomplete="tel"
+              inputmode="tel" maxlength="15" onkeypress="return soloTelefono(event)"
+              oninput="this.value=this.value.replace(/[^0-9+\s]/g,'')">
           </div>
           <div class="form-error" id="regTelefonoError"></div>
         </div>
@@ -236,6 +238,12 @@
   <script src="../js/config.js"></script>
   <script src="../js/ui.js"></script>
   <script src="../js/auth.js"></script>
+  <script>
+    // Solo permite dígitos, + y espacios en campos de teléfono
+    function soloTelefono(e) {
+      return /[0-9+\s]/.test(String.fromCharCode(e.which || e.keyCode));
+    }
+  </script>
 </body>
 
 </html>

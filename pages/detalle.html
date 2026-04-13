@@ -144,7 +144,7 @@
 
   </main>
 
-  <!--  MODAL CONFIRMAR COMPRA  -->
+  <!-- MODAL CONFIRMAR COMPRA -->
   <div id="modalConfirmarCompra" class="modal-overlay">
     <div class="modal">
       <div style="text-align:center;margin-bottom:1.5rem">
@@ -167,7 +167,7 @@
     </div>
   </div>
 
-  <!--  MODAL SOLICITAR VISITA  -->
+  <!-- MODAL SOLICITAR VISITA -->
   <div id="modalVisita" class="modal-overlay">
     <div class="modal">
       <h3 class="modal-title"><i class="fa-regular fa-calendar-days"></i> Solicitar visita</h3>
@@ -181,7 +181,9 @@
         <div class="form-group">
           <label class="form-label">Teléfono de contacto <span>*</span></label>
           <div class="input-wrap"><span class="input-icon"><i class="fa-solid fa-mobile-screen-button"></i></span><input
-              type="tel" id="visitaTelefono" class="form-input" placeholder="+34 600 000 000"></div>
+              type="tel" id="visitaTelefono" class="form-input" placeholder="+34 600 000 000" inputmode="tel"
+              maxlength="15" onkeypress="return soloTelefono(event)"
+              oninput="this.value=this.value.replace(/[^0-9+\s]/g,'')"></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
           <div class="form-group">
@@ -206,7 +208,7 @@
     </div>
   </div>
 
-  <!--  MODAL VISITA CONFIRMADA  -->
+  <!-- MODAL VISITA CONFIRMADA -->
   <div id="modalVisitaConfirmada" class="modal-overlay">
     <div class="modal" style="text-align:center">
       <div style="margin-bottom:1rem;animation:float 2s ease infinite"><i class="fa-solid fa-circle-check"
