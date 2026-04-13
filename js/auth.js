@@ -304,7 +304,15 @@ function showOtpStep() {
   step?.classList.remove("hidden");
   const span = document.getElementById("otpEmailDisplay");
   if (span) span.textContent = pendingEmail;
-  document.querySelector(".otp-input")?.focus();
+
+  // Limpiar inputs y resetear botón al mostrar el paso OTP
+  const inputs = document.querySelectorAll(".otp-input");
+  inputs.forEach(i => { i.value = ""; i.classList.remove("filled"); });
+  const btn = document.getElementById("btnVerifyOtp");
+  if (btn) btn.disabled = true;
+
+  // Focus en el primer input con pequeño delay para asegurar visibilidad
+  setTimeout(() => inputs[0]?.focus(), 50);
 }
 
 function initOtpInputs() {
@@ -471,12 +479,14 @@ async function handleResendOtp() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Inicializar inputs OTP de forma síncrona, sin esperar auth
+  initOtpInputs();
+
   db.auth.getUser().then(({ data: { user } }) => {
     if (user) {
       const r = new URLSearchParams(window.location.search).get("redirect");
       window.location.href = r || "../index.html";
     }
-    initOtpInputs();
   });
 
   document
