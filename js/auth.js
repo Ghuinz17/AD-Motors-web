@@ -413,48 +413,6 @@ async function handleVerifyOtp(e) {
   }
 }
 
-e.preventDefault();
-const code = [...document.querySelectorAll(".otp-input")]
-  .map((i) => i.value)
-  .join("");
-
-if (code.length < 8) return;
-const btn = document.getElementById("btnVerifyOtp");
-setLoading(btn, true);
-
-try {
-  const { data, error } = await db.auth.verifyOtp({
-    email: pendingEmail,
-    token: code,
-    type: "email",
-  });
-
-  if (error) throw error;
-
-  const user = data?.user;
-  if (user) {
-    const nombre = pendingNombre || user.user_metadata?.nombre;
-    const tel = pendingTel || user.user_metadata?.phone;
-
-    const { error: dbError } = await db.from("usuario").upsert({
-      id_usuario: user.id,
-      nombre: nombre,
-      email: user.email,
-      phone: tel,
-    });
-
-    if (dbError) {
-      console.error("Error guardando datos adicionales:", dbError);
-    }
-  }
-
-  showToast("¡Cuenta verificada!", "success");
-} catch (err) {
-  showToast("Código incorrecto o expirado", "error");
-} finally {
-  setLoading(btn, false);
-}
-
 async function handleResendOtp() {
   const btn = document.getElementById("btnResendOtp");
   btn.disabled = true;
