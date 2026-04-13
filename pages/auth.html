@@ -24,22 +24,19 @@
       <p class="auth-left-sub">Accede a tu cuenta para gestionar tus pedidos, solicitar visitas y mucho más.</p>
       <div style="margin-top:2.5rem;display:flex;flex-direction:column;gap:.875rem">
         <div style="display:flex;align-items:center;gap:.75rem;color:#94a3b8;font-size:.9rem">
-          <span
-            style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">
+          <span style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">
             <i class="fa-solid fa-shield-halved" style="color:#93c5fd;font-size:.875rem"></i>
           </span>
           Compra 100% segura
         </div>
         <div style="display:flex;align-items:center;gap:.75rem;color:#94a3b8;font-size:.9rem">
-          <span
-            style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">
+          <span style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">
             <i class="fa-solid fa-calendar-check" style="color:#93c5fd;font-size:.875rem"></i>
           </span>
           Visitas personales concertadas
         </div>
         <div style="display:flex;align-items:center;gap:.75rem;color:#94a3b8;font-size:.9rem">
-          <span
-            style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">
+          <span style="width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:50%;display:flex;align-items:center;justify-content:center">
             <i class="fa-solid fa-car" style="color:#93c5fd;font-size:.875rem"></i>
           </span>
           Amplio catálogo de vehículos
@@ -61,11 +58,10 @@
       </div>
 
       <div class="auth-tabs">
-        <button id="tabLogin" class="auth-tab active">Iniciar sesión</button>
-        <button id="tabRegister" class="auth-tab">Registrarse</button>
+        <button id="tabLogin" class="auth-tab active" onclick="setMode('login')">Iniciar sesión</button>
+        <button id="tabRegister" class="auth-tab" onclick="setMode('register')">Registrarse</button>
       </div>
 
-      <!-- LOGIN -->
       <form id="formLogin" novalidate>
         <h2 class="auth-title">Bienvenido</h2>
         <p class="auth-sub">Introduce tus credenciales para acceder</p>
@@ -100,7 +96,6 @@
         </p>
       </form>
 
-      <!-- REGISTRO -->
       <form id="formRegister" class="hidden" novalidate>
         <h2 class="auth-title">Crear cuenta</h2>
         <p class="auth-sub">Rellena el formulario para registrarte</p>
@@ -127,9 +122,7 @@
           <label class="form-label" for="regTelefono">Teléfono <span>*</span></label>
           <div class="input-wrap">
             <span class="input-icon"><i class="fa-solid fa-mobile-screen-button"></i></span>
-            <input type="tel" id="regTelefono" class="form-input" placeholder="+34 600 000 000" autocomplete="tel"
-              inputmode="tel" maxlength="15" onkeypress="return soloTelefono(event)"
-              oninput="this.value=this.value.replace(/[^0-9+\s]/g,'')">
+            <input type="tel" id="regTelefono" class="form-input" placeholder="+34 600 000 000" autocomplete="tel">
           </div>
           <div class="form-error" id="regTelefonoError"></div>
         </div>
@@ -192,7 +185,6 @@
         </p>
       </form>
 
-      <!-- OTP -->
       <div id="stepOtp" class="hidden">
         <div style="text-align:center;margin-bottom:2rem">
           <div style="margin-bottom:1.25rem;animation:float 2s ease infinite">
@@ -238,12 +230,5 @@
   <script src="../js/config.js"></script>
   <script src="../js/ui.js"></script>
   <script src="../js/auth.js"></script>
-  <script>
-    // Solo permite dígitos, + y espacios en campos de teléfono
-    function soloTelefono(e) {
-      return /[0-9+\s]/.test(String.fromCharCode(e.which || e.keyCode));
-    }
-  </script>
 </body>
-
 </html>
