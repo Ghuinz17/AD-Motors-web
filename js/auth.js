@@ -374,7 +374,7 @@ async function handleVerifyOtp(e) {
 
     const user = data?.user;
     if (user) {
-      // Usamos las variables globales o 
+      // Usamos las variables globales o
       const nombreFinal = pendingNombre || user.user_metadata?.nombre || "";
       const telFinal = pendingTel || user.user_metadata?.phone || "";
 
