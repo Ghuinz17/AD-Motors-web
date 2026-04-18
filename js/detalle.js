@@ -1,5 +1,6 @@
 // Galería, compra, solicitud de visita
 
+
 let vehiculo   = null;
 let imagenes   = [];
 let currentImg = 0;
@@ -184,7 +185,7 @@ async function confirmarCompra() {
   const btn = document.getElementById('btnConfirmarCompra');
   setLoading(btn, true);
   try {
-    // Crear compra (id_metodo_pago = null para reserva sin pago online)
+    // 1. Crear compra (id_metodo_pago = null para reserva sin pago online)
     const { data: compraData, error: compraError } = await db.from('compra').insert([{
       fecha:          new Date().toISOString(),
       total:          vehiculo.precio,
@@ -194,7 +195,7 @@ async function confirmarCompra() {
     }]).select().single();
     if (compraError) throw compraError;
 
-    // Crear detalle
+    // 2. Crear detalle
     const { error: detalleError } = await db.from('detallecompra').insert([{
       id_compra:       compraData.id_compra,
       id_vehiculo:     vehiculoId,
@@ -203,13 +204,13 @@ async function confirmarCompra() {
     }]);
     if (detalleError) throw detalleError;
 
-    // Marcar vehículo como reservado (desaparece del catálogo)
+    // 3. Marcar vehículo como reservado (desaparece del catálogo)
     await db.from('vehiculo').update({
       reservado:     true,
       fecha_reserva: new Date().toISOString(),
     }).eq('id_vehiculo', vehiculoId);
 
-    // Intentar enviar email (no bloquear si falla)
+    // 4. Intentar enviar email (no bloquear si falla)
     try {
       const { data: userData } = await db.from('usuario').select('nombre,email').eq('id_usuario', currentUser.id).single();
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_COMPRA, {
@@ -350,9 +351,7 @@ async function handleSubmitVisita(e) {
     // Guardar en BD con id_usuario
     const { error: insertError } = await db.from('solicitudes_revision').insert([{
       id_vehiculo:      vehiculoId,
-      id_usuario:       currentUser.id,
-      marca:            vehiculo.marca,
-      modelo:           vehiculo.modelo,
+      id_usuario:       currentUser?.id || null,
       nombre_asistente: nombre,
       telefono:         tel,
       fecha_visita:     fecha,
