@@ -1,4 +1,4 @@
-//js — Configuración global AD Motors
+//Configuración global AD Motors
 
 // --- Supabase ---
 const SUPABASE_URL      = 'https://mgbftvxlqinxrthswqih.supabase.co';
