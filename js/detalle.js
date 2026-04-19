@@ -184,7 +184,7 @@ async function confirmarCompra() {
   const btn = document.getElementById('btnConfirmarCompra');
   setLoading(btn, true);
   try {
-    // Crear compra (id_metodo_pago = null para reserva sin pago online)
+    // 1. Crear compra (id_metodo_pago = null para reserva sin pago online)
     const { data: compraData, error: compraError } = await db.from('compra').insert([{
       fecha:          new Date().toISOString(),
       total:          vehiculo.precio,
@@ -194,7 +194,7 @@ async function confirmarCompra() {
     }]).select().single();
     if (compraError) throw compraError;
 
-    // Crear detalle
+    // 2. Crear detalle
     const { error: detalleError } = await db.from('detallecompra').insert([{
       id_compra:       compraData.id_compra,
       id_vehiculo:     vehiculoId,
@@ -203,13 +203,13 @@ async function confirmarCompra() {
     }]);
     if (detalleError) throw detalleError;
 
-    // Marcar vehículo como reservado (desaparece del catálogo)
+    // 3. Marcar vehículo como reservado (desaparece del catálogo)
     await db.from('vehiculo').update({
       reservado:     true,
       fecha_reserva: new Date().toISOString(),
     }).eq('id_vehiculo', vehiculoId);
 
-    // Intentar enviar email (no bloquear si falla)
+    // 4. Intentar enviar email (no bloquear si falla)
     try {
       const { data: userData } = await db.from('usuario').select('nombre,email').eq('id_usuario', currentUser.id).single();
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_COMPRA, {
@@ -258,10 +258,16 @@ async function handleSolicitarVisita() {
     if (telInp  && data.phone)  telInp.value  = data.phone;
   }
 
-  // Fecha mínima: mañana
-  const minDate = new Date(); minDate.setDate(minDate.getDate() + 1);
+  // Fecha mínima: mañana en hora local (no UTC)
+  const hoy = new Date();
+  const manana = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 1);
+  const minDateStr = `${manana.getFullYear()}-${String(manana.getMonth()+1).padStart(2,'0')}-${String(manana.getDate()).padStart(2,'0')}`;
   const fechaInp = document.getElementById('visitaFecha');
-  if (fechaInp) fechaInp.min = minDate.toISOString().split('T')[0];
+  if (fechaInp) {
+    fechaInp.min = minDateStr;
+    // Si hay una fecha ya seleccionada y es anterior a mañana, limpiarla
+    if (fechaInp.value && fechaInp.value < minDateStr) fechaInp.value = '';
+  }
 
   openModal('modalVisita');
   clearAllFieldErrors();
@@ -328,6 +334,13 @@ async function handleSubmitVisita(e) {
   }
   if (!fecha) {
     showFieldError('visitaFecha', 'Selecciona una fecha'); ok = false;
+  } else {
+    const hoy = new Date();
+    const manana = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 1);
+    const minStr = `${manana.getFullYear()}-${String(manana.getMonth()+1).padStart(2,'0')}-${String(manana.getDate()).padStart(2,'0')}`;
+    if (fecha < minStr) {
+      showFieldError('visitaFecha', 'La fecha debe ser a partir de mañana'); ok = false;
+    }
   }
   if (!hora) {
     showFieldError('visitaHora', 'Selecciona una hora'); ok = false;
