@@ -72,7 +72,10 @@ async function loadPedidos(userId) {
     .eq('id_usuario', userId)
     .order('fecha', { ascending: false });
 
-  if (error) { console.error('Error pedidos:', error); }
+  if (error) {
+    console.error('Error pedidos:', JSON.stringify(error));
+    cont.innerHTML = emptyState('<i class="fa-solid fa-box"></i>', 'Error al cargar pedidos', error.message); return;
+  }
 
   if (!data?.length) {
     cont.innerHTML = emptyState('<i class="fa-solid fa-box"></i>', 'No se ha realizado ningún pedido', 'Cuando reserves un vehículo aparecerá aquí'); return;
