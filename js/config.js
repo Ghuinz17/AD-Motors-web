@@ -6,7 +6,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 // --- EmailJS ---
 const EMAILJS_PUBLIC_KEY            = 'UM986XzXpgyzXW_vs';
-const EMAILJS_SERVICE_ID            = 'service_afa48tb ';
+const EMAILJS_SERVICE_ID            = 'service_58ve2lo';
 
 // Confirmación de reserva (se envía al cliente al reservar)
 const EMAILJS_TEMPLATE_COMPRA     = 'template_ge0ovyp';
