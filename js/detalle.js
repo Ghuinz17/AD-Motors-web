@@ -1,6 +1,5 @@
 // Galería, compra, solicitud de visita
 
-
 let vehiculo   = null;
 let imagenes   = [];
 let currentImg = 0;
@@ -185,7 +184,7 @@ async function confirmarCompra() {
   const btn = document.getElementById('btnConfirmarCompra');
   setLoading(btn, true);
   try {
-    // 1. Crear compra (id_metodo_pago = null para reserva sin pago online)
+    // Crear compra (id_metodo_pago = null para reserva sin pago online)
     const { data: compraData, error: compraError } = await db.from('compra').insert([{
       fecha:          new Date().toISOString(),
       total:          vehiculo.precio,
@@ -195,7 +194,7 @@ async function confirmarCompra() {
     }]).select().single();
     if (compraError) throw compraError;
 
-    // 2. Crear detalle
+    // Crear detalle
     const { error: detalleError } = await db.from('detallecompra').insert([{
       id_compra:       compraData.id_compra,
       id_vehiculo:     vehiculoId,
@@ -204,13 +203,13 @@ async function confirmarCompra() {
     }]);
     if (detalleError) throw detalleError;
 
-    // 3. Marcar vehículo como reservado (desaparece del catálogo)
+    // Marcar vehículo como reservado (desaparece del catálogo)
     await db.from('vehiculo').update({
       reservado:     true,
       fecha_reserva: new Date().toISOString(),
     }).eq('id_vehiculo', vehiculoId);
 
-    // 4. Intentar enviar email (no bloquear si falla)
+    // Intentar enviar email (no bloquear si falla)
     try {
       const { data: userData } = await db.from('usuario').select('nombre,email').eq('id_usuario', currentUser.id).single();
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_COMPRA, {
@@ -364,7 +363,7 @@ async function handleSubmitVisita(e) {
 
     // Enviar email (no bloquear si falla)
     try {
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_VISITA_CLIENTE, {
+      const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_VISITA_CLIENTE, {
         to_email:       currentUser.email,
         admin_email:    ADMIN_EMAIL,
         nombre,
@@ -380,8 +379,10 @@ async function handleSubmitVisita(e) {
         nota_final:     `Teléfono de contacto: ${tel}. Si necesitas modificar la visita responde a este correo.`,
         fecha_solicitud: now,
       });
+      console.log('Email visita enviado:', result);
     } catch(emailErr) {
-      console.warn('Email no enviado:', emailErr);
+      console.error('Error email visita:', emailErr);
+      showToast('Solicitud guardada (email no enviado)', 'info');
     }
 
     closeModal('modalVisita');
