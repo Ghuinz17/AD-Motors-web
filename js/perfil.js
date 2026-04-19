@@ -109,6 +109,7 @@ async function loadSolicitudes(userId) {
     .from('solicitudes_revision')
     .select('*')
     .eq('id_usuario', userId)
+    .gte('fecha_visita', new Date().toISOString().split('T')[0])
     .order('fecha_creacion', { ascending: false });
 
   if (error || !data?.length) {
@@ -254,9 +255,9 @@ async function handleDeleteAccount() {
   setLoading(btn, true);
   try {
     const { data: { user } } = await db.auth.getUser();
-    // Borrar de tabla usuario → el trigger borra también de auth.users
+    // 1. Borrar de tabla usuario → el trigger borra también de auth.users
     await db.from('usuario').delete().eq('id_usuario', user.id);
-    // Cerrar sesión localmente
+    // 2. Cerrar sesión localmente
     await db.auth.signOut();
     showToast('Cuenta eliminada correctamente', 'info');
     setTimeout(() => window.location.href = '../index.html', 1500);
