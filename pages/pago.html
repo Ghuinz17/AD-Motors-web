@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -10,304 +9,279 @@
   <link rel="stylesheet" href="../css/header.css">
   <link rel="stylesheet" href="../css/pago.css">
   <style>
-    .hidden {
-      display: none !important
-    }
-
-    .card-input {
-      letter-spacing: 2px;
-      font-family: monospace;
-    }
+    .hidden{display:none!important}
+    .card-input { letter-spacing: 2px; font-family: monospace; }
   </style>
 </head>
-
 <body>
 
-  <header class="header">
-    <div class="header-inner">
-      <a href="../index.html" class="logo"><img src="../assets/admotors.png" alt="AD Motors">AD <span>Motors</span></a>
-      <div class="header-actions">
-        <button id="btnTheme" class="btn-icon"><i class="fa-solid fa-moon"></i></button>
-        <button id="btnMenu" class="btn-icon"><i class="fa-solid fa-bars"></i></button>
-      </div>
-    </div>
-  </header>
-
-  <div id="drawerOverlay" class="drawer-overlay"></div>
-  <aside id="drawer" class="drawer">
-    <div class="drawer-header"><span class="drawer-title">Menú</span><button id="btnCloseDrawer" class="btn-icon"><i
-          class="fa-solid fa-xmark"></i></button></div>
-    <div class="drawer-user">
-      <div id="drawerInitials" class="drawer-avatar">U</div>
-      <div class="drawer-user-info">
-        <div id="drawerName" class="drawer-user-name">—</div>
-        <div id="drawerEmail" class="drawer-user-email">—</div>
-      </div>
-    </div>
-    <nav class="drawer-nav">
-      <div class="drawer-nav-item" data-href="index.html"><span class="ni"><i class="fa-solid fa-house"></i></span>
-        Inicio</div>
-      <div class="drawer-nav-item" data-href="pages/perfil.html"><span class="ni"><i class="fa-solid fa-box"></i></span>
-        Mi perfil</div>
-    </nav>
-    <div class="drawer-footer"><button id="btnLogout" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i>
-        Cerrar sesión</button></div>
-  </aside>
-
-  <main class="main">
-    <nav style="font-size:.8rem;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem">
-      <a href="../index.html" style="color:var(--primary)">Inicio</a>
-      <span>›</span><a id="backToDetail" href="#" style="color:var(--primary)">Vehículo</a>
-      <span><i class="fa-solid fa-chevron-right" style="font-size:.7rem"></i></span><span>Pago</span>
-    </nav>
-
-    <!-- Indicador pasos -->
-    <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:2rem;font-size:.8rem;font-weight:700">
-      <span
-        style="background:var(--primary);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem">1</span>
-      <span style="color:var(--primary)">Datos de pago</span>
-      <span style="flex:1;height:2px;background:var(--border);border-radius:2px"></span>
-      <span
-        style="background:var(--border);color:var(--text3);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem">2</span>
-      <span style="color:var(--text3)">Confirmación</span>
-    </div>
-
-    <div class="payment-layout">
-
-      <!-- Formulario pago -->
-      <div class="payment-card">
-        <h2 class="payment-title"><i class="fa-regular fa-credit-card"></i> Datos de pago</h2>
-
-        <!-- Tarjeta visual -->
-        <div class="card-visual">
-          <div class="card-chip"></div>
-          <div class="card-number-display" id="cardNumberDisplay">•••• •••• •••• ••••</div>
-          <div class="card-info-row">
-            <div>
-              <div class="card-info-row">Titular</div>
-              <div class="card-info-val" id="cardNameDisplay">NOMBRE APELLIDO</div>
-            </div>
-            <div style="text-align:right">
-              <div>Caduca</div>
-              <div class="card-info-val" id="cardExpDisplay">MM/AA</div>
-            </div>
-          </div>
-          <div
-            style="position:absolute;bottom:1.5rem;right:1.5rem;font-size:1.5rem;font-weight:800;color:rgba(255,255,255,.4)">
-            VISA</div>
-        </div>
-
-        <form id="formPago" novalidate>
-          <div class="form-group">
-            <label class="form-label">Número de tarjeta <span>*</span></label>
-            <div class="input-wrap">
-              <span class="input-icon"><i class="fa-regular fa-credit-card"></i></span>
-              <input type="text" id="cardNumber" class="form-input card-input" placeholder="0000 0000 0000 0000"
-                maxlength="19" inputmode="numeric">
-            </div>
-            <div class="form-error" id="cardNumberError"></div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Titular de la tarjeta <span>*</span></label>
-            <div class="input-wrap">
-              <span class="input-icon"><i class="fa-regular fa-user"></i></span>
-              <input type="text" id="cardName" class="form-input" placeholder="Como aparece en la tarjeta"
-                style="text-transform:uppercase">
-            </div>
-            <div class="form-error" id="cardNameError"></div>
-          </div>
-
-          <div class="card-input-group">
-            <div class="form-group">
-              <label class="form-label">Fecha de caducidad <span>*</span></label>
-              <div class="input-wrap">
-                <span class="input-icon"><i class="fa-regular fa-calendar"></i></span>
-                <input type="text" id="cardExp" class="form-input card-input" placeholder="MM/AA" maxlength="5"
-                  inputmode="numeric">
-              </div>
-              <div class="form-error" id="cardExpError"></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">CVV <span>*</span></label>
-              <div class="input-wrap">
-                <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
-                <input type="password" id="cardCvv" class="form-input card-input" placeholder="•••" maxlength="4"
-                  inputmode="numeric">
-              </div>
-              <div class="form-error" id="cardCvvError"></div>
-            </div>
-          </div>
-
-          <div
-            style="background:var(--primary-lt);border-radius:var(--r-sm);padding:.875rem;margin-bottom:1.5rem;font-size:.8rem;color:var(--primary);display:flex;gap:.625rem">
-            <i class="fa-solid fa-lock"></i> <span>Esta es una pasarela de pago simulada. No se realizará ningún cargo
-              real.</span>
-          </div>
-
-          <button type="submit" id="btnPagar" class="btn btn-primary btn-full btn-lg">
-            <i class="fa-solid fa-lock"></i> Pagar ahora
-          </button>
-        </form>
-      </div>
-
-      <!-- Resumen pedido -->
-      <div class="order-summary">
-        <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.25rem;font-weight:800;margin-bottom:1.25rem">
-          Resumen del pedido</h3>
-        <div id="vehiculoResumen"
-          style="background:var(--bg3);border-radius:var(--r-sm);padding:1rem;margin-bottom:1.25rem">
-          <div style="font-weight:700;color:var(--text)" id="resumenNombre">Cargando...</div>
-          <div style="font-size:.8rem;color:var(--text2);margin-top:.25rem" id="resumenAno"></div>
-        </div>
-        <div class="summary-row"><span>Precio vehículo</span><span id="resumenPrecio">—</span></div>
-        <div class="summary-row"><span>IVA incluido</span><span style="color:var(--success)"><i
-              class="fa-solid fa-check"></i></span></div>
-        <div class="summary-row"><span>Gestión</span><span style="color:var(--success)">Gratis</span></div>
-        <div class="summary-row" style="border-top:2px solid var(--border);padding-top:1rem;margin-top:.5rem">
-          <strong>Total</strong><strong class="summary-total" id="resumenTotal">—</strong>
-        </div>
-        <div style="margin-top:1.25rem;font-size:.76rem;color:var(--text3);line-height:1.6">
-          <i class="fa-solid fa-shield-halved"></i> Pago 100% seguro &nbsp;·&nbsp; <i class="fa-solid fa-lock"></i>
-          Datos encriptados SSL &nbsp;·&nbsp; No guardamos datos de tarjeta
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <!-- MODAL PAGO EXITOSO -->
-  <div id="modalPagoExito" class="modal-overlay">
-    <div class="modal" style="text-align:center">
-      <div style="margin-bottom:1rem;animation:float 2s ease infinite"><i class="fa-solid fa-circle-check"
-          style="font-size:3.5rem;color:var(--success)"></i></div>
-      <h3 class="modal-title">¡Pago completado!</h3>
-      <p class="modal-subtitle" style="margin-bottom:1.5rem">
-        Tu compra se ha procesado correctamente. Hemos enviado la confirmación a tu correo electrónico. Nos pondremos en
-        contacto contigo para coordinar la entrega.
-      </p>
-      <button class="btn btn-primary btn-full" onclick="window.location.href='../index.html'">
-        Volver al inicio
-      </button>
-      <button class="btn btn-secondary btn-full" style="margin-top:.625rem"
-        onclick="window.location.href='perfil.html'">
-        Ver mis pedidos
-      </button>
+<header class="header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo"><img src="../assets/admotors.png" alt="AD Motors">AD <span>Motors</span></a>
+    <div class="header-actions">
+      <button id="btnTheme" class="btn-icon"><i class="fa-solid fa-moon"></i></button>
+      <button id="btnMenu" class="btn-icon"><i class="fa-solid fa-bars"></i></button>
     </div>
   </div>
+</header>
 
-  <div id="toastContainer" class="toast-container"></div>
+<div id="drawerOverlay" class="drawer-overlay"></div>
+<aside id="drawer" class="drawer">
+  <div class="drawer-header"><span class="drawer-title">Menú</span><button id="btnCloseDrawer" class="btn-icon"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="drawer-user">
+    <div id="drawerInitials" class="drawer-avatar">U</div>
+    <div class="drawer-user-info">
+      <div id="drawerName" class="drawer-user-name"></div>
+      <div id="drawerEmail" class="drawer-user-email"></div>
+    </div>
+  </div>
+  <nav class="drawer-nav">
+    <div class="drawer-nav-item" data-href="index.html"><span class="ni"><i class="fa-solid fa-house"></i></span> Inicio</div>
+    <div class="drawer-nav-item" data-href="pages/perfil.html"><span class="ni"><i class="fa-solid fa-box"></i></span> Mi perfil</div>
+  
+    <div class="drawer-nav-item" onclick="openModal('modalSoporte');document.getElementById('drawer')?.classList.remove('open');document.getElementById('drawerOverlay')?.classList.remove('open')">
+      <span class="ni"><i class="fa-solid fa-circle-question"></i></span> Soporte y ayuda
+    </div>
+  </nav>
+  <div class="drawer-footer"><button id="btnLogout" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button></div>
+</aside>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <script src="../js/config.js"></script>
-  <script src="../js/ui.js"></script>
-  <script>
-    const vehiculoId = new URLSearchParams(window.location.search).get('id');
-    let vehiculoData = null;
+<main class="main">
+  <nav style="font-size:.8rem;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem">
+    <a href="../index.html" style="color:var(--primary)">Inicio</a>
+    <span>›</span><a id="backToDetail" href="#" style="color:var(--primary)">Vehículo</a>
+    <span><i class="fa-solid fa-chevron-right" style="font-size:.7rem"></i></span><span>Pago</span>
+  </nav>
 
-    // Formatear número tarjeta
-    document.getElementById('cardNumber')?.addEventListener('input', e => {
-      let v = e.target.value.replace(/\D/g, '').slice(0, 16);
-      e.target.value = v.replace(/(.{4})/g, '$1 ').trim();
-      document.getElementById('cardNumberDisplay').textContent = (v + '•'.repeat(16 - v.length)).replace(/(.{4})/g, '$1 ').trim();
+  <!-- Indicador pasos -->
+  <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:2rem;font-size:.8rem;font-weight:700">
+    <span style="background:var(--primary);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem">1</span>
+    <span style="color:var(--primary)">Datos de pago</span>
+    <span style="flex:1;height:2px;background:var(--border);border-radius:2px"></span>
+    <span style="background:var(--border);color:var(--text3);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem">2</span>
+    <span style="color:var(--text3)">Confirmación</span>
+  </div>
+
+  <div class="payment-layout">
+
+    <!-- Formulario pago -->
+    <div class="payment-card">
+      <h2 class="payment-title"><i class="fa-regular fa-credit-card"></i> Datos de pago</h2>
+
+      <!-- Tarjeta visual -->
+      <div class="card-visual">
+        <div class="card-chip"></div>
+        <div class="card-number-display" id="cardNumberDisplay">•••• •••• •••• ••••</div>
+        <div class="card-info-row">
+          <div>
+            <div class="card-info-row">Titular</div>
+            <div class="card-info-val" id="cardNameDisplay">NOMBRE APELLIDO</div>
+          </div>
+          <div style="text-align:right">
+            <div>Caduca</div>
+            <div class="card-info-val" id="cardExpDisplay">MM/AA</div>
+          </div>
+        </div>
+        <div style="position:absolute;bottom:1.5rem;right:1.5rem;font-size:1.5rem;font-weight:800;color:rgba(255,255,255,.4)">VISA</div>
+      </div>
+
+      <form id="formPago" novalidate>
+        <div class="form-group">
+          <label class="form-label">Número de tarjeta <span>*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-regular fa-credit-card"></i></span>
+            <input type="text" id="cardNumber" class="form-input card-input" placeholder="0000 0000 0000 0000" maxlength="19" inputmode="numeric">
+          </div>
+          <div class="form-error" id="cardNumberError"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Titular de la tarjeta <span>*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-regular fa-user"></i></span>
+            <input type="text" id="cardName" class="form-input" placeholder="Como aparece en la tarjeta" style="text-transform:uppercase">
+          </div>
+          <div class="form-error" id="cardNameError"></div>
+        </div>
+
+        <div class="card-input-group">
+          <div class="form-group">
+            <label class="form-label">Fecha de caducidad <span>*</span></label>
+            <div class="input-wrap">
+              <span class="input-icon"><i class="fa-regular fa-calendar"></i></span>
+              <input type="text" id="cardExp" class="form-input card-input" placeholder="MM/AA" maxlength="5" inputmode="numeric">
+            </div>
+            <div class="form-error" id="cardExpError"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">CVV <span>*</span></label>
+            <div class="input-wrap">
+              <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+              <input type="password" id="cardCvv" class="form-input card-input" placeholder="•••" maxlength="4" inputmode="numeric">
+            </div>
+            <div class="form-error" id="cardCvvError"></div>
+          </div>
+        </div>
+
+        <div style="background:var(--primary-lt);border-radius:var(--r-sm);padding:.875rem;margin-bottom:1.5rem;font-size:.8rem;color:var(--primary);display:flex;gap:.625rem">
+          <i class="fa-solid fa-lock"></i> <span>Esta es una pasarela de pago simulada. No se realizará ningún cargo real.</span>
+        </div>
+
+        <button type="submit" id="btnPagar" class="btn btn-primary btn-full btn-lg">
+          <i class="fa-solid fa-lock"></i> Pagar ahora
+        </button>
+      </form>
+    </div>
+
+    <!-- Resumen pedido -->
+    <div class="order-summary">
+      <h3 style="font-family:'Barlow Condensed',sans-serif;font-size:1.25rem;font-weight:800;margin-bottom:1.25rem">Resumen del pedido</h3>
+      <div id="vehiculoResumen" style="background:var(--bg3);border-radius:var(--r-sm);padding:1rem;margin-bottom:1.25rem">
+        <div style="font-weight:700;color:var(--text)" id="resumenNombre">Cargando...</div>
+        <div style="font-size:.8rem;color:var(--text2);margin-top:.25rem" id="resumenAno"></div>
+      </div>
+      <div class="summary-row"><span>Precio vehículo</span><span id="resumenPrecio">—</span></div>
+      <div class="summary-row"><span>IVA incluido</span><span style="color:var(--success)"><i class="fa-solid fa-check"></i></span></div>
+      <div class="summary-row"><span>Gestión</span><span style="color:var(--success)">Gratis</span></div>
+      <div class="summary-row" style="border-top:2px solid var(--border);padding-top:1rem;margin-top:.5rem">
+        <strong>Total</strong><strong class="summary-total" id="resumenTotal">—</strong>
+      </div>
+      <div style="margin-top:1.25rem;font-size:.76rem;color:var(--text3);line-height:1.6">
+        <i class="fa-solid fa-shield-halved"></i> Pago 100% seguro &nbsp;·&nbsp; <i class="fa-solid fa-lock"></i> Datos encriptados SSL &nbsp;·&nbsp; No guardamos datos de tarjeta
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- MODAL PAGO EXITOSO -->
+<div id="modalPagoExito" class="modal-overlay">
+  <div class="modal" style="text-align:center">
+    <div style="margin-bottom:1rem;animation:float 2s ease infinite"><i class="fa-solid fa-circle-check" style="font-size:3.5rem;color:var(--success)"></i></div>
+    <h3 class="modal-title">¡Pago completado!</h3>
+    <p class="modal-subtitle" style="margin-bottom:1.5rem">
+      Tu compra se ha procesado correctamente. Hemos enviado la confirmación a tu correo electrónico. Nos pondremos en contacto contigo para coordinar la entrega.
+    </p>
+    <button class="btn btn-primary btn-full" onclick="window.location.href='../index.html'">
+      Volver al inicio
+    </button>
+    <button class="btn btn-secondary btn-full" style="margin-top:.625rem" onclick="window.location.href='perfil.html'">
+      Ver mis pedidos
+    </button>
+  </div>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/ui.js"></script>
+<script>
+const vehiculoId = new URLSearchParams(window.location.search).get('id');
+let vehiculoData = null;
+
+// Formatear número tarjeta
+document.getElementById('cardNumber')?.addEventListener('input', e => {
+  let v = e.target.value.replace(/\D/g,'').slice(0,16);
+  e.target.value = v.replace(/(.{4})/g,'$1 ').trim();
+  document.getElementById('cardNumberDisplay').textContent = (v+'•'.repeat(16-v.length)).replace(/(.{4})/g,'$1 ').trim();
+});
+
+// Formatear titular
+document.getElementById('cardName')?.addEventListener('input', e => {
+  e.target.value = e.target.value.toUpperCase();
+  document.getElementById('cardNameDisplay').textContent = e.target.value || 'NOMBRE APELLIDO';
+});
+
+// Formatear expiración
+document.getElementById('cardExp')?.addEventListener('input', e => {
+  let v = e.target.value.replace(/\D/g,'').slice(0,4);
+  if (v.length >= 2) v = v.slice(0,2)+'/'+v.slice(2);
+  e.target.value = v;
+  document.getElementById('cardExpDisplay').textContent = v || 'MM/AA';
+});
+
+// Cargar vehículo
+async function loadVehiculo() {
+  if (!vehiculoId) { window.location.href='../index.html'; return; }
+
+  const { data: { user } } = await db.auth.getUser();
+  if (!user) { window.location.href=`auth.html?redirect=pago.html?id=${vehiculoId}`; return; }
+
+  const { data } = await db.from('vehiculo').select('*').eq('id_vehiculo', vehiculoId).single();
+  if (!data) { window.location.href='../index.html'; return; }
+  vehiculoData = data;
+
+  document.getElementById('resumenNombre').textContent = data.marca_modelo;
+  document.getElementById('resumenAno').textContent    = `Año ${data.ano_fabricacion} · ${data.tipo_combustible}`;
+  document.getElementById('resumenPrecio').textContent = data.precio?.toLocaleString('es-ES') + ' €';
+  document.getElementById('resumenTotal').textContent  = data.precio?.toLocaleString('es-ES') + ' €';
+  document.getElementById('backToDetail').href = `detalle.html?id=${vehiculoId}`;
+}
+
+// Enviar pago (simulado)
+document.getElementById('formPago')?.addEventListener('submit', async e => {
+  e.preventDefault();
+  const num = document.getElementById('cardNumber')?.value.replace(/\s/g,'');
+  const nom = document.getElementById('cardName')?.value.trim();
+  const exp = document.getElementById('cardExp')?.value;
+  const cvv = document.getElementById('cardCvv')?.value;
+
+  let ok = true;
+  if (!num||num.length<16) { document.getElementById('cardNumberError').textContent='Número no válido'; document.getElementById('cardNumberError').classList.add('show'); document.getElementById('cardNumber').classList.add('error'); ok=false; }
+  if (!nom||nom.length<3)  { document.getElementById('cardNameError').textContent='Introduce el titular'; document.getElementById('cardNameError').classList.add('show'); document.getElementById('cardName').classList.add('error'); ok=false; }
+  if (!exp||!/^\d{2}\/\d{2}$/.test(exp)) { document.getElementById('cardExpError').textContent='Fecha no válida'; document.getElementById('cardExpError').classList.add('show'); document.getElementById('cardExp').classList.add('error'); ok=false; }
+  if (!cvv||cvv.length<3)  { document.getElementById('cardCvvError').textContent='CVV no válido'; document.getElementById('cardCvvError').classList.add('show'); document.getElementById('cardCvv').classList.add('error'); ok=false; }
+  if (!ok) return;
+
+  const btn = document.getElementById('btnPagar');
+  setLoading(btn, true);
+  try {
+    // Simular procesamiento
+    await new Promise(r => setTimeout(r, 2000));
+    const { data: { user } } = await db.auth.getUser();
+
+    // Crear compra
+    const { data: compra } = await db.from('compra').insert([{
+      fecha: new Date().toISOString(), total: vehiculoData.precio,
+      estado: 'COMPLETADA', id_usuario: user.id,
+    }]).select().single();
+
+    // Detalle
+    await db.from('detallecompra').insert([{
+      id_compra: compra.id_compra, id_vehiculo: vehiculoId,
+      cantidad: 1, precio_unitario: vehiculoData.precio,
+    }]);
+
+    // Pago
+    await db.from('pago').insert([{
+      fecha_pago: new Date().toISOString(),
+      estado_pago: 'COMPLETADO', id_compra: compra.id_compra,
+    }]);
+
+    // Reservar vehículo
+    await db.from('vehiculo').update({ reservado: true, fecha_reserva: new Date().toISOString() }).eq('id_vehiculo', vehiculoId);
+
+    // Email confirmación
+    const { data: userData } = await db.from('usuario').select('nombre,email').eq('id_usuario', user.id).single();
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_COMPRA, {
+      nombre: userData?.nombre || user.email,
+      vehiculo: vehiculoData.marca_modelo,
+      precio: vehiculoData.precio?.toLocaleString('es-ES') + ' €',
+      id_compra: compra.id_compra,
+      to_email: user.email,
     });
 
-    // Formatear titular
-    document.getElementById('cardName')?.addEventListener('input', e => {
-      e.target.value = e.target.value.toUpperCase();
-      document.getElementById('cardNameDisplay').textContent = e.target.value || 'NOMBRE APELLIDO';
-    });
+    openModal('modalPagoExito');
+  } catch(err) {
+    showToast('Error al procesar: ' + err.message, 'error');
+  } finally {
+    setLoading(btn, false);
+  }
+});
 
-    // Formatear expiración
-    document.getElementById('cardExp')?.addEventListener('input', e => {
-      let v = e.target.value.replace(/\D/g, '').slice(0, 4);
-      if (v.length >= 2) v = v.slice(0, 2) + '/' + v.slice(2);
-      e.target.value = v;
-      document.getElementById('cardExpDisplay').textContent = v || 'MM/AA';
-    });
-
-    // Cargar vehículo
-    async function loadVehiculo() {
-      if (!vehiculoId) { window.location.href = '../index.html'; return; }
-
-      const { data: { user } } = await db.auth.getUser();
-      if (!user) { window.location.href = `auth.html?redirect=pago.html?id=${vehiculoId}`; return; }
-
-      const { data } = await db.from('vehiculo').select('*').eq('id_vehiculo', vehiculoId).single();
-      if (!data) { window.location.href = '../index.html'; return; }
-      vehiculoData = data;
-
-      document.getElementById('resumenNombre').textContent = data.marca_modelo;
-      document.getElementById('resumenAno').textContent = `Año ${data.ano_fabricacion} · ${data.tipo_combustible}`;
-      document.getElementById('resumenPrecio').textContent = data.precio?.toLocaleString('es-ES') + ' €';
-      document.getElementById('resumenTotal').textContent = data.precio?.toLocaleString('es-ES') + ' €';
-      document.getElementById('backToDetail').href = `detalle.html?id=${vehiculoId}`;
-    }
-
-    // Enviar pago (simulado)
-    document.getElementById('formPago')?.addEventListener('submit', async e => {
-      e.preventDefault();
-      const num = document.getElementById('cardNumber')?.value.replace(/\s/g, '');
-      const nom = document.getElementById('cardName')?.value.trim();
-      const exp = document.getElementById('cardExp')?.value;
-      const cvv = document.getElementById('cardCvv')?.value;
-
-      let ok = true;
-      if (!num || num.length < 16) { document.getElementById('cardNumberError').textContent = 'Número no válido'; document.getElementById('cardNumberError').classList.add('show'); document.getElementById('cardNumber').classList.add('error'); ok = false; }
-      if (!nom || nom.length < 3) { document.getElementById('cardNameError').textContent = 'Introduce el titular'; document.getElementById('cardNameError').classList.add('show'); document.getElementById('cardName').classList.add('error'); ok = false; }
-      if (!exp || !/^\d{2}\/\d{2}$/.test(exp)) { document.getElementById('cardExpError').textContent = 'Fecha no válida'; document.getElementById('cardExpError').classList.add('show'); document.getElementById('cardExp').classList.add('error'); ok = false; }
-      if (!cvv || cvv.length < 3) { document.getElementById('cardCvvError').textContent = 'CVV no válido'; document.getElementById('cardCvvError').classList.add('show'); document.getElementById('cardCvv').classList.add('error'); ok = false; }
-      if (!ok) return;
-
-      const btn = document.getElementById('btnPagar');
-      setLoading(btn, true);
-      try {
-        // Simular procesamiento
-        await new Promise(r => setTimeout(r, 2000));
-        const { data: { user } } = await db.auth.getUser();
-
-        // Crear compra
-        const { data: compra } = await db.from('compra').insert([{
-          fecha: new Date().toISOString(), total: vehiculoData.precio,
-          estado: 'COMPLETADA', id_usuario: user.id,
-        }]).select().single();
-
-        // Detalle
-        await db.from('detallecompra').insert([{
-          id_compra: compra.id_compra, id_vehiculo: vehiculoId,
-          cantidad: 1, precio_unitario: vehiculoData.precio,
-        }]);
-
-        // Pago
-        await db.from('pago').insert([{
-          fecha_pago: new Date().toISOString(),
-          estado_pago: 'COMPLETADO', id_compra: compra.id_compra,
-        }]);
-
-        // Reservar vehículo
-        await db.from('vehiculo').update({ reservado: true, fecha_reserva: new Date().toISOString() }).eq('id_vehiculo', vehiculoId);
-
-        // Email confirmación
-        const { data: userData } = await db.from('usuario').select('nombre,email').eq('id_usuario', user.id).single();
-        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_COMPRA, {
-          nombre: userData?.nombre || user.email,
-          vehiculo: vehiculoData.marca_modelo,
-          precio: vehiculoData.precio?.toLocaleString('es-ES') + ' €',
-          id_compra: compra.id_compra,
-          to_email: user.email,
-        });
-
-        openModal('modalPagoExito');
-      } catch (err) {
-        showToast('Error al procesar: ' + err.message, 'error');
-      } finally {
-        setLoading(btn, false);
-      }
-    });
-
-    document.addEventListener('DOMContentLoaded', loadVehiculos);
-    function loadVehiculos() { loadVehiculo(); }
-  </script>
+document.addEventListener('DOMContentLoaded', loadVehiculos);
+function loadVehiculos() { loadVehiculo(); }
+</script>
 </body>
-
 </html>

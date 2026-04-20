@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,205 +8,187 @@
   <link rel="stylesheet" href="../css/base.css">
   <link rel="stylesheet" href="../css/header.css">
   <link rel="stylesheet" href="../css/perfil.css">
-  <style>
-    .hidden {
-      display: none !important
-    }
-  </style>
+  <style>.hidden{display:none!important}</style>
 </head>
-
 <body>
 
-  <header class="header">
-    <div class="header-inner">
-      <a href="../index.html" class="logo"><img src="../assets/admotors.png" alt="AD Motors">AD <span>Motors</span></a>
-      <div class="header-actions">
-        <button id="btnTheme" class="btn-icon"><i class="fa-solid fa-moon"></i></button>
-        <a href="auth.html" id="headerLoginBtn" class="btn-header-login hidden">Acceder</a>
-        <div id="userAvatar" class="user-avatar">U</div>
-        <button id="btnMenu" class="btn-icon"><i class="fa-solid fa-bars"></i></button>
-      </div>
+<header class="header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo"><img src="../assets/admotors.png" alt="AD Motors">AD <span>Motors</span></a>
+    <div class="header-actions">
+      <button id="btnTheme" class="btn-icon"><i class="fa-solid fa-moon"></i></button>
+      <a href="auth.html" id="headerLoginBtn" class="btn-header-login hidden">Acceder</a>
+      <div id="userAvatar" class="user-avatar">U</div>
+      <button id="btnMenu" class="btn-icon"><i class="fa-solid fa-bars"></i></button>
     </div>
-  </header>
+  </div>
+</header>
 
-  <div id="drawerOverlay" class="drawer-overlay"></div>
-  <aside id="drawer" class="drawer">
-    <div class="drawer-header"><span class="drawer-title">Menú</span><button id="btnCloseDrawer" class="btn-icon"><i
-          class="fa-solid fa-xmark"></i></button></div>
-    <div class="drawer-user">
-      <div id="drawerInitials" class="drawer-avatar">U</div>
-      <div class="drawer-user-info">
-        <div id="drawerName" class="drawer-user-name"></div>
-        <div id="drawerEmail" class="drawer-user-email"></div>
-      </div>
+<div id="drawerOverlay" class="drawer-overlay"></div>
+<aside id="drawer" class="drawer">
+  <div class="drawer-header"><span class="drawer-title">Menú</span><button id="btnCloseDrawer" class="btn-icon"><i class="fa-solid fa-xmark"></i></button></div>
+  <div class="drawer-user">
+    <div id="drawerInitials" class="drawer-avatar">U</div>
+    <div class="drawer-user-info">
+      <div id="drawerName" class="drawer-user-name"></div>
+      <div id="drawerEmail" class="drawer-user-email"></div>
     </div>
-    <nav class="drawer-nav">
-      <div class="drawer-nav-item" data-href="index.html"><span class="ni"><i class="fa-solid fa-house"></i></span>
-        Inicio</div>
-      <div class="drawer-nav-item active" data-page="perfil"><span class="ni"><i class="fa-solid fa-box"></i></span> Mis
-        pedidos</div>
-      <div class="drawer-nav-item" data-page="solicitudes"><span class="ni"><i
-            class="fa-solid fa-calendar-days"></i></span> Mis solicitudes</div>
-      <div class="drawer-nav-item" data-page="cuenta"><span class="ni"><i class="fa-solid fa-gear"></i></span> Mi cuenta
-      </div>
-    </nav>
-    <div class="drawer-footer"><button id="btnLogout" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i>
-        Cerrar sesión</button></div>
-  </aside>
-
-  <main class="main">
-
-    <!-- CABECERA PERFIL -->
-    <div class="profile-header">
-      <div class="profile-avatar-big" id="profileInitial">U</div>
-      <div>
-        <div class="profile-name" id="profileName">Cargando...</div>
-        <div class="profile-email" id="profileEmail"></div>
-      </div>
+  </div>
+  <nav class="drawer-nav">
+    <div class="drawer-nav-item" data-href="index.html"><span class="ni"><i class="fa-solid fa-house"></i></span> Inicio</div>
+    <div class="drawer-nav-item active" data-page="perfil"><span class="ni"><i class="fa-solid fa-box"></i></span> Mis pedidos</div>
+    <div class="drawer-nav-item" data-page="solicitudes"><span class="ni"><i class="fa-solid fa-calendar-days"></i></span> Mis solicitudes</div>
+    <div class="drawer-nav-item" data-page="cuenta"><span class="ni"><i class="fa-solid fa-gear"></i></span> Mi cuenta</div>
+  
+    <div class="drawer-nav-item" onclick="openModal('modalSoporte');document.getElementById('drawer')?.classList.remove('open');document.getElementById('drawerOverlay')?.classList.remove('open')">
+      <span class="ni"><i class="fa-solid fa-circle-question"></i></span> Soporte y ayuda
     </div>
+  </nav>
+  <div class="drawer-footer"><button id="btnLogout" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button></div>
+</aside>
 
-    <!-- TABS -->
-    <div class="profile-tabs">
-      <button class="profile-tab" data-tab="pedidos"><i class="fa-solid fa-box"></i> Mis pedidos</button>
-      <button class="profile-tab" data-tab="solicitudes"><i class="fa-regular fa-calendar-days"></i>
-        Solicitudes</button>
-      <button class="profile-tab" data-tab="cuenta"><i class="fa-solid fa-gear"></i> Mi cuenta</button>
-    </div>
+<main class="main">
 
-    <!-- TAB PEDIDOS -->
-    <div id="tab-pedidos" class="tab-content">
-      <div class="section-title" style="margin-bottom:1.25rem">Mis pedidos</div>
-      <div id="pedidosList"></div>
-    </div>
-
-    <!-- TAB SOLICITUDES -->
-    <div id="tab-solicitudes" class="tab-content">
-      <div class="section-title" style="margin-bottom:1.25rem">Solicitudes de visita</div>
-      <div id="solicitudesList"></div>
-    </div>
-
-    <!-- TAB CUENTA -->
-    <div id="tab-cuenta" class="tab-content">
-      <div class="section-title" style="margin-bottom:1.25rem">Mi cuenta</div>
-
-      <!-- Datos personales -->
-      <div class="settings-section">
-        <div class="settings-section-title"><i class="fa-regular fa-user"></i> Datos personales</div>
-        <form id="formUpdatePerfil" novalidate>
-          <div class="form-group">
-            <label class="form-label">Nombre completo</label>
-            <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-user"></i></span><input type="text"
-                id="settingNombre" class="form-input" placeholder="Tu nombre"></div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Teléfono</label>
-            <div class="input-wrap"><span class="input-icon"><i
-                  class="fa-solid fa-mobile-screen-button"></i></span><input type="tel" id="settingTelefono"
-                class="form-input" placeholder="+34 600 000 000" inputmode="tel" maxlength="15"
-                onkeypress="return soloTelefono(event)" oninput="this.value=this.value.replace(/[^0-9+\s]/g,'')"></div>
-          </div>
-          <button type="submit" id="btnUpdatePerfil" class="btn btn-primary">Guardar cambios</button>
-        </form>
-      </div>
-
-      <!-- Cambiar email -->
-      <div class="settings-section">
-        <div class="settings-section-title"><i class="fa-regular fa-envelope"></i> Cambiar correo electrónico</div>
-        <form id="formUpdateEmail" novalidate>
-          <div class="form-group">
-            <label class="form-label">Nuevo correo</label>
-            <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-envelope"></i></span><input
-                type="email" id="settingEmail" class="form-input" placeholder="nuevo@email.com"></div>
-            <div class="form-hint">Se enviará un enlace de confirmación al nuevo correo.</div>
-          </div>
-          <button type="submit" id="btnUpdateEmail" class="btn btn-primary">Cambiar correo</button>
-        </form>
-      </div>
-
-      <!-- Cambiar contraseña -->
-      <div class="settings-section">
-        <div class="settings-section-title"><i class="fa-solid fa-lock"></i> Cambiar contraseña</div>
-        <form id="formUpdatePassword" novalidate>
-          <div class="form-group">
-            <label class="form-label">Nueva contraseña</label>
-            <div class="input-wrap">
-              <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
-              <input type="password" id="settingPassword" class="form-input" placeholder="Nueva contraseña segura">
-              <span class="input-suffix" data-toggle-pw="settingPassword"><i class="fa-regular fa-eye"></i></span>
-            </div>
-            <div class="form-hint">Mín. 8 caracteres, mayúscula, minúscula, número y carácter especial.</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Confirmar contraseña</label>
-            <div class="input-wrap">
-              <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
-              <input type="password" id="settingPassword2" class="form-input" placeholder="Repite la contraseña">
-              <span class="input-suffix" data-toggle-pw="settingPassword2"><i class="fa-regular fa-eye"></i></span>
-            </div>
-          </div>
-          <button type="submit" id="btnUpdatePassword" class="btn btn-primary">Cambiar contraseña</button>
-        </form>
-      </div>
-
-      <!-- Zona peligrosa -->
-      <div class="danger-zone">
-        <div class="settings-section-title" style="color:var(--danger)"><i class="fa-solid fa-triangle-exclamation"></i>
-          Zona de peligro</div>
-        <p style="font-size:.875rem;color:var(--text2);margin-bottom:1rem">
-          Eliminar tu cuenta es una acción irreversible. Se borrarán todos tus datos, pedidos y solicitudes.
-        </p>
-        <button id="btnDeleteAccount" class="btn btn-danger btn-sm"><i class="fa-regular fa-trash-can"></i> Eliminar mi
-          cuenta</button>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- MODAL ELIMINAR CUENTA -->
-  <div id="modalDeleteAccount" class="modal-overlay">
-    <div class="modal">
-      <div style="text-align:center;margin-bottom:1.5rem">
-        <div style="margin-bottom:.75rem"><i class="fa-solid fa-triangle-exclamation"
-            style="font-size:3rem;color:var(--danger)"></i></div>
-        <h3 class="modal-title">¿Eliminar cuenta?</h3>
-        <p class="modal-subtitle">Esta acción es irreversible. Todos tus datos serán eliminados permanentemente.</p>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Escribe <strong>ELIMINAR</strong> para confirmar</label>
-        <input type="text" id="deleteConfirmInput" class="form-input no-icon" placeholder="ELIMINAR">
-      </div>
-      <div style="display:flex;gap:.75rem">
-        <button id="btnCancelDelete" class="btn btn-secondary btn-full">Cancelar</button>
-        <button id="btnDeleteConfirm" class="btn btn-danger btn-full"><i class="fa-regular fa-trash-can"></i>
-          Eliminar</button>
-      </div>
+  <!-- CABECERA PERFIL -->
+  <div class="profile-header">
+    <div class="profile-avatar-big" id="profileInitial">U</div>
+    <div>
+      <div class="profile-name" id="profileName">Cargando...</div>
+      <div class="profile-email" id="profileEmail"></div>
     </div>
   </div>
 
-  <div id="toastContainer" class="toast-container"></div>
+  <!-- TABS -->
+  <div class="profile-tabs">
+    <button class="profile-tab" data-tab="pedidos"><i class="fa-solid fa-box"></i> Mis pedidos</button>
+    <button class="profile-tab" data-tab="solicitudes"><i class="fa-regular fa-calendar-days"></i> Solicitudes</button>
+    <button class="profile-tab" data-tab="cuenta"><i class="fa-solid fa-gear"></i> Mi cuenta</button>
+  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <script src="../js/config.js"></script>
-  <script src="../js/ui.js"></script>
-  <script src="../js/perfil.js"></script>
-  <script>
-    // Toggle contraseña en perfil
-    document.querySelectorAll('[data-toggle-pw]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const t = document.getElementById(btn.dataset.togglePw);
-        if (!t) return;
-        t.type = t.type === 'text' ? 'password' : 'text';
-        btn.innerHTML = t.type === 'text' ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>';
-      });
+  <!-- TAB PEDIDOS -->
+  <div id="tab-pedidos" class="tab-content">
+    <div class="section-title" style="margin-bottom:1.25rem">Mis pedidos</div>
+    <div id="pedidosList"></div>
+  </div>
+
+  <!-- TAB SOLICITUDES -->
+  <div id="tab-solicitudes" class="tab-content">
+    <div class="section-title" style="margin-bottom:1.25rem">Solicitudes de visita</div>
+    <div id="solicitudesList"></div>
+  </div>
+
+  <!-- TAB CUENTA -->
+  <div id="tab-cuenta" class="tab-content">
+    <div class="section-title" style="margin-bottom:1.25rem">Mi cuenta</div>
+
+    <!-- Datos personales -->
+    <div class="settings-section">
+      <div class="settings-section-title"><i class="fa-regular fa-user"></i> Datos personales</div>
+      <form id="formUpdatePerfil" novalidate>
+        <div class="form-group">
+          <label class="form-label">Nombre completo</label>
+          <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-user"></i></span><input type="text" id="settingNombre" class="form-input" placeholder="Tu nombre"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Teléfono</label>
+          <div class="input-wrap"><span class="input-icon"><i class="fa-solid fa-mobile-screen-button"></i></span><input type="tel" id="settingTelefono" class="form-input" placeholder="+34 600 000 000" inputmode="tel" maxlength="15" onkeypress="return soloTelefono(event)" oninput="this.value=this.value.replace(/[^0-9+\s]/g,'')"></div>
+        </div>
+        <button type="submit" id="btnUpdatePerfil" class="btn btn-primary">Guardar cambios</button>
+      </form>
+    </div>
+
+    <!-- Cambiar email -->
+    <div class="settings-section">
+      <div class="settings-section-title"><i class="fa-regular fa-envelope"></i> Cambiar correo electrónico</div>
+      <form id="formUpdateEmail" novalidate>
+        <div class="form-group">
+          <label class="form-label">Nuevo correo</label>
+          <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-envelope"></i></span><input type="email" id="settingEmail" class="form-input" placeholder="nuevo@email.com"></div>
+          <div class="form-hint">Se enviará un enlace de confirmación al nuevo correo.</div>
+        </div>
+        <button type="submit" id="btnUpdateEmail" class="btn btn-primary">Cambiar correo</button>
+      </form>
+    </div>
+
+    <!-- Cambiar contraseña -->
+    <div class="settings-section">
+      <div class="settings-section-title"><i class="fa-solid fa-lock"></i> Cambiar contraseña</div>
+      <form id="formUpdatePassword" novalidate>
+        <div class="form-group">
+          <label class="form-label">Nueva contraseña</label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+            <input type="password" id="settingPassword" class="form-input" placeholder="Nueva contraseña segura">
+            <span class="input-suffix" data-toggle-pw="settingPassword"><i class="fa-regular fa-eye"></i></span>
+          </div>
+          <div class="form-hint">Mín. 8 caracteres, mayúscula, minúscula, número y carácter especial.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirmar contraseña</label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+            <input type="password" id="settingPassword2" class="form-input" placeholder="Repite la contraseña">
+            <span class="input-suffix" data-toggle-pw="settingPassword2"><i class="fa-regular fa-eye"></i></span>
+          </div>
+        </div>
+        <button type="submit" id="btnUpdatePassword" class="btn btn-primary">Cambiar contraseña</button>
+      </form>
+    </div>
+
+    <!-- Zona peligrosa -->
+    <div class="danger-zone">
+      <div class="settings-section-title" style="color:var(--danger)"><i class="fa-solid fa-triangle-exclamation"></i> Zona de peligro</div>
+      <p style="font-size:.875rem;color:var(--text2);margin-bottom:1rem">
+        Eliminar tu cuenta es una acción irreversible. Se borrarán todos tus datos, pedidos y solicitudes.
+      </p>
+      <button id="btnDeleteAccount" class="btn btn-danger btn-sm"><i class="fa-regular fa-trash-can"></i> Eliminar mi cuenta</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- MODAL ELIMINAR CUENTA -->
+<div id="modalDeleteAccount" class="modal-overlay">
+  <div class="modal">
+    <div style="text-align:center;margin-bottom:1.5rem">
+      <div style="margin-bottom:.75rem"><i class="fa-solid fa-triangle-exclamation" style="font-size:3rem;color:var(--danger)"></i></div>
+      <h3 class="modal-title">¿Eliminar cuenta?</h3>
+      <p class="modal-subtitle">Esta acción es irreversible. Todos tus datos serán eliminados permanentemente.</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Escribe <strong>ELIMINAR</strong> para confirmar</label>
+      <input type="text" id="deleteConfirmInput" class="form-input no-icon" placeholder="ELIMINAR">
+    </div>
+    <div style="display:flex;gap:.75rem">
+      <button id="btnCancelDelete" class="btn btn-secondary btn-full">Cancelar</button>
+      <button id="btnDeleteConfirm" class="btn btn-danger btn-full"><i class="fa-regular fa-trash-can"></i> Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="../js/config.js"></script>
+<script src="../js/ui.js"></script>
+<script src="../js/perfil.js"></script>
+<script>
+  // Toggle contraseña en perfil
+  document.querySelectorAll('[data-toggle-pw]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const t = document.getElementById(btn.dataset.togglePw);
+      if (!t) return;
+      t.type = t.type === 'text' ? 'password' : 'text';
+      btn.innerHTML = t.type === 'text' ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>';
     });
-  </script>
-  <script>
-    // Solo permite dígitos, + y espacios en campos de teléfono
-    function soloTelefono(e) {
-      return /[0-9+\s]/.test(String.fromCharCode(e.which || e.keyCode));
-    }
-  </script>
+  });
+</script>
+<script>
+// Solo permite dígitos, + y espacios en campos de teléfono
+function soloTelefono(e) {
+  return /[0-9+\s]/.test(String.fromCharCode(e.which || e.keyCode));
+}
+</script>
 </body>
-
 </html>
