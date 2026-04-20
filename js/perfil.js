@@ -68,7 +68,7 @@ async function loadPedidos(userId) {
 
   const { data, error } = await db
     .from('compra')
-    .select('*, detallecompra(id_vehiculo, precio_unitario, vehiculo(marca, modelo))')
+    .select('*')
     .eq('id_usuario', userId)
     .order('fecha', { ascending: false });
 
@@ -81,17 +81,35 @@ async function loadPedidos(userId) {
     cont.innerHTML = emptyState('<i class="fa-solid fa-box"></i>', 'No se ha realizado ningún pedido', 'Cuando reserves un vehículo aparecerá aquí'); return;
   }
 
-  cont.innerHTML = data.map(p => {
-    const detalle     = p.detallecompra?.[0];
-    const v           = detalle?.vehiculo;
-    const nombreVeh   = v ? `${v.marca} ${v.modelo}` : detalle?.id_vehiculo || '—';
+  // Cargar detalles de cada compra por separado para evitar ambigüedad FK
+  const pedidosConDetalle = await Promise.all(data.map(async p => {
+    const { data: detalle } = await db
+      .from('detallecompra')
+      .select('id_vehiculo, precio_unitario')
+      .eq('id_compra', p.id_compra)
+      .limit(1)
+      .single();
+
+    let vehiculoNombre = '—';
+    if (detalle?.id_vehiculo) {
+      const { data: veh } = await db
+        .from('vehiculo')
+        .select('marca, modelo')
+        .eq('id_vehiculo', detalle.id_vehiculo)
+        .single();
+      if (veh) vehiculoNombre = `${veh.marca} ${veh.modelo}`;
+    }
+    return { ...p, vehiculoNombre };
+  }));
+
+  cont.innerHTML = pedidosConDetalle.map(p => {
     const estadoBadge = getEstadoBadge(p.estado);
     return `
       <div class="pedido-card">
         <div class="pedido-icon"><i class="fa-solid fa-car"></i></div>
         <div style="flex:1">
           <div class="pedido-title">Pedido #${p.id_compra?.slice(0,8).toUpperCase()}</div>
-          <div class="pedido-sub"><i class="fa-solid fa-car" style="font-size:.75rem"></i> ${nombreVeh}</div>
+          <div class="pedido-sub"><i class="fa-solid fa-car" style="font-size:.75rem"></i> ${p.vehiculoNombre}</div>
           <div class="pedido-date"><i class="fa-regular fa-calendar"></i> ${new Date(p.fecha).toLocaleDateString('es-ES', { year:'numeric',month:'long',day:'numeric' })}</div>
         </div>
         <div style="text-align:right">
@@ -125,7 +143,10 @@ async function loadSolicitudes(userId) {
       <div class="pedido-card">
         <div class="pedido-icon"><i class="fa-solid fa-calendar-days"></i></div>
         <div style="flex:1">
-          <div class="pedido-title">${`${s.marca || ''} ${s.modelo || ''}`.trim() || 'Vehículo' || 'Vehículo'}</div>
+          <div class="pedido-title">${
+            s.marca && s.modelo ? `${s.marca} ${s.modelo}` :
+            s.marca_modelo || 'Vehículo'
+          }</div>
           <div class="pedido-sub"><i class="fa-regular fa-user"></i> ${s.nombre_asistente} &nbsp;·&nbsp; <i class="fa-solid fa-mobile-screen-button"></i> ${s.telefono}</div>
           <div class="pedido-date"><i class="fa-regular fa-calendar"></i> ${formatFecha(s.fecha_visita)} a las ${s.hora_visita?.slice(0,5) || '—'}</div>
         </div>
@@ -258,7 +279,7 @@ async function handleDeleteAccount() {
   setLoading(btn, true);
   try {
     const { data: { user } } = await db.auth.getUser();
-    // 1. Borrar de tabla usuario → el trigger borra también de auth.users
+    // 1. Borrar de tabla usuario y el trigger borra también de auth.users
     await db.from('usuario').delete().eq('id_usuario', user.id);
     // 2. Cerrar sesión localmente
     await db.auth.signOut();

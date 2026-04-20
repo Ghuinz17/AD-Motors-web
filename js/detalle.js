@@ -364,6 +364,7 @@ async function handleSubmitVisita(e) {
     const { error: insertError } = await db.from('solicitudes_revision').insert([{
       id_vehiculo:      vehiculoId,
       id_usuario:       currentUser?.id || null,
+      marca_modelo:     `${vehiculo.marca} ${vehiculo.modelo}`,
       nombre_asistente: nombre,
       telefono:         tel,
       fecha_visita:     fecha,
