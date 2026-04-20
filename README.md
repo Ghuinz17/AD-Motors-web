@@ -101,8 +101,6 @@ Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detall
 
 Este proyecto ha sido desarrollado en colaboración con **AD Motor's**.
 
-| Red | Enlace |
-|---|---|
-| 📸 Instagram | [vehiculosadmotors](https://www.instagram.com/vehiculosadmotors) |
-| 👥 Facebook | [AD Motors](https://www.facebook.com/people/AD-Motors/61584583105868/) |
-| 🎵 TikTok | Próximamente |
+📸 **Instagram** — [vehiculosadmotors](https://www.instagram.com/vehiculosadmotors)  
+👥 **Facebook** — [AD Motors](https://www.facebook.com/people/AD-Motors/61584583105868/)  
+🎵 **TikTok** — Próximamente
