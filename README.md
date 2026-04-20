@@ -1,128 +1,108 @@
-# AD Motor's — Platform
+# 🌐 AD Motor's — Plataforma Web
 
-**Full-stack platform for vehicle listing and management, built with React Native, Expo and Supabase.**
+**Plataforma web para la gestión y venta de vehículos de segunda mano, desarrollada con HTML, CSS y JavaScript vanilla con Supabase como backend.**
 
-[![Node.js](https://img.shields.io/badge/Node.js-v24.13.1-green)](https://nodejs.org/)
-[![React Native](https://img.shields.io/badge/React%20Native-0.74.5-blue)](https://reactnative.dev/)
-[![Expo](https://img.shields.io/badge/Expo-51.0.39-black)](https://expo.dev/)
 [![Supabase](https://img.shields.io/badge/Supabase-2.45.1-green)](https://supabase.com/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3.3-blue)](https://www.typescriptlang.org/)
+[![EmailJS](https://img.shields.io/badge/EmailJS-3.x-blue)](https://emailjs.com/)
+[![Font%20Awesome](https://img.shields.io/badge/Font%20Awesome-6.5-purple)](https://fontawesome.com/)
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black)](https://vercel.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 ---
 
-## Description
+## 📱 Descripción
 
-**AD Motors** is a complete platform for browsing, reserving and managing second-hand vehicles. It consists of two parts: a **public-facing web application** for customers and an **Android administration app** for staff. Both share the same Supabase backend.
-
-**Key features:**
-- Full vehicle catalogue with search and filtering
-- Vehicle reservation with payment gateway (card, PayPal, Bizum)
-- Visit request system with date and time scheduling
-- User authentication via email and OTP code
-- User profile with order history and account management
-- Support and help contact form
-- Light and dark theme
-- Administration app for managing vehicles, reservations and visit requests
+**AD Motor's Web** es la plataforma pública del concesionario. Permite a los clientes explorar el catálogo de vehículos disponibles, realizar reservas, solicitar visitas personales y gestionar su cuenta. Incluye un sistema de autenticación por OTP, pasarela de pago simulada y un formulario de soporte.
 
 ---
 
-## Technology Stack
+## ✅ Características principales
 
-### Web
-- HTML5, CSS3, Vanilla JavaScript
-- Supabase JavaScript Client
-- EmailJS
-- Font Awesome 6
-- Google Fonts — Barlow, Barlow Condensed
-- Vercel (deployment)
-
-### Mobile (Android Administration App)
-- React Native 0.74.5
-- Expo 51.0.39
-- TypeScript 5.3.3
-- @react-navigation/native-stack
-- Supabase 2.45.1
-- expo-image-picker 15.1.0
-- @expo/vector-icons 14.0.3
-- react-native-safe-area-context 4.10.5
-- base64-arraybuffer 1.0.2
+- 🔍 Catálogo con búsqueda y filtros avanzados
+- 🚗 Detalle de vehículo con galería de imágenes y lightbox
+- 💳 Reserva de vehículo con señal de 25 € (tarjeta, PayPal, Bizum)
+- 📅 Solicitud de visita con selección de fecha y hora
+- 🔐 Autenticación por email con código OTP de 8 dígitos
+- 👤 Perfil de usuario con historial de pedidos y solicitudes
+- ✉️ Notificaciones por email automáticas (EmailJS + Supabase)
+- 🌙 Tema claro y oscuro
+- 📞 Formulario de soporte y ayuda
+- 📱 Diseño completamente responsive
 
 ---
 
-## Features
+## 🛠️ Tecnologías utilizadas
 
-### Customer (Web)
-
-| Feature | Description |
+| Capa | Tecnología |
 |---|---|
-| Vehicle catalogue | Browse all available vehicles with advanced search and filtering |
-| Vehicle detail | Image gallery with lightbox, full specs and pricing |
-| Reservation | Reserve a vehicle with a 25 EUR deposit via simulated payment gateway |
-| Visit request | Schedule a personal visit to view a vehicle |
-| User account | Register, log in, manage orders and visit requests |
-| Support form | Contact the team directly from the website |
-
-### Administration (Android App)
-
-| Feature | Description |
-|---|---|
-| Vehicle management | Create, edit, view and delete vehicle listings with images |
-| Visit request management | Accept or reject requests, contact customers directly |
-| Reservation management | View and release reserved vehicles |
+| Frontend | HTML5, CSS3, JavaScript ES6+ |
+| Backend | Supabase (PostgreSQL, Auth, Storage) |
+| Email | EmailJS |
+| Iconos | Font Awesome 6 |
+| Tipografía | Google Fonts — Barlow, Barlow Condensed |
+| Despliegue | Vercel |
 
 ---
 
-## Requirements
+## 💻 Uso
 
-- Node.js 24.13.1 or higher
-- npm or yarn
-- Expo CLI installed globally
-- Supabase account — [supabase.com](https://supabase.com)
-- EmailJS account — [emailjs.com](https://emailjs.com)
-- Git
+### Para el cliente
+1. Navega por el catálogo de vehículos
+2. Regístrate o inicia sesión con tu email
+3. Confirma tu cuenta con el código de 8 dígitos que recibirás por correo
+4. Reserva un vehículo o solicita una visita personal
+5. Gestiona tus pedidos y solicitudes desde tu perfil
 
----
-
-## Usage
-
-### Web
-Open `index.html` locally or access the deployed version. Customers can browse vehicles, create an account, reserve a vehicle or request a visit.
-
-### Mobile App
-1. Clone the repository
-2. Run `npm install --legacy-peer-deps`
-3. Configure `src/config/supabase.ts` with your Supabase credentials
-4. Run `npx expo start`
-5. Build for Android with `eas build --platform android --profile preview`
+### Para el administrador
+- Los vehículos se gestionan desde la **app móvil de administración**
+- Las solicitudes de visita se aceptan o rechazan desde la app
+- Los vehículos reservados se pueden volver a publicar desde la app
 
 ---
 
-## Email Notifications
+## 📧 Notificaciones por email
 
-The platform sends automated emails for account confirmation, reservation confirmation, visit requests, password reset and email changes. All templates are built with inline HTML and CSS for full email client compatibility.
+La plataforma envía emails automáticos para los siguientes eventos:
+
+- ✅ Confirmación de cuenta (OTP)
+- 🚗 Confirmación de reserva
+- 📅 Solicitud de visita registrada
+- 🔑 Restablecimiento de contraseña
+- ✉️ Cambio de dirección de correo
 
 ---
 
-## License
+## 🌍 Despliegue
 
-This project is licensed under the MIT License. See the `LICENSE` file for full terms.
+La web está desplegada como sitio estático en **Vercel**.
+
+Tras el despliegue, configura en Supabase:
+- **Authentication > URL Configuration** — establece la URL del sitio
+- **Redirect URLs** — añade el dominio de Vercel
 
 ---
 
-## Author
+## 📝 Licencia
 
-**Antonio Jose Molero Perez**
+Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detalles.
+
+---
+
+## 👨‍💻 Autor
+
+**Antonio José Molero Pérez**
 
 - GitHub: [@Ghuinz17](https://github.com/Ghuinz17)
 - Email: ajmolero797@gmail.com
 
 ---
 
-## Acknowledgements
+## 🤝 Desarrollado para AD Motor's
 
-This platform was developed for and in collaboration with **AD Motor's**.
+Este proyecto ha sido desarrollado en colaboración con **AD Motor's**.
 
-- Instagram: [vehiculosadmotors](https://www.instagram.com/vehiculosadmotors)
-- Facebook: [AD Motors](https://www.facebook.com/people/AD-Motors/61584583105868/)
-- TikTok: Coming soon
+| Red | Enlace |
+|---|---|
+| 📸 Instagram | [vehiculosadmotors](https://www.instagram.com/vehiculosadmotors) |
+| 👥 Facebook | [AD Motors](https://www.facebook.com/people/AD-Motors/61584583105868/) |
+| 🎵 TikTok | Próximamente |
