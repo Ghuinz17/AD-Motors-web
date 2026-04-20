@@ -1,153 +1,84 @@
-# 🏎️ AD Motor´s App
+# 🌐 AD Motor's — Plataforma Web
 
-**Aplicación móvil para gestionar vehículos con imágenes, desarrollada con React Native y Supabase.**
+**Plataforma web para la gestión y venta de vehículos de segunda mano, desarrollada con HTML, CSS y JavaScript vanilla con Supabase como backend.**
 
-[![Node.js](https://img.shields.io/badge/Node.js-v24.13.1-green)](https://nodejs.org/)
-[![React Native](https://img.shields.io/badge/React%20Native-0.74.5-blue)](https://reactnative.dev/)
-[![Expo](https://img.shields.io/badge/Expo-51.0.39-black)](https://expo.dev/)
 [![Supabase](https://img.shields.io/badge/Supabase-2.45.1-green)](https://supabase.com/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3.3-blue)](https://www.typescriptlang.org/)
+[![EmailJS](https://img.shields.io/badge/EmailJS-3.x-blue)](https://emailjs.com/)
+[![Font%20Awesome](https://img.shields.io/badge/Font%20Awesome-6.5-purple)](https://fontawesome.com/)
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black)](https://vercel.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 ---
 
 ## 📱 Descripción
 
-**AD Motors** es una aplicación móvil completa para **crear, editar, visualizar y eliminar vehículos** con sus correspondientes imágenes. La aplicación está optimizada para **iOS y Android** y utiliza **Supabase** como backend para almacenar datos e imágenes.
-
-**Características principales:**
-- ✅ Gestión CRUD completa de vehículos
-- ✅ Carga de múltiples imágenes por vehículo
-- ✅ Almacenamiento en la nube (Supabase Storage)
-- ✅ Sincronización en tiempo real
-- ✅ Autenticación anónima
-- ✅ Interfaz intuitiva y responsive
-- ✅ Compatible con iOS y Android
+**AD Motor's Web** es la plataforma pública del concesionario. Permite a los clientes explorar el catálogo de vehículos disponibles, realizar reservas, solicitar visitas personales y gestionar su cuenta. Incluye un sistema de autenticación por OTP, pasarela de pago simulada y un formulario de soporte.
 
 ---
 
-## 🎯 Características
+## ✅ Características principales
 
-### **Funcionalidades Principales**
-
-| Función | Descripción |
-|---------|------------|
-| **Agregar Vehículo** | Crear nuevo vehículo con datos y múltiples imágenes |
-| **Listar Vehículos** | Ver todos los vehículos registrados en el dispositivo |
-| **Ver Detalles** | Visualizar información completa y galería de imágenes |
-| **Editar Vehículo** | Modificar datos y agregar nuevas imágenes |
-| **Eliminar Vehículo** | Remover vehículo e imágenes asociadas |
-
-### **Campos de Vehículo**
-
-- 📝 Marca
-- 📋 Modelo
-- 💰 Precio
-- 📅 Año de fabricación
-- ⛽ Tipo de combustible
-- 🛣️ Kilometraje
-- 🎨 Color
-- 📸 Múltiples imágenes
-- 📄 Descripción
+- 🔍 Catálogo con búsqueda y filtros avanzados
+- 🚗 Detalle de vehículo con galería de imágenes y lightbox
+- 💳 Reserva de vehículo con señal de 25 € (tarjeta, PayPal, Bizum)
+- 📅 Solicitud de visita con selección de fecha y hora
+- 🔐 Autenticación por email con código OTP de 8 dígitos
+- 👤 Perfil de usuario con historial de pedidos y solicitudes
+- ✉️ Notificaciones por email automáticas (EmailJS + Supabase)
+- 🌙 Tema claro y oscuro
+- 📞 Formulario de soporte y ayuda
+- 📱 Diseño completamente responsive
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## 🛠️ Tecnologías utilizadas
 
-### **Framework y Plataforma**
-- React Native 0.74.5
-- Expo 51.0.39
-- TypeScript 5.3.3
-
-### **Navegación**
-- @react-navigation/native
-- @react-navigation/native-stack
-- @react-navigation/stack
-
-### **Backend y Base de Datos**
-- Supabase 2.45.1
-- PostgreSQL (a través de Supabase)
-
-### **Almacenamiento**
-- Supabase Storage (imágenes en la nube)
-- @react-native-async-storage/async-storage (almacenamiento local)
-
-### **Procesamiento de Imágenes**
-- expo-image-picker 15.1.0
-- expo-image-manipulator 12.0.5
-
-### **Utilidades**
-- @expo/vector-icons 14.0.3 (Ionicons)
-- react-native-safe-area-context 4.10.5
-- react-native-screens 3.31.1
-- react-native-gesture-handler 2.16.1
-- expo-status-bar 1.12.1
-- expo-font 12.0.10
-- expo-system-ui 3.0.7
-- base64-arraybuffer 1.0.2
-- uuid (para generar IDs únicos)
+| Capa | Tecnología |
+|---|---|
+| Frontend | HTML5, CSS3, JavaScript ES6+ |
+| Backend | Supabase (PostgreSQL, Auth, Storage) |
+| Email | EmailJS |
+| Iconos | Font Awesome 6 |
+| Tipografía | Google Fonts — Barlow, Barlow Condensed |
+| Despliegue | Vercel |
 
 ---
-
-## 📋 Requisitos Previos
-
-Antes de instalar, asegúrate de tener:
-
-- **Node.js** versión 24.13.1 o superior
-- **npm** o **yarn**
-- **Expo CLI** instalado globalmente
-- **Cuenta de Supabase** (gratuita en [supabase.com](https://supabase.com))
-- **Git** para clonar el repositorio
-
----
-
 
 ## 💻 Uso
 
-### **Pantalla Principal (Home)**
-- Acceso a opciones: Ver vehículos, Agregar vehículo
+### Para el cliente
+1. Navega por el catálogo de vehículos
+2. Regístrate o inicia sesión con tu email
+3. Confirma tu cuenta con el código de 8 dígitos que recibirás por correo
+4. Reserva un vehículo o solicita una visita personal
+5. Gestiona tus pedidos y solicitudes desde tu perfil
 
-### **Listar Vehículos**
-- Muestra todos los vehículos del dispositivo
-- Toca un vehículo para ver detalles
-- Desliza para eliminar (swipe)
-
-### **Agregar/Editar Vehículo**
-1. Ingresa los datos del vehículo
-2. Selecciona imágenes de la galería o cámara
-3. Presiona "Guardar"
-
-### **Ver Detalles**
-- Visualiza información del vehículo
-- Galería de imágenes
-- Opciones para editar o eliminar
+### Para el administrador
+- Los vehículos se gestionan desde la **app móvil de administración**
+- Las solicitudes de visita se aceptan o rechazan desde la app
+- Los vehículos reservados se pueden volver a publicar desde la app
 
 ---
 
-## 🔐 Autenticación
+## 📧 Notificaciones por email
 
-La aplicación utiliza **autenticación anónima de Supabase**, lo que significa:
+La plataforma envía emails automáticos para los siguientes eventos:
 
-- ✅ No requiere login
-- ✅ Cada dispositivo tiene un Device ID único
-- ✅ Los datos se sincronizan automáticamente
+- ✅ Confirmación de cuenta (OTP)
+- 🚗 Confirmación de reserva
+- 📅 Solicitud de visita registrada
+- 🔑 Restablecimiento de contraseña
+- ✉️ Cambio de dirección de correo
 
 ---
 
-## 📁 Estructura del Proyecto
+## 🌍 Despliegue
 
-El proyecto está organizado en la siguiente estructura:
+La web está desplegada como sitio estático en **Vercel**.
 
-- **src/** - Código fuente de la aplicación
-  - **config/** - Configuración de servicios externos
-  - **types/** - Definiciones de tipos TypeScript
-  - **services/** - Servicios de negocio y comunicación con Supabase
-  - **screens/** - Pantallas de la aplicación
-  - **utils/** - Funciones utilitarias
-
-- **assets/** - Recursos (imágenes, íconos, splash screen)
-- **App.tsx** - Punto de entrada de la aplicación
-- **app.json** - Configuración de Expo
+Tras el despliegue, configura en Supabase:
+- **Authentication > URL Configuration** — establece la URL del sitio
+- **Redirect URLs** — añade el dominio de Vercel
 
 ---
 
@@ -166,6 +97,10 @@ Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detall
 
 ---
 
-## 🙏 Colaboración con AD Motor´s
+## 🤝 Desarrollado para AD Motor's
 
-- AD Motor´s - (https://www.instagram.com/vehiculosadmotors)
+Este proyecto ha sido desarrollado en colaboración con **AD Motor's**.
+
+📸 **Instagram** — [vehiculosadmotors](https://www.instagram.com/vehiculosadmotors)  
+👥 **Facebook** — [AD Motors](https://www.facebook.com/people/AD-Motors/61584583105868/)  
+🎵 **TikTok** — Próximamente
