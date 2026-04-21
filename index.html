@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,253 +10,281 @@
   <link rel="stylesheet" href="css/header.css">
   <link rel="stylesheet" href="css/index.css">
   <style>
-    .hidden { display: none !important; }
-    .loading-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); gap: 1.5rem; }
-    .skel-card { height: 340px; border-radius: 12px; }
+    .hidden {
+      display: none !important;
+    }
+
+    .loading-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .skel-card {
+      height: 340px;
+      border-radius: 12px;
+    }
+
     /* Asegura que el hero no deje espacio azul en móvil */
-    body { overflow-x: hidden; }
+    body {
+      overflow-x: hidden;
+    }
   </style>
 </head>
+
 <body>
 
-<!--  HEADER   -->
-<header class="header">
-  <div class="header-inner">
-    <a href="index.html" class="logo">
-      <img src="assets/admotors.png" alt="AD Motors">
-      AD <span>Motors</span>
-    </a>
-    <div class="header-actions">
-      <button id="btnTheme" class="btn-icon" title="Cambiar tema"><i class="fa-solid fa-moon"></i></button>
-      <a href="pages/auth.html" id="headerLoginBtn" class="btn-header-login">Acceder</a>
-      <div id="userAvatar" class="user-avatar hidden">U</div>
-      <button id="btnMenu" class="btn-icon" title="Menú"><i class="fa-solid fa-bars"></i></button>
-    </div>
-  </div>
-</header>
-
-<!--  DRAWER  -->
-<div id="drawerOverlay" class="drawer-overlay"></div>
-<aside id="drawer" class="drawer">
-  <div class="drawer-header">
-    <span class="drawer-title">Menú</span>
-    <button id="btnCloseDrawer" class="btn-close-drawer btn-icon"><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div class="drawer-user">
-    <div id="drawerInitials" class="drawer-avatar">U</div>
-    <div class="drawer-user-info">
-      <div id="drawerName"  class="drawer-user-name"></div>
-      <div id="drawerEmail" class="drawer-user-email"></div>
-    </div>
-  </div>
-  <nav class="drawer-nav">
-    <div class="drawer-nav-item" data-href="index.html" data-page="index">
-      <span class="ni"><i class="fa-solid fa-house"></i></span> Inicio
-    </div>
-    <div class="drawer-nav-item" data-href="pages/perfil.html?tab=pedidos" data-page="perfil">
-      <span class="ni"><i class="fa-solid fa-box"></i></span> Mis pedidos
-    </div>
-    <div class="drawer-nav-item" data-href="pages/perfil.html?tab=solicitudes" data-page="solicitudes">
-      <span class="ni"><i class="fa-solid fa-calendar-days"></i></span> Mis solicitudes de visita
-    </div>
-    <div class="drawer-nav-item" data-href="pages/perfil.html?tab=cuenta" data-page="cuenta">
-      <span class="ni"><i class="fa-solid fa-gear"></i></span> Mi cuenta
-    </div>
-    <div class="drawer-nav-item" data-href="pages/terminos.html">
-      <span class="ni"><i class="fa-solid fa-file-lines"></i></span> Términos y condiciones
-    </div>
-    <div class="drawer-nav-item" onclick="openModal('modalSoporte');document.getElementById('drawer')?.classList.remove('open');document.getElementById('drawerOverlay')?.classList.remove('open')">
-      <span class="ni"><i class="fa-solid fa-circle-question"></i></span> Soporte y ayuda
-    </div>
-  </nav>
-  <div class="drawer-footer">
-    <button id="btnLogout" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
-  </div>
-</aside>
-
-<!--  HERO  -->
-<section class="hero">
-  <div class="hero-inner">
-    <span class="hero-eyebrow"><i class="fa-solid fa-car"></i> Concesionario oficial</span>
-    <h1 class="hero-title">Encuentra tu<br><span>vehículo ideal</span></h1>
-    <p class="hero-sub">Más de <strong>50 vehículos</strong> de ocasión con garantía. Precios transparentes, sin sorpresas.</p>
-
-    <div class="search-bar">
-      <input type="text" id="searchInput" class="search-input" placeholder="Buscar por marca o modelo...">
-      <button class="btn-search" onclick="applyFilters()"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
-    </div>
-
-    <div class="hero-stats">
-      <div>
-        <div class="hero-stat-num" id="statTotal">—</div>
-        <div class="hero-stat-label">Vehículos</div>
-      </div>
-      <div>
-        <div class="hero-stat-num">100%</div>
-        <div class="hero-stat-label">Garantía</div>
-      </div>
-      <div>
-        <div class="hero-stat-num">24h</div>
-        <div class="hero-stat-label">Respuesta</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!--  CONTENIDO PRINCIPAL  -->
-<main class="main">
-
-  <!-- Filtros avanzados -->
-  <div class="filters-bar">
-    <div class="filters-row">
-      <div class="filter-group">
-        <label class="filter-label">Combustible</label>
-        <select id="filterCombustible" class="filter-select" onchange="applyFilters()">
-          <option value="">Todos</option>
-          <option value="GASOLINA">Gasolina</option>
-          <option value="DIESEL">Diésel</option>
-          <option value="ELECTRICO">Eléctrico</option>
-          <option value="HIBRIDO">Híbrido</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label class="filter-label">Color</label>
-        <input type="text" id="filterColor" class="filter-input" placeholder="Ej: Rojo" oninput="applyFilters()">
-      </div>
-      <div class="filter-group">
-        <label class="filter-label">Año mínimo</label>
-        <input type="number" id="filterAnoMin" class="filter-input" placeholder="2010" min="1990" max="2025" oninput="applyFilters()">
-      </div>
-      <div class="filter-group">
-        <label class="filter-label">Precio máximo</label>
-        <input type="number" id="filterPrecioMax" class="filter-input" placeholder="50000 EUR" oninput="applyFilters()">
-      </div>
-      <div class="filter-group">
-        <label class="filter-label">Ordenar por</label>
-        <select id="filterOrden" class="filter-select" onchange="applyFilters()">
-          <option value="fecha_desc">Más recientes</option>
-          <option value="precio_asc">Precio: menor a mayor</option>
-          <option value="precio_desc">Precio: mayor a menor</option>
-          <option value="ano_desc">Año: más nuevo</option>
-          <option value="ano_asc">Año: más antiguo</option>
-        </select>
-      </div>
-      <div class="filter-group" style="justify-content:flex-end;flex-direction:row;align-items:flex-end">
-        <button class="btn-clear-filters" onclick="clearFilters()"><i class="fa-solid fa-xmark"></i> Limpiar</button>
-      </div>
-    </div>
-    <div style="margin-top:.75rem;font-size:.8rem;color:var(--text3)" id="filterCount"></div>
-  </div>
-
-  <!-- Grid vehículos -->
-  <div id="vehiculosGrid" class="vehicles-grid">
-    <!-- Skeletons mientras carga -->
-    <div class="skel-card skeleton"></div>
-    <div class="skel-card skeleton"></div>
-    <div class="skel-card skeleton"></div>
-    <div class="skel-card skeleton"></div>
-    <div class="skel-card skeleton"></div>
-    <div class="skel-card skeleton"></div>
-  </div>
-
-</main>
-
-<!--  FOOTER  -->
-<footer class="footer">
-  <div class="footer-inner">
-    <div class="footer-logo">
-      <img src="assets/admotors.png" alt="AD Motors">
-      AD MOTOR'S
-    </div>
-
-    <!-- Redes sociales -->
-    <div class="footer-social">
-      <a href="https://www.instagram.com/vehiculosadmotors" target="_blank" rel="noopener" class="social-btn" title="Instagram">
-        <i class="fa-brands fa-instagram"></i>
+  <!-- ======== HEADER ======== -->
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">
+        <img src="assets/admotors.png" alt="AD Motors">
+        AD <span>Motors</span>
       </a>
-      <a href="https://www.facebook.com/people/AD-Motors/61584583105868/" target="_blank" rel="noopener" class="social-btn" title="Facebook">
-        <i class="fa-brands fa-facebook-f"></i>
-      </a>
-      <span class="social-btn social-btn-disabled" title="TikTok (próximamente)">
-        <i class="fa-brands fa-tiktok"></i>
-      </span>
-    </div>
-
-    <p class="footer-text">© 2025 AD Motors. Todos los derechos reservados.</p>
-  </div>
-</footer>
-
-<!-- Toast container -->
-<div id="toastContainer" class="toast-container"></div>
-
-<!-- Scripts -->
-<!--  MODAL SOPORTE  -->
-<div id="modalSoporte" class="modal-overlay">
-  <div class="modal" style="max-width:480px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
-      <div>
-        <h3 class="modal-title"><i class="fa-solid fa-circle-question" style="color:var(--primary);margin-right:.5rem"></i>Soporte y ayuda</h3>
-        <p class="modal-subtitle">Cuéntanos tu problema o sugerencia</p>
+      <div class="header-actions">
+        <button id="btnTheme" class="btn-icon" title="Cambiar tema"><i class="fa-solid fa-moon"></i></button>
+        <a href="pages/auth.html" id="headerLoginBtn" class="btn-header-login">Acceder</a>
+        <div id="userAvatar" class="user-avatar hidden">U</div>
+        <button id="btnMenu" class="btn-icon" title="Menú"><i class="fa-solid fa-bars"></i></button>
       </div>
-      <button onclick="closeModal('modalSoporte')" style="background:none;border:none;color:var(--text3);font-size:1.2rem;cursor:pointer"><i class="fa-solid fa-xmark"></i></button>
     </div>
+  </header>
 
-    <form id="formSoporte" novalidate>
-            <div class="form-group">
-        <label class="form-label">Tipo de consulta</label>
-        <div class="input-wrap">
-          <span class="input-icon"><i class="fa-solid fa-tag"></i></span>
-          <select id="soporteTipo" class="form-input" style="padding-left:2.5rem">
-            <option value="error">Error detectado</option>
-            <option value="ayuda">Necesito ayuda</option>
-            <option value="sugerencia">Tengo una sugerencia</option>
-            <option value="otro">Otro</option>
+  <!-- ======== DRAWER ======== -->
+  <div id="drawerOverlay" class="drawer-overlay"></div>
+  <aside id="drawer" class="drawer">
+    <div class="drawer-header">
+      <span class="drawer-title">Menú</span>
+      <button id="btnCloseDrawer" class="btn-close-drawer btn-icon"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="drawer-user">
+      <div id="drawerInitials" class="drawer-avatar">U</div>
+      <div class="drawer-user-info">
+        <div id="drawerName" class="drawer-user-name"></div>
+        <div id="drawerEmail" class="drawer-user-email"></div>
+      </div>
+    </div>
+    <nav class="drawer-nav">
+      <div class="drawer-nav-item" data-href="index.html" data-page="index">
+        <span class="ni"><i class="fa-solid fa-house"></i></span> Inicio
+      </div>
+      <div class="drawer-nav-item" data-href="pages/perfil.html?tab=pedidos" data-page="perfil">
+        <span class="ni"><i class="fa-solid fa-box"></i></span> Mis pedidos
+      </div>
+      <div class="drawer-nav-item" data-href="pages/perfil.html?tab=solicitudes" data-page="solicitudes">
+        <span class="ni"><i class="fa-solid fa-calendar-days"></i></span> Mis solicitudes de visita
+      </div>
+      <div class="drawer-nav-item" data-href="pages/perfil.html?tab=cuenta" data-page="cuenta">
+        <span class="ni"><i class="fa-solid fa-gear"></i></span> Mi cuenta
+      </div>
+      <div class="drawer-nav-item" data-href="pages/terminos.html">
+        <span class="ni"><i class="fa-solid fa-file-lines"></i></span> Términos y condiciones
+      </div>
+      <div class="drawer-nav-item"
+        onclick="openModal('modalSoporte');document.getElementById('drawer')?.classList.remove('open');document.getElementById('drawerOverlay')?.classList.remove('open')">
+        <span class="ni"><i class="fa-solid fa-circle-question"></i></span> Soporte y ayuda
+      </div>
+    </nav>
+    <div class="drawer-footer">
+      <button id="btnLogout" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <!-- ======== HERO ======== -->
+  <section class="hero">
+    <div class="hero-inner">
+      <span class="hero-eyebrow"><i class="fa-solid fa-car"></i> Concesionario oficial</span>
+      <h1 class="hero-title">Encuentra tu<br><span>vehículo ideal</span></h1>
+      <p class="hero-sub">Más de <strong>50 vehículos</strong> de ocasión con garantía. Precios transparentes, sin
+        sorpresas.</p>
+
+      <div class="search-bar">
+        <input type="text" id="searchInput" class="search-input" placeholder="Buscar por marca o modelo...">
+        <button class="btn-search" onclick="applyFilters()"><i class="fa-solid fa-magnifying-glass"></i> Buscar</button>
+      </div>
+
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-num" id="statTotal">—</div>
+          <div class="hero-stat-label">Vehículos</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">100%</div>
+          <div class="hero-stat-label">Garantía</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">24h</div>
+          <div class="hero-stat-label">Respuesta</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== CONTENIDO PRINCIPAL ======== -->
+  <main class="main">
+
+    <!-- Filtros avanzados -->
+    <div class="filters-bar">
+      <div class="filters-row">
+        <div class="filter-group">
+          <label class="filter-label">Combustible</label>
+          <select id="filterCombustible" class="filter-select" onchange="applyFilters()">
+            <option value="">Todos</option>
+            <option value="GASOLINA">Gasolina</option>
+            <option value="DIESEL">Diésel</option>
+            <option value="ELECTRICO">Eléctrico</option>
+            <option value="HIBRIDO">Híbrido</option>
           </select>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Asunto <span>*</span></label>
-        <div class="input-wrap">
-          <span class="input-icon"><i class="fa-regular fa-pen-to-square"></i></span>
-          <input type="text" id="soporteAsunto" class="form-input" placeholder="Describe brevemente el problema">
+        <div class="filter-group">
+          <label class="filter-label">Color</label>
+          <input type="text" id="filterColor" class="filter-input" placeholder="Ej: Rojo" oninput="applyFilters()">
         </div>
-        <div class="form-error" id="soporteAsuntoError"></div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Descripción <span>*</span></label>
-        <textarea id="soporteDescripcion" class="form-input no-icon" rows="4"
-          style="resize:none;padding:.875rem 1rem"
-          placeholder="Describe con detalle qué ocurrió, qué esperabas que ocurriera y cualquier información relevante..."></textarea>
-        <div class="form-error" id="soporteDescripcionError"></div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Tu email <span>*</span></label>
-        <div class="input-wrap">
-          <span class="input-icon"><i class="fa-regular fa-envelope"></i></span>
-          <input type="email" id="soporteEmail" class="form-input" placeholder="Para que podamos responderte">
+        <div class="filter-group">
+          <label class="filter-label">Año mínimo</label>
+          <input type="number" id="filterAnoMin" class="filter-input" placeholder="2010" min="1990" max="2030"
+            maxlength="4" onkeypress="return /[0-9]/.test(String.fromCharCode(event.which||event.keyCode))"
+            oninput="applyFilters()">
         </div>
-        <div class="form-error" id="soporteEmailError"></div>
+        <div class="filter-group">
+          <label class="filter-label">Precio máximo</label>
+          <input type="number" id="filterPrecioMax" class="filter-input" placeholder="50000 EUR" min="0"
+            onkeypress="return /[0-9]/.test(String.fromCharCode(event.which||event.keyCode))" oninput="applyFilters()">
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Ordenar por</label>
+          <select id="filterOrden" class="filter-select" onchange="applyFilters()">
+            <option value="fecha_desc">Más recientes</option>
+            <option value="precio_asc">Precio: menor a mayor</option>
+            <option value="precio_desc">Precio: mayor a menor</option>
+            <option value="ano_desc">Año: más nuevo</option>
+            <option value="ano_asc">Año: más antiguo</option>
+          </select>
+        </div>
+        <div class="filter-group" style="justify-content:flex-end;flex-direction:row;align-items:flex-end">
+          <button class="btn-clear-filters" onclick="clearFilters()"><i class="fa-solid fa-xmark"></i> Limpiar</button>
+        </div>
+      </div>
+      <div style="margin-top:.75rem;font-size:.8rem;color:var(--text3)" id="filterCount"></div>
+    </div>
+
+    <!-- Grid vehículos -->
+    <div id="vehiculosGrid" class="vehicles-grid">
+      <!-- Skeletons mientras carga -->
+      <div class="skel-card skeleton"></div>
+      <div class="skel-card skeleton"></div>
+      <div class="skel-card skeleton"></div>
+      <div class="skel-card skeleton"></div>
+      <div class="skel-card skeleton"></div>
+      <div class="skel-card skeleton"></div>
+    </div>
+
+  </main>
+
+  <!-- ======== FOOTER ======== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <img src="assets/admotors.png" alt="AD Motors">
+        AD MOTOR'S
       </div>
 
-      <div style="display:flex;gap:.75rem;margin-top:.5rem">
-        <button type="button" class="btn btn-secondary btn-full" onclick="closeModal('modalSoporte')">Cancelar</button>
-        <button type="submit" id="btnEnviarSoporte" class="btn btn-primary btn-full">
-          <i class="fa-solid fa-paper-plane"></i> Enviar
-        </button>
+      <!-- Redes sociales -->
+      <div class="footer-social">
+        <a href="https://www.instagram.com/vehiculosadmotors" target="_blank" rel="noopener" class="social-btn"
+          title="Instagram">
+          <i class="fa-brands fa-instagram"></i>
+        </a>
+        <a href="https://www.facebook.com/people/AD-Motors/61584583105868/" target="_blank" rel="noopener"
+          class="social-btn" title="Facebook">
+          <i class="fa-brands fa-facebook-f"></i>
+        </a>
+        <span class="social-btn social-btn-disabled" title="TikTok (próximamente)">
+          <i class="fa-brands fa-tiktok"></i>
+        </span>
       </div>
-    </form>
+
+      <p class="footer-text">© 2025 AD Motors. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Toast container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Scripts -->
+  <!-- ======== MODAL SOPORTE ======== -->
+  <div id="modalSoporte" class="modal-overlay">
+    <div class="modal" style="max-width:480px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+        <div>
+          <h3 class="modal-title"><i class="fa-solid fa-circle-question"
+              style="color:var(--primary);margin-right:.5rem"></i>Soporte y ayuda</h3>
+          <p class="modal-subtitle">Cuéntanos tu problema o sugerencia</p>
+        </div>
+        <button onclick="closeModal('modalSoporte')"
+          style="background:none;border:none;color:var(--text3);font-size:1.2rem;cursor:pointer"><i
+            class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form id="formSoporte" novalidate>
+        <div class="form-group">
+          <label class="form-label">Tipo de consulta</label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-solid fa-tag"></i></span>
+            <select id="soporteTipo" class="form-input" style="padding-left:2.5rem">
+              <option value="error">Error detectado</option>
+              <option value="ayuda">Necesito ayuda</option>
+              <option value="sugerencia">Tengo una sugerencia</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Asunto <span>*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-regular fa-pen-to-square"></i></span>
+            <input type="text" id="soporteAsunto" class="form-input" placeholder="Describe brevemente el problema"
+              maxlength="120">
+          </div>
+          <div class="form-error" id="soporteAsuntoError"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Descripción <span>*</span></label>
+          <textarea id="soporteDescripcion" class="form-input no-icon" rows="4" style="resize:none;padding:.875rem 1rem"
+            placeholder="Describe con detalle qué ocurrió, qué esperabas que ocurriera y cualquier información relevante..."></textarea>
+          <div class="form-error" id="soporteDescripcionError"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Tu email <span>*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-regular fa-envelope"></i></span>
+            <input type="email" id="soporteEmail" class="form-input" placeholder="Para que podamos responderte"
+              oninput="this.value=this.value.replace(/\s/g,'')" maxlength="100">
+          </div>
+          <div class="form-error" id="soporteEmailError"></div>
+        </div>
+
+        <div style="display:flex;gap:.75rem;margin-top:.5rem">
+          <button type="button" class="btn btn-secondary btn-full"
+            onclick="closeModal('modalSoporte')">Cancelar</button>
+          <button type="submit" id="btnEnviarSoporte" class="btn btn-primary btn-full">
+            <i class="fa-solid fa-paper-plane"></i> Enviar
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script src="js/config.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/main.js"></script>
-<script src="js/soporte.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/soporte.js"></script>
 
 </body>
+
 </html>

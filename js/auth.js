@@ -23,6 +23,7 @@ const COMMON_DOMAINS = [
   "outlook.es",
   "yahoo.es",
   "gmail.es",
+  "g.educaand.es",
 ];
 
 function checkEmailTypo(email) {
@@ -307,7 +308,10 @@ function showOtpStep() {
 
   // Limpiar inputs y resetear botón al mostrar el paso OTP
   const inputs = document.querySelectorAll(".otp-input");
-  inputs.forEach(i => { i.value = ""; i.classList.remove("filled"); });
+  inputs.forEach((i) => {
+    i.value = "";
+    i.classList.remove("filled");
+  });
   const btn = document.getElementById("btnVerifyOtp");
   if (btn) btn.disabled = true;
 
