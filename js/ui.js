@@ -1,4 +1,4 @@
-// Tema, Header, Toast (compartido en todas las páginas)
+// Tema, Header, Toast
 
 /* ---- TEMA ---- */
 function initTheme() {

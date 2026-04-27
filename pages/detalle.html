@@ -149,7 +149,7 @@
 
   </main>
 
-  <!--   MODAL CONFIRMAR RESERVA   -->
+  <!-- MODAL CONFIRMAR RESERVA -->
   <div id="modalConfirmarCompra" class="modal-overlay">
     <div class="modal">
       <div style="text-align:center;margin-bottom:1.5rem">
@@ -204,7 +204,7 @@
     </div>
   </div>
 
-  <!--   MODAL PASARELA DE PAGO   -->
+  <!-- MODAL PASARELA DE PAGO -->
   <div id="modalPasarela" class="modal-overlay">
     <div class="modal" style="max-width:520px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
@@ -274,23 +274,22 @@
           <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-user"></i></span>
             <input type="text" id="pCardName" class="form-input" placeholder="Como aparece en la tarjeta"
               style="text-transform:uppercase" oninput="this.value=this.value.replace(/[^a-zA-Z\s]/g,'').toUpperCase()"
-              maxlength="50"
-              oninput="this.value=this.value.toUpperCase();document.getElementById('cardNameDisplay').textContent=this.value||'NOMBRE APELLIDO'">
+              maxlength="50"oninput="this.value=this.value.toUpperCase();document.getElementById('cardNameDisplay').textContent=this.value||'NOMBRE APELLIDO'">
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
           <div class="form-group">
             <label class="form-label">Caducidad</label>
             <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-calendar"></i></span>
-              <input type="text" id="pCardExp" class="form-input" placeholder="MM/AA" maxlength="5" 
-              inputmode="numeric"oninput="let v=this.value.replace(/\D/g,'').slice(0,4);if(v.length>=2)v=v.slice(0,2)+'/'+v.slice(2);this.value=v;document.getElementById('cardExpDisplay').textContent=v||'MM/AA'">
+              <input type="text" id="pCardExp" class="form-input" placeholder="MM/AA" maxlength="5" inputmode="numeric"oninput="let v=this.value.replace(/\D/g,'').slice(0,4);if(v.length>=2)v=v.slice(0,2)+'/'+v.slice(2);this.value=v;document.getElementById('cardExpDisplay').textContent=v||'MM/AA'">
             </div>
           </div>
           <div class="form-group">
             <label class="form-label">CVV</label>
             <div class="input-wrap"><span class="input-icon"><i class="fa-solid fa-lock"></i></span>
               <input type="password" id="pCardCvv" class="form-input" placeholder="•••" maxlength="4"
-                inputmode="numeric" onkeypress="return /[0-9]/.test(String.fromCharCode(event.which||event.keyCode))"oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+                inputmode="numeric" onkeypress="return /[0-9]/.test(String.fromCharCode(event.which||event.keyCode))"
+                oninput="this.value=this.value.replace(/[^0-9]/g,'')">
             </div>
           </div>
         </div>
@@ -343,49 +342,124 @@
       </button>
     </div>
   </div>
-  <div id="modalVisita" class="modal-overlay">
-    <div class="modal">
-      <h3 class="modal-title"><i class="fa-regular fa-calendar-days"></i> Solicitar visita</h3>
-      <p class="modal-subtitle">Rellena los datos para concertar una visita para ver el vehículo en persona.</p>
-      <form id="formVisita" novalidate>
-        <div class="form-group">
-          <label class="form-label">Nombre del asistente <span>*</span></label>
-          <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-user"></i></span><input type="text"
-              id="visitaNombre" class="form-input" placeholder="Tu nombre completo"
-              oninput="this.value=this.value.replace(/[^a-zA-ZáéíóúàèìòùäëïöüÁÉÍÓÚÀÈÌÒÙÄËÏÖÜñÑçÇ\s]/g,'')"
-              maxlength="80"></div>
+  <!-- MODAL CITA POST-RESERVA -->
+  <div id="modalCitaReserva" class="modal-overlay">
+    <div class="modal" style="max-width:480px">
+      <div style="text-align:center;margin-bottom:1.5rem">
+        <div style="margin-bottom:.75rem">
+          <i class="fa-solid fa-circle-check" style="font-size:3rem;color:var(--success)"></i>
         </div>
-        <div class="form-group">
-          <label class="form-label">Teléfono de contacto <span>*</span></label>
-          <div class="input-wrap"><span class="input-icon"><i class="fa-solid fa-mobile-screen-button"></i></span><input
-              type="tel" id="visitaTelefono" class="form-input" placeholder="+34 600 000 000" inputmode="tel"
-              maxlength="15" onkeypress="return soloTelefono(event)"
-              oninput="this.value=this.value.replace(/[^0-9+\s]/g,'')"></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-          <div class="form-group">
-            <label class="form-label">Fecha <span>*</span></label>
-            <input type="date" id="visitaFecha" class="form-input no-icon">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Hora <span>*</span></label>
-            <input type="time" id="visitaHora" class="form-input no-icon" min="09:00" max="20:00">
-          </div>
-        </div>
-        <div
-          style="background:var(--primary-lt);border-radius:var(--r-sm);padding:.875rem;margin-bottom:1.25rem;font-size:.8rem;color:var(--primary)">
-          ℹ️ Nos pondremos en contacto contigo para confirmar la disponibilidad.
-        </div>
-        <div style="display:flex;gap:.75rem">
-          <button type="button" class="btn btn-secondary btn-full" onclick="closeModal('modalVisita')">Cancelar</button>
-          <button type="submit" id="btnSubmitVisita" class="btn btn-primary btn-full"><i
-              class="fa-regular fa-calendar-plus"></i> Solicitar</button>
-        </div>
-      </form>
+        <h3 class="modal-title">Reserva realizada</h3>
+        <p class="modal-subtitle">Ahora selecciona cómo quieres continuar</p>
+      </div>
+      <div
+        style="background:var(--bg3);border-radius:var(--r-sm);padding:1rem;margin-bottom:1.5rem;font-size:.875rem;color:var(--text2);line-height:1.6;text-align:center">
+        Para completar la compra necesitas acordar una visita al concesionario o un día para realizar el pago.
+      </div>
+      <div style="display:flex;flex-direction:column;gap:.75rem">
+        <button class="btn btn-primary btn-full btn-lg"
+          onclick="closeModal('modalCitaReserva');openModal('modalVisita')">
+          <i class="fa-regular fa-calendar-days"></i> Solicitar visita al concesionario
+        </button>
+        <button class="btn btn-outline btn-full btn-lg"
+          onclick="closeModal('modalCitaReserva');openModal('modalFechaPago')">
+          <i class="fa-regular fa-credit-card"></i> Acordar día para el pago
+        </button>
+        <button class="btn btn-secondary btn-full btn-sm"
+          onclick="closeModal('modalCitaReserva');window.location.href='../index.html'">
+          Decidir más tarde
+        </button>
+      </div>
     </div>
   </div>
 
-  <!--   MODAL VISITA CONFIRMADA   -->
+  <!-- MODAL FECHA PAGO ->
+<div id="modalFechaPago" class="modal-overlay">
+  <div class="modal" style="max-width:440px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+      <div>
+        <h3 class="modal-title"><i class="fa-regular fa-credit-card" style="color:var(--primary);margin-right:.5rem"></i>Acordar día de pago</h3>
+        <p class="modal-subtitle">Selecciona cuándo quieres venir a pagar</p>
+      </div>
+      <button onclick="closeModal('modalFechaPago')" style="background:none;border:none;color:var(--text3);font-size:1.2rem;cursor:pointer"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <form id="formFechaPago" novalidate>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group">
+          <label class="form-label">Fecha <span>*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-regular fa-calendar"></i></span>
+            <input type="date" id="fechaPagoFecha" class="form-input" style="padding-left:2.5rem">
+          </div>
+          <div class="form-error" id="fechaPagoFechaError"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hora <span>*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-regular fa-clock"></i></span>
+            <input type="time" id="fechaPagoHora" class="form-input" style="padding-left:2.5rem" min="09:00" max="20:00" value="10:00">
+          </div>
+          <div class="form-error" id="fechaPagoHoraError"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Teléfono de contacto <span>*</span></label>
+        <div class="input-wrap">
+          <span class="input-icon"><i class="fa-solid fa-mobile-screen-button"></i></span>
+          <input type="tel" id="fechaPagoTel" class="form-input" placeholder="+34 600 000 000" inputmode="tel" maxlength="15" onkeypress="return soloTelefono(event)" oninput="this.value=this.value.replace(/[^0-9+\s]/g,'')">
+        </div>
+        <div class="form-error" id="fechaPagoTelError"></div>
+      </div>
+      <div style="background:var(--primary-lt);border-radius:var(--r-sm);padding:.875rem 1rem;font-size:.8rem;color:var(--primary);margin-bottom:1.25rem">
+        <i class="fa-solid fa-circle-info"></i> Nos pondremos en contacto contigo para confirmar la disponibilidad.
+      </div>
+      <div style="display:flex;gap:.75rem">
+        <button type="button" class="btn btn-secondary btn-full" onclick="closeModal('modalFechaPago');openModal('modalCitaReserva')">
+          <i class="fa-solid fa-arrow-left"></i> Volver
+        </button>
+        <button type="submit" id="btnConfirmarFechaPago" class="btn btn-primary btn-full">
+          <i class="fa-solid fa-check"></i> Confirmar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="modalVisita" class="modal-overlay">
+  <div class="modal">
+    <h3 class="modal-title"><i class="fa-regular fa-calendar-days"></i> Solicitar visita</h3>
+    <p class="modal-subtitle">Rellena los datos para concertar una visita para ver el vehículo en persona.</p>
+    <form id="formVisita" novalidate>
+      <div class="form-group">
+        <label class="form-label">Nombre del asistente <span>*</span></label>
+        <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-user"></i></span><input type="text" id="visitaNombre" class="form-input" placeholder="Tu nombre completo" oninput="this.value=this.value.replace(/[^a-zA-ZáéíóúàèìòùäëïöüÁÉÍÓÚÀÈÌÒÙÄËÏÖÜñÑçÇ\s]/g,'')" maxlength="80"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Teléfono de contacto <span>*</span></label>
+        <div class="input-wrap"><span class="input-icon"><i class="fa-solid fa-mobile-screen-button"></i></span><input type="tel" id="visitaTelefono" class="form-input" placeholder="+34 600 000 000" inputmode="tel" maxlength="15" onkeypress="return soloTelefono(event)" oninput="this.value=this.value.replace(/[^0-9+\s]/g,'')"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group">
+          <label class="form-label">Fecha <span>*</span></label>
+          <input type="date" id="visitaFecha" class="form-input no-icon">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hora <span>*</span></label>
+          <input type="time" id="visitaHora" class="form-input no-icon" min="09:00" max="20:00">
+        </div>
+      </div>
+      <div style="background:var(--primary-lt);border-radius:var(--r-sm);padding:.875rem;margin-bottom:1.25rem;font-size:.8rem;color:var(--primary)">
+        ℹ️ Nos pondremos en contacto contigo para confirmar la disponibilidad.
+      </div>
+      <div style="display:flex;gap:.75rem">
+        <button type="button" class="btn btn-secondary btn-full" onclick="closeModal('modalVisita')">Cancelar</button>
+        <button type="submit" id="btnSubmitVisita" class="btn btn-primary btn-full"><i class="fa-regular fa-calendar-plus"></i> Solicitar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL VISITA CONFIRMADA -->
   <div id="modalVisitaConfirmada" class="modal-overlay">
     <div class="modal" style="text-align:center">
       <div style="margin-bottom:1rem;animation:float 2s ease infinite"><i class="fa-solid fa-circle-check"
@@ -412,6 +486,67 @@
   <script src="../js/config.js"></script>
   <script src="../js/ui.js"></script>
   <script src="../js/detalle.js"></script>
+  <!-- MODAL SOPORTE -->
+  <div id="modalSoporte" class="modal-overlay">
+    <div class="modal" style="max-width:480px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+        <div>
+          <h3 class="modal-title"><i class="fa-solid fa-circle-question"
+              style="color:var(--primary);margin-right:.5rem"></i>Soporte y ayuda</h3>
+          <p class="modal-subtitle">Cuéntanos tu problema o sugerencia</p>
+        </div>
+        <button onclick="closeModal('modalSoporte')"
+          style="background:none;border:none;color:var(--text3);font-size:1.2rem;cursor:pointer"><i
+            class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="formSoporte" novalidate>
+        <div class="form-group">
+          <label class="form-label">Tipo de consulta</label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-solid fa-tag"></i></span>
+            <select id="soporteTipo" class="form-input" style="padding-left:2.5rem">
+              <option value="error">He encontrado un error</option>
+              <option value="ayuda">Necesito ayuda</option>
+              <option value="sugerencia">Tengo una sugerencia</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Asunto <span>*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-regular fa-pen-to-square"></i></span>
+            <input type="text" id="soporteAsunto" class="form-input" placeholder="Describe brevemente el problema"
+              maxlength="120">
+          </div>
+          <div class="form-error" id="soporteAsuntoError"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Descripción <span>*</span></label>
+          <textarea id="soporteDescripcion" class="form-input no-icon" rows="4" style="resize:none;padding:.875rem 1rem"
+            placeholder="Describe con detalle qué ocurrió..."></textarea>
+          <div class="form-error" id="soporteDescripcionError"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tu email <span>*</span></label>
+          <div class="input-wrap">
+            <span class="input-icon"><i class="fa-regular fa-envelope"></i></span>
+            <input type="email" id="soporteEmail" class="form-input" placeholder="Para que podamos responderte"
+              oninput="this.value=this.value.replace(/\s/g,'')" maxlength="100">
+          </div>
+          <div class="form-error" id="soporteEmailError"></div>
+        </div>
+        <div style="display:flex;gap:.75rem;margin-top:.5rem">
+          <button type="button" class="btn btn-secondary btn-full"
+            onclick="closeModal('modalSoporte')">Cancelar</button>
+          <button type="submit" id="btnEnviarSoporte" class="btn btn-primary btn-full">
+            <i class="fa-solid fa-paper-plane"></i> Enviar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="../js/soporte.js"></script>
 </body>
 
 </html>

@@ -1,5 +1,5 @@
 /*
-   Configuración de la página de login / registro / OTP
+   Configuración de la página de login, registro, OTP
 */
 
 .auth-page {
@@ -9,7 +9,7 @@
   background: linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 50%, #0d0d0d 100%);
 }
 
-/* Panel izquierdo decorativo — solo escritorio */
+/* Panel izquierdo decorativo*/
 .auth-left {
   display: none;
   flex: 1;
