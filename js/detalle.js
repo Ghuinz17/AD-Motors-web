@@ -39,7 +39,7 @@ async function loadVehiculo() {
 }
 
 function renderPage() {
-  // Título
+  // Título — compatibilidad con marca_modelo y con marca+modelo separados
   const nombreCompleto = vehiculo.marca && vehiculo.modelo
     ? `${vehiculo.marca} ${vehiculo.modelo}`
     : vehiculo.marca_modelo || 'Vehículo';
