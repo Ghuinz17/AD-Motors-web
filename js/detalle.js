@@ -388,7 +388,7 @@ async function handleSubmitVisita(e) {
         admin_email:    ADMIN_EMAIL,
         nombre,
         vehiculo:       `${vehiculo.marca} ${vehiculo.modelo}`,
-        icono:          '📅',
+        icono:          'V',
         titulo:         'Solicitud de visita registrada',
         subtitulo:      'Te contactaremos para confirmar',
         mensaje:        'Hemos recibido tu solicitud para ver el vehículo en persona. Nos pondremos en contacto contigo a la mayor brevedad posible para confirmar los detalles.',
@@ -396,7 +396,7 @@ async function handleSubmitVisita(e) {
         campo1_valor:   fechaFormateada,
         campo2_label:   'Hora solicitada',
         campo2_valor:   hora,
-        nota_final:     `Teléfono de contacto: ${tel}. Si necesitas modificar la visita responde a este correo.`,
+        nota_final:     'Telefono de contacto: ' + tel + '. Si necesitas modificar la visita responde a este correo.',
         fecha_solicitud: now,
       });
       console.log('Email visita enviado:', result);
