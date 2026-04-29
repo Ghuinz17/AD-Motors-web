@@ -209,25 +209,28 @@ async function confirmarCompra() {
       fecha_reserva: new Date().toISOString(),
     }).eq('id_vehiculo', vehiculoId);
 
-    // 4. Intentar enviar email (no bloquear si falla)
+    // 4. Enviar email de confirmación
     try {
       const { data: userData } = await db.from('usuario').select('nombre,email').eq('id_usuario', currentUser.id).single();
+      emailjs.init(EMAILJS_PUBLIC_KEY);
       const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_COMPRA, {
         to_email:      currentUser.email,
+        admin_email:   ADMIN_EMAIL,
         nombre:        userData?.nombre || currentUser.email,
         vehiculo:      `${vehiculo.marca} ${vehiculo.modelo}`,
-        icono:         'R',
+        icono:         'OK',
         titulo:        'Reserva confirmada',
         subtitulo:     'Gracias por confiar en AD Motors',
-        mensaje:       'Hemos registrado tu reserva correctamente. En breve nos pondremos en contacto contigo para coordinar todos los detalles.',
-        campo1_label:  'N de Pedido',
+        mensaje:       'Hemos registrado tu reserva. En breve nos pondremos en contacto para coordinar los detalles.',
+        campo1_label:  'Pedido',
         campo1_valor:  compraData.id_compra?.slice(0,8).toUpperCase(),
-        campo2_label:  'Precio vehiculo',
+        campo2_label:  'Precio',
         campo2_valor:  vehiculo.precio?.toLocaleString('es-ES') + ' EUR',
         fecha:         new Date().toLocaleDateString('es-ES', { year:'numeric', month:'long', day:'numeric' }),
-        nota_final:    'Si tienes cualquier duda no dudes en contactarnos.',
+        nota_final:    'Si tienes alguna duda no dudes en contactarnos.',
+        fecha_solicitud: new Date().toLocaleString('es-ES'),
       });
-      console.log('Email reserva enviado:', result.status);
+      console.log('Email reserva OK:', result.status);
     } catch(emailErr) {
       console.error('Email reserva error:', JSON.stringify(emailErr));
     }
@@ -371,6 +374,7 @@ async function handleSubmitVisita(e) {
       telefono:         tel,
       fecha_visita:     fecha,
       hora_visita:      hora,
+      tipo:             'visita',
     }]);
     if (insertError) throw insertError;
 
@@ -466,6 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
         telefono:         tel,
         fecha_visita:     fecha,
         hora_visita:      hora,
+        tipo:             'pago',
       }]);
       closeModal('modalFechaPago');
       showToast('Cita de pago registrada. Te contactaremos para confirmar.', 'success');
