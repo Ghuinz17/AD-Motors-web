@@ -7,7 +7,7 @@ const SUPABASE_ANON_KEY =
 
 // --- EmailJS — Cuenta principal (reservas y visitas) ---
 const EMAILJS_PUBLIC_KEY = "UM986XzXpgyzXW_vs";
-const EMAILJS_SERVICE_ID = "service_afa48tb";
+const EMAILJS_SERVICE_ID = "service_58ve2lo";
 const EMAILJS_TEMPLATE_COMPRA = "template_ge0ovyp"; // Confirmación de reserva
 const EMAILJS_TEMPLATE_VISITA_CLIENTE = "template_du605di"; // Solicitud de visita
 
