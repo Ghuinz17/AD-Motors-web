@@ -1,6 +1,7 @@
 /*
   Configuración de variables, reset, animaciones, botones, formularios, componentes compartidos
  */
+
 @import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@600;700;800&display=swap");
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css");
 
@@ -136,6 +137,16 @@ ul {
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 @keyframes scaleIn {
@@ -630,15 +641,19 @@ ul {
 /* --- Toast --- */
 .toast-container {
   position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 999;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.5rem;
+  width: max-content;
+  max-width: min(460px, 90vw);
 }
 .toast {
-  padding: 0.875rem 1.25rem;
+  padding: 0.875rem 1.5rem;
   border-radius: var(--r-sm);
   background: var(--bg2);
   border: 1px solid var(--border);
@@ -648,8 +663,9 @@ ul {
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  max-width: 320px;
-  animation: slideInRight 0.3s ease;
+  width: max-content;
+  max-width: min(420px, 90vw);
+  animation: slideInUp 0.3s ease;
 }
 .toast.success {
   border-left: 4px solid var(--success);
