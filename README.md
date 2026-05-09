@@ -82,6 +82,12 @@ Tras el despliegue, configura en Supabase:
 
 ---
 
+## 📚 Documentación
+
+- 📋 [Documentación técnica](docs/documentacion-tecnica.md)
+- 👤 [Manual de usuario](docs/manual-usuario.md)
+- ⚙️ [Manual de instalación](docs/manual-instalacion.md)
+
 ## 📝 Licencia
 
 Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detalles.
@@ -101,6 +107,6 @@ Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para más detall
 
 Este proyecto ha sido desarrollado en colaboración con **AD Motor's**.
 
-📸 **Instagram** — [AD Motors](https://www.instagram.com/vehiculosadmotors)  
+📸 **Instagram** — [vehiculosadmotors](https://www.instagram.com/vehiculosadmotors)  
 👥 **Facebook** — [AD Motors](https://www.facebook.com/people/AD-Motors/61584583105868/)  
 🎵 **TikTok** — Próximamente
