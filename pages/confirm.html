@@ -115,7 +115,7 @@
       const hash = window.location.hash.substring(1);
       const params = new URLSearchParams(hash);
 
-      // También puede venir como query params
+      // Los parámetros pueden llegar también como venir como query params
       const queryParams = new URLSearchParams(window.location.search);
 
       const accessToken = params.get('access_token') || queryParams.get('access_token');
