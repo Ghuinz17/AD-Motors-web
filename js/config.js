@@ -1,4 +1,13 @@
 // Configuración global AD Motors
+//
+// IMPORTANTE:
+// - La URL y la clave anon/publishable de Supabase son públicas por diseño.
+//   Se pueden ver en el navegador; NO son un secreto.
+// - La seguridad real de los datos la imponen las políticas RLS de Supabase.
+//   Ejecuta `supabase/seguridad-rls.sql` en el SQL Editor del proyecto.
+// - NUNCA pongas aquí la clave `service_role`, contraseñas, datos personales
+//   ni información que no deba ser pública. Todo lo que hay en este archivo
+//   se descarga en el navegador del visitante.
 
 // --- Supabase ---
 const SUPABASE_URL      = 'https://mgbftvxlqinxrthswqih.supabase.co';
@@ -15,10 +24,15 @@ const EMAILJS_PUBLIC_KEY_SOPORTE  = 'MpbGWXxdeYPPzWhXy';
 const EMAILJS_SERVICE_ID_SOPORTE  = 'service_31fvthj';
 const EMAILJS_TEMPLATE_SOPORTE    = 'template_gpx18w5';
 
-// --- Email del administrador ---
-const ADMIN_EMAIL = 'moleroprogramador@gmail.com';
+// El email del administrador NO se guarda en el cliente.
+// Se configura directamente en la plantilla de EmailJS (campo "To email")
+// para que no aparezca en el código fuente ni en el modo inspección.
 
 // --- Inicializar clientes ---
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-emailjs.init(EMAILJS_PUBLIC_KEY);
+
+// EmailJS solo está cargado en las páginas que lo necesitan.
+if (typeof emailjs !== 'undefined') {
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+}

@@ -15,7 +15,7 @@ async function initPerfil() {
   // Intentar cargar datos de la tabla usuario (puede fallar por RLS)
   let userData = null;
   try {
-    const { data } = await db.from('usuario').select('*').eq('id_usuario', user.id).single();
+    const { data } = await db.from('usuario').select('nombre,email,phone').eq('id_usuario', user.id).single();
     userData = data;
   } catch { /* RLS o tabla vacía — usar metadata */ }
 
@@ -28,7 +28,7 @@ async function initPerfil() {
         email:      user.email,
         phone:      user.user_metadata?.phone || '',
       });
-      const { data } = await db.from('usuario').select('*').eq('id_usuario', user.id).single();
+      const { data } = await db.from('usuario').select('nombre,email,phone').eq('id_usuario', user.id).single();
       userData = data;
     } catch { /* continuar con metadata */ }
   }
@@ -68,13 +68,12 @@ async function loadPedidos(userId) {
 
   const { data, error } = await db
     .from('compra')
-    .select('*')
+    .select('id_compra,total,estado,fecha')
     .eq('id_usuario', userId)
     .order('fecha', { ascending: false });
 
   if (error) {
-    console.error('Error pedidos:', JSON.stringify(error));
-    cont.innerHTML = emptyState('<i class="fa-solid fa-box"></i>', 'Error al cargar pedidos', error.message); return;
+    cont.innerHTML = emptyState('<i class="fa-solid fa-box"></i>', 'Error al cargar pedidos', 'Inténtalo de nuevo en unos minutos'); return;
   }
 
   if (!data?.length) {
@@ -108,13 +107,13 @@ async function loadPedidos(userId) {
       <div class="pedido-card">
         <div class="pedido-icon"><i class="fa-solid fa-car"></i></div>
         <div style="flex:1">
-          <div class="pedido-title">Pedido #${p.id_compra?.slice(0,8).toUpperCase()}</div>
-          <div class="pedido-sub"><i class="fa-solid fa-car" style="font-size:.75rem"></i> ${p.vehiculoNombre}</div>
+          <div class="pedido-title">Pedido #${escapeHtml(p.id_compra?.slice(0,8).toUpperCase())}</div>
+          <div class="pedido-sub"><i class="fa-solid fa-car" style="font-size:.75rem"></i> ${escapeHtml(p.vehiculoNombre)}</div>
           <div class="pedido-date"><i class="fa-regular fa-calendar"></i> ${new Date(p.fecha).toLocaleDateString('es-ES', { year:'numeric',month:'long',day:'numeric' })}</div>
         </div>
         <div style="text-align:right">
-          <span class="badge ${estadoBadge.cls}">${estadoBadge.label}</span>
-          <div style="font-weight:800;color:var(--primary);font-size:1rem;margin-top:.5rem">${p.total?.toLocaleString('es-ES')} €</div>
+          <span class="badge ${estadoBadge.cls}">${escapeHtml(estadoBadge.label)}</span>
+          <div style="font-weight:800;color:var(--primary);font-size:1rem;margin-top:.5rem">${Number(p.total || 0).toLocaleString('es-ES')} €</div>
         </div>
       </div>`;
   }).join('');
@@ -128,7 +127,7 @@ async function loadSolicitudes(userId) {
 
   const { data, error } = await db
     .from('solicitudes_revision')
-    .select('*')
+    .select('id,marca,marca_modelo,modelo,nombre_asistente,telefono,fecha_visita,hora_visita,estado,fecha_creacion')
     .eq('id_usuario', userId)
     .gte('fecha_visita', new Date().toISOString().split('T')[0])
     .order('fecha_creacion', { ascending: false });
@@ -143,15 +142,15 @@ async function loadSolicitudes(userId) {
       <div class="pedido-card">
         <div class="pedido-icon"><i class="fa-solid fa-calendar-days"></i></div>
         <div style="flex:1">
-          <div class="pedido-title">${
+          <div class="pedido-title">${escapeHtml(
             s.marca && s.modelo ? `${s.marca} ${s.modelo}` :
             s.marca_modelo || 'Vehículo'
-          }</div>
-          <div class="pedido-sub"><i class="fa-regular fa-user"></i> ${s.nombre_asistente} &nbsp;·&nbsp; <i class="fa-solid fa-mobile-screen-button"></i> ${s.telefono}</div>
-          <div class="pedido-date"><i class="fa-regular fa-calendar"></i> ${formatFecha(s.fecha_visita)} a las ${s.hora_visita?.slice(0,5) || '—'}</div>
+          )}</div>
+          <div class="pedido-sub"><i class="fa-regular fa-user"></i> ${escapeHtml(s.nombre_asistente)} &nbsp;·&nbsp; <i class="fa-solid fa-mobile-screen-button"></i> ${escapeHtml(s.telefono)}</div>
+          <div class="pedido-date"><i class="fa-regular fa-calendar"></i> ${escapeHtml(formatFecha(s.fecha_visita))} a las ${escapeHtml(s.hora_visita?.slice(0,5) || '—')}</div>
         </div>
         <div>
-          <span class="badge ${estadoBadge.cls}">${estadoBadge.label}</span>
+          <span class="badge ${estadoBadge.cls}">${escapeHtml(estadoBadge.label)}</span>
         </div>
       </div>`;
   }).join('');
@@ -176,8 +175,8 @@ function getEstadoBadge(estado) {
 function emptyState(icon, title, sub) {
   return `<div class="no-results" style="padding:2.5rem 1rem">
     <div class="no-results-icon" style="font-size:2.5rem;color:var(--primary)">${icon}</div>
-    <div class="no-results-title">${title}</div>
-    <div class="no-results-sub">${sub}</div>
+    <div class="no-results-title">${escapeHtml(title)}</div>
+    <div class="no-results-sub">${escapeHtml(sub)}</div>
   </div>`;
 }
 

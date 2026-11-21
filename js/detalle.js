@@ -18,9 +18,11 @@ async function init() {
 
 async function loadVehiculo() {
   try {
+    // Solo columnas públicas. Nunca `*`: evita enviar al navegador
+    // columnas internas como `device_id` o fechas de gestión.
     const { data, error } = await db
       .from('vehiculo')
-      .select('*, vehiculo_imagenes(imagen)')
+      .select('id_vehiculo,marca,modelo,descripcion,precio,ano_fabricacion,tipo_combustible,kilometraje,color,reservado,vehiculo_imagenes(imagen)')
       .eq('id_vehiculo', vehiculoId)
       .single();
 
@@ -39,10 +41,9 @@ async function loadVehiculo() {
 }
 
 function renderPage() {
-  // Título — compatibilidad con marca_modelo y con marca+modelo separados
   const nombreCompleto = vehiculo.marca && vehiculo.modelo
     ? `${vehiculo.marca} ${vehiculo.modelo}`
-    : vehiculo.marca_modelo || 'Vehículo';
+    : 'Vehículo';
 
   document.title = `${nombreCompleto} — AD Motors`;
 
@@ -67,7 +68,7 @@ function renderPage() {
   if (specsCont) specsCont.innerHTML = specs.map(s => `
     <div class="spec-row">
       <div class="spec-label"><i class="fa-solid fa-${s.icon}"></i>${s.label}</div>
-      <div class="spec-value">${s.value}</div>
+      <div class="spec-value">${escapeHtml(s.value)}</div>
     </div>`).join('');
 
   // Rellenar modal de reserva
@@ -111,7 +112,7 @@ function renderGallery() {
   if (thumbsCont) {
     thumbsCont.innerHTML = imagenes.map((url, i) => `
       <div class="gallery-thumb ${i===0?'active':''}" onclick="setImage(${i})">
-        <img src="${url}" alt="Imagen ${i+1}" loading="lazy">
+        <img src="${escapeHtml(url)}" alt="Imagen ${i+1}" loading="lazy">
       </div>`).join('');
   }
 }
@@ -154,8 +155,8 @@ async function handlePagarSenal() {
     // Procesar reserva
     await confirmarCompra();
     closeModal('modalPasarela');
-  } catch(err) {
-    showToast('Error al procesar el pago: ' + err.message, 'error');
+  } catch {
+    showToast('No se pudo procesar el pago. Inténtalo de nuevo.', 'error');
   } finally {
     setLoading(btn, false);
   }
@@ -184,55 +185,38 @@ async function confirmarCompra() {
   const btn = document.getElementById('btnConfirmarCompra');
   setLoading(btn, true);
   try {
-    // 1. Crear compra (id_metodo_pago = null para reserva sin pago online)
-    const { data: compraData, error: compraError } = await db.from('compra').insert([{
-      fecha:          new Date().toISOString(),
-      total:          vehiculo.precio,
-      estado:         'PENDIENTE',
-      id_usuario:     currentUser.id,
-      id_metodo_pago: null,
-    }]).select().single();
+    // 1. Crear la reserva en el servidor con una función atómica.
+    //    La función comprueba que el vehículo siga libre, usa el precio
+    //    real de la base de datos y marca el vehículo como reservado.
+    //    El navegador no puede saltarse estas comprobaciones.
+    const { data: compraId, error: compraError } = await db.rpc('crear_reserva', {
+      p_id_vehiculo: vehiculoId,
+      p_estado:      'PENDIENTE',
+    });
     if (compraError) throw compraError;
 
-    // 2. Crear detalle
-    const { error: detalleError } = await db.from('detallecompra').insert([{
-      id_compra:       compraData.id_compra,
-      id_vehiculo:     vehiculoId,
-      cantidad:        1,
-      precio_unitario: vehiculo.precio,
-    }]);
-    if (detalleError) throw detalleError;
-
-    // 3. Marcar vehículo como reservado (desaparece del catálogo)
-    await db.from('vehiculo').update({
-      reservado:     true,
-      fecha_reserva: new Date().toISOString(),
-    }).eq('id_vehiculo', vehiculoId);
-
-    // 4. Enviar email de confirmación
+    // 2. Enviar email de confirmación
     try {
       const { data: userData } = await db.from('usuario').select('nombre,email').eq('id_usuario', currentUser.id).single();
       emailjs.init(EMAILJS_PUBLIC_KEY);
-      const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_COMPRA, {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_COMPRA, {
         to_email:      currentUser.email,
-        admin_email:   ADMIN_EMAIL,
         nombre:        userData?.nombre || currentUser.email,
-        vehiculo:      `${vehiculo.marca} ${vehiculo.modelo}`,
+        vehiculo:      [vehiculo.marca, vehiculo.modelo].filter(Boolean).join(' ') || 'Vehículo',
         icono:         'OK',
         titulo:        'Reserva confirmada',
         subtitulo:     'Gracias por confiar en AD Motors',
         mensaje:       'Hemos registrado tu reserva. En breve nos pondremos en contacto para coordinar los detalles.',
         campo1_label:  'Pedido',
-        campo1_valor:  compraData.id_compra?.slice(0,8).toUpperCase(),
+        campo1_valor:  String(compraId || '').slice(0,8).toUpperCase(),
         campo2_label:  'Precio',
         campo2_valor:  vehiculo.precio?.toLocaleString('es-ES') + ' EUR',
         fecha:         new Date().toLocaleDateString('es-ES', { year:'numeric', month:'long', day:'numeric' }),
         nota_final:    'Si tienes alguna duda no dudes en contactarnos.',
         fecha_solicitud: new Date().toLocaleString('es-ES'),
       });
-      console.log('Email reserva OK:', result.status);
-    } catch(emailErr) {
-      console.error('Email reserva error:', JSON.stringify(emailErr));
+    } catch {
+      // El email es secundario: la reserva ya está guardada.
     }
 
     closeModal('modalConfirmarCompra');
@@ -241,7 +225,13 @@ async function confirmarCompra() {
     // Abrir modal para acordar cita o día de pago
     setTimeout(() => openModal('modalCitaReserva'), 400);
   } catch(err) {
-    showToast('Error al procesar la reserva: ' + err.message, 'error');
+    const msg = String(err?.message || '');
+    showToast(
+      msg.toLowerCase().includes('reservado')
+        ? 'Este vehículo ya está reservado'
+        : 'No se pudo completar la reserva. Inténtalo de nuevo.',
+      'error',
+    );
   } finally {
     setLoading(btn, false);
   }
@@ -369,7 +359,7 @@ async function handleSubmitVisita(e) {
     const { error: insertError } = await db.from('solicitudes_revision').insert([{
       id_vehiculo:      vehiculoId,
       id_usuario:       currentUser?.id || null,
-      marca_modelo:     `${vehiculo.marca} ${vehiculo.modelo}`,
+      marca_modelo:     [vehiculo.marca, vehiculo.modelo].filter(Boolean).join(' ') || 'Vehículo',
       nombre_asistente: nombre,
       telefono:         tel,
       fecha_visita:     fecha,
@@ -383,11 +373,10 @@ async function handleSubmitVisita(e) {
 
     // Enviar email (no bloquear si falla)
     try {
-      const result = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_VISITA_CLIENTE, {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_VISITA_CLIENTE, {
         to_email:       currentUser.email,
-        admin_email:    ADMIN_EMAIL,
         nombre,
-        vehiculo:       `${vehiculo.marca} ${vehiculo.modelo}`,
+        vehiculo:       [vehiculo.marca, vehiculo.modelo].filter(Boolean).join(' ') || 'Vehículo',
         icono:          'V',
         titulo:         'Solicitud de visita registrada',
         subtitulo:      'Te contactaremos para confirmar',
@@ -399,16 +388,14 @@ async function handleSubmitVisita(e) {
         nota_final:     'Telefono de contacto: ' + tel + '. Si necesitas modificar la visita responde a este correo.',
         fecha_solicitud: now,
       });
-      console.log('Email visita enviado:', result);
-    } catch(emailErr) {
-      console.error('Error email visita:', emailErr);
+    } catch {
       showToast('Solicitud guardada (email no enviado)', 'info');
     }
 
     closeModal('modalVisita');
     openModal('modalVisitaConfirmada');
-  } catch(err) {
-    showToast('Error al enviar la solicitud: ' + err.message, 'error');
+  } catch {
+    showToast('No se pudo enviar la solicitud. Inténtalo de nuevo.', 'error');
   } finally {
     setLoading(btn, false);
   }
@@ -465,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
       await db.from('solicitudes_revision').insert([{
         id_vehiculo:      vehiculoId,
         id_usuario:       currentUser?.id || null,
-        marca_modelo:     `${vehiculo.marca} ${vehiculo.modelo}`,
+        marca_modelo:     [vehiculo.marca, vehiculo.modelo].filter(Boolean).join(' ') || 'Vehículo',
         nombre_asistente: currentUser?.email || '',
         telefono:         tel,
         fecha_visita:     fecha,
@@ -475,8 +462,8 @@ document.addEventListener('DOMContentLoaded', () => {
       closeModal('modalFechaPago');
       showToast('Cita de pago registrada. Te contactaremos para confirmar.', 'success');
       setTimeout(() => window.location.href = '../index.html', 2000);
-    } catch(err) {
-      showToast('Error al guardar la cita: ' + err.message, 'error');
+    } catch {
+      showToast('No se pudo guardar la cita. Inténtalo de nuevo.', 'error');
     } finally {
       setLoading(btn, false);
     }

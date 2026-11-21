@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <title>Administración — AD Motors</title>
+  <link rel="icon" href="../assets/admotors.png">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/header.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <style>.hidden{display:none!important}</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo"><img src="../assets/admotors.png" alt="AD Motors">AD <span>Motors</span></a>
+    <div class="header-actions">
+      <button id="btnTheme" class="btn-icon" title="Cambiar tema"><i class="fa-solid fa-moon"></i></button>
+      <a href="../index.html" class="btn-icon" title="Volver a la web"><i class="fa-solid fa-house"></i></a>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- Pantalla de comprobación de permisos -->
+  <div id="adminCheck" class="admin-check">
+    <i class="fa-solid fa-spinner fa-spin"></i> Comprobando permisos...
+  </div>
+
+  <!-- Contenido solo visible para administradores -->
+  <div id="adminContent" class="hidden">
+    <div class="admin-head">
+      <div>
+        <h1 class="admin-title"><i class="fa-solid fa-pencil"></i> Modo administrador</h1>
+        <p class="admin-sub" id="adminCount">Cargando vehículos...</p>
+      </div>
+      <button id="btnNuevo" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Nuevo vehículo</button>
+    </div>
+
+    <div id="adminList" class="admin-list"></div>
+
+    <!-- Gestión de anuncios AdSense: pendiente de definir -->
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="footer-text">© <span class="js-year">2026</span> AD Motors. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<!-- ======== MODAL CREAR / EDITAR VEHÍCULO ======== -->
+<div id="modalVehiculo" class="modal-overlay">
+  <div class="modal admin-modal">
+    <div class="admin-modal-head">
+      <h3 class="modal-title" id="modalVehiculoTitulo">Nuevo vehículo</h3>
+      <button type="button" class="admin-close" onclick="closeModal('modalVehiculo')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <form id="formVehiculo" novalidate>
+      <div class="admin-grid">
+        <div class="form-group">
+          <label class="form-label" for="vMarca">Marca <span>*</span></label>
+          <input type="text" id="vMarca" class="form-input no-icon" maxlength="50" placeholder="Ej: Toyota">
+          <div class="form-error" id="vMarcaError"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="vModelo">Modelo <span>*</span></label>
+          <input type="text" id="vModelo" class="form-input no-icon" maxlength="50" placeholder="Ej: Corolla">
+          <div class="form-error" id="vModeloError"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="vDescripcion">Descripción</label>
+        <textarea id="vDescripcion" class="form-input no-icon" rows="4" maxlength="2000" style="resize:vertical" placeholder="Descripción del vehículo..."></textarea>
+      </div>
+
+      <div class="admin-grid">
+        <div class="form-group">
+          <label class="form-label" for="vAno">Año de fabricación <span>*</span></label>
+          <input type="text" id="vAno" class="form-input no-icon" inputmode="numeric" maxlength="4" placeholder="2020">
+          <div class="form-error" id="vAnoError"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="vPrecio">Precio (€) <span>*</span></label>
+          <input type="text" id="vPrecio" class="form-input no-icon" inputmode="decimal" maxlength="10" placeholder="15000">
+          <div class="form-error" id="vPrecioError"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="vKm">Kilometraje <span>*</span></label>
+          <input type="text" id="vKm" class="form-input no-icon" inputmode="numeric" maxlength="7" placeholder="80000">
+          <div class="form-error" id="vKmError"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="vColor">Color</label>
+          <input type="text" id="vColor" class="form-input no-icon" maxlength="30" placeholder="Ej: Rojo">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="vCombustible">Combustible <span>*</span></label>
+          <select id="vCombustible" class="form-input no-icon">
+            <option value="GASOLINA">Gasolina</option>
+            <option value="DIESEL">Diésel</option>
+            <option value="HIBRIDO">Híbrido</option>
+            <option value="ELECTRICO">Eléctrico</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="vEstado">Estado</label>
+          <select id="vEstado" class="form-input no-icon">
+            <option value="">Sin asignar</option>
+            <option value="reservado">Reservado</option>
+            <option value="vendido">Vendido</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Imágenes <span style="color:var(--text3);font-weight:400">(JPG, PNG o WEBP · máx. 5 MB cada una)</span></label>
+        <div id="imgExistentes" class="admin-thumbs"></div>
+        <div id="imgNuevas" class="admin-thumbs"></div>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('vImagenes').click()">
+          <i class="fa-solid fa-image"></i> Añadir imágenes
+        </button>
+        <input type="file" id="vImagenes" accept="image/jpeg,image/png,image/webp" multiple style="display:none">
+      </div>
+
+      <div style="display:flex;gap:.75rem;margin-top:1rem">
+        <button type="button" class="btn btn-secondary btn-full" onclick="closeModal('modalVehiculo')">Cancelar</button>
+        <button type="submit" id="btnGuardarVehiculo" class="btn btn-primary btn-full"><i class="fa-solid fa-check"></i> Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ======== MODAL CONFIRMAR ELIMINAR ======== -->
+<div id="modalEliminar" class="modal-overlay">
+  <div class="modal" style="max-width:420px;text-align:center">
+    <div style="font-size:2.5rem;color:var(--danger);margin-bottom:.75rem"><i class="fa-solid fa-triangle-exclamation"></i></div>
+    <h3 class="modal-title">¿Eliminar vehículo?</h3>
+    <p class="modal-subtitle" id="eliminarNombre" style="margin-bottom:1.5rem"></p>
+    <p style="font-size:.85rem;color:var(--text2);margin-bottom:1.5rem">Se borrarán también todas sus imágenes. Esta acción no se puede deshacer.</p>
+    <div style="display:flex;gap:.75rem">
+      <button class="btn btn-secondary btn-full" onclick="closeModal('modalEliminar')">Cancelar</button>
+      <button id="btnConfirmarEliminar" class="btn btn-danger btn-full"><i class="fa-solid fa-trash"></i> Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="../js/ui.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>

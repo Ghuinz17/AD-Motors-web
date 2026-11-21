@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /pages/admin.html
+Disallow: /pages/perfil.html
+Disallow: /pages/pago.html
+Disallow: /pages/auth.html
+Disallow: /pages/resetPassword.html
+Disallow: /pages/confirm.html

@@ -4,6 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Pago — AD Motors</title>
   <link rel="icon" href="../assets/admotors.png">
   <link rel="stylesheet" href="../css/base.css">
@@ -238,11 +240,16 @@
       const { data: { user } } = await db.auth.getUser();
       if (!user) { window.location.href = `auth.html?redirect=pago.html?id=${vehiculoId}`; return; }
 
-      const { data } = await db.from('vehiculo').select('*').eq('id_vehiculo', vehiculoId).single();
+      const { data } = await db
+        .from('vehiculo')
+        .select('id_vehiculo,marca,modelo,precio,ano_fabricacion,tipo_combustible,reservado')
+        .eq('id_vehiculo', vehiculoId)
+        .single();
       if (!data) { window.location.href = '../index.html'; return; }
       vehiculoData = data;
 
-      document.getElementById('resumenNombre').textContent = data.marca_modelo;
+      const nombreVehiculo = `${data.marca || ''} ${data.modelo || ''}`.trim() || 'Vehículo';
+      document.getElementById('resumenNombre').textContent = nombreVehiculo;
       document.getElementById('resumenAno').textContent = `Año ${data.ano_fabricacion} · ${data.tipo_combustible}`;
       document.getElementById('resumenPrecio').textContent = data.precio?.toLocaleString('es-ES') + ' €';
       document.getElementById('resumenTotal').textContent = data.precio?.toLocaleString('es-ES') + ' €';
@@ -271,40 +278,39 @@
         await new Promise(r => setTimeout(r, 2000));
         const { data: { user } } = await db.auth.getUser();
 
-        // Crear compra
-        const { data: compra } = await db.from('compra').insert([{
-          fecha: new Date().toISOString(), total: vehiculoData.precio,
-          estado: 'COMPLETADA', id_usuario: user.id,
-        }]).select().single();
+        // Crear la compra en el servidor con una función atómica.
+        // Comprueba que el vehículo siga libre y usa el precio real de la BD.
+        const { data: compraId, error: compraError } = await db.rpc('crear_reserva', {
+          p_id_vehiculo: vehiculoId,
+          p_estado: 'COMPLETADA',
+        });
+        if (compraError) throw compraError;
 
-        // Detalle
-        await db.from('detallecompra').insert([{
-          id_compra: compra.id_compra, id_vehiculo: vehiculoId,
-          cantidad: 1, precio_unitario: vehiculoData.precio,
-        }]);
-
-        // Pago
+        // Pago simulado. Si la tabla no existe o falla, no bloquea la compra.
         await db.from('pago').insert([{
           fecha_pago: new Date().toISOString(),
-          estado_pago: 'COMPLETADO', id_compra: compra.id_compra,
+          estado_pago: 'COMPLETADO', id_compra: compraId,
         }]);
-
-        // Reservar vehículo
-        await db.from('vehiculo').update({ reservado: true, fecha_reserva: new Date().toISOString() }).eq('id_vehiculo', vehiculoId);
 
         // Email confirmación
         const { data: userData } = await db.from('usuario').select('nombre,email').eq('id_usuario', user.id).single();
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_COMPRA, {
           nombre: userData?.nombre || user.email,
-          vehiculo: vehiculoData.marca_modelo,
+          vehiculo: `${vehiculoData.marca || ''} ${vehiculoData.modelo || ''}`.trim() || 'Vehículo',
           precio: vehiculoData.precio?.toLocaleString('es-ES') + ' €',
-          id_compra: compra.id_compra,
+          id_compra: compraId,
           to_email: user.email,
         });
 
         openModal('modalPagoExito');
       } catch (err) {
-        showToast('Error al procesar: ' + err.message, 'error');
+        const msg = String(err?.message || '');
+        showToast(
+          msg.toLowerCase().includes('reservado')
+            ? 'Este vehículo ya está reservado'
+            : 'No se pudo procesar el pago. Inténtalo de nuevo.',
+          'error',
+        );
       } finally {
         setLoading(btn, false);
       }

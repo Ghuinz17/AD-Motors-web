@@ -87,6 +87,30 @@ Tras el despliegue, configura en Supabase:
 - 📋 [Documentación técnica](docs/documentacion-tecnica.md)
 - 👤 [Manual de usuario](docs/manual-usuario.md)
 - ⚙️ [Manual de instalación](docs/manual-instalacion.md)
+- 🔐 [Guía de seguridad](docs/seguridad.md)
+
+---
+
+## 🔐 Seguridad
+
+Antes de publicar cambios, ejecuta en Supabase el script
+[`supabase/seguridad-rls.sql`](supabase/seguridad-rls.sql). Es la barrera real
+que impide que un usuario vea datos de otros clientes.
+
+La clave `anon` de Supabase y la clave pública de EmailJS son públicas por
+diseño. **Nunca** incluyas la clave `service_role`, contraseñas ni datos
+personales en el frontend: todo lo que se envía al navegador se puede ver con
+F12.
+
+Para generar la versión minificada (sin `console.*` y sin source maps):
+
+```bash
+npm install
+npm run build
+```
+
+El resultado se publica desde `dist/`. La minificación dificulta la lectura,
+pero no sustituye a RLS: el código del navegador siempre se puede inspeccionar.
 
 ## 📝 Licencia
 

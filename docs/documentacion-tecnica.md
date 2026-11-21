@@ -89,7 +89,7 @@ AD Motor's es una plataforma de dos capas:
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-Todas las tablas tienen **Row Level Security (RLS)** activado. Los usuarios solo pueden leer y modificar sus propios registros. Las imágenes se almacenan en el bucket `ad-motors-images` de Supabase Storage.
+Todas las tablas tienen **Row Level Security (RLS)** activado. Los usuarios solo pueden leer y modificar sus propios registros; los administradores se identifican con la función `public.es_admin()` y son los únicos que pueden escribir en el catálogo, ver todas las compras y gestionar las solicitudes. Las políticas endurecidas están en [`supabase/seguridad-rls.sql`](../supabase/seguridad-rls.sql). Las imágenes se almacenan en el bucket `ad-motors-images` de Supabase Storage, con lectura pública y escritura restringida a administradores.
 
 ---
 
@@ -264,7 +264,9 @@ Las capturas de pantalla del funcionamiento real de la aplicación se encuentran
 
 1. Conectar el repositorio de GitHub a Vercel desde [vercel.com](https://vercel.com).
 2. Configurar el directorio raíz como `web/` (o la carpeta que contenga `index.html`).
-3. No se requiere paso de build — es un sitio estático.
+3. El proyecto incluye `vercel.json`: Vercel ejecuta `npm run build` y publica `dist/`.
+   - El build minifica JS/CSS, elimina `console.*` y no genera source maps.
+   - Para probarlo en local: `npm install && npm run build`.
 4. Tras el despliegue, copiar la URL generada (p. ej. `https://admotors.vercel.app`).
 5. En Supabase → **Authentication → URL Configuration**:
    - **Site URL**: `https://admotors.vercel.app`
