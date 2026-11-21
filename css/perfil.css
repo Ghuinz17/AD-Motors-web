@@ -1,5 +1,5 @@
 /*
-   Configuración del perfil de usuario, tabs, pedidos, solicitudes, ajustes
+   Configuración del perfil de usuario, tabs, solicitudes, ajustes
 */
 
 /* --- Cabecera perfil --- */
@@ -86,7 +86,7 @@
   display: block;
 }
 
-/* --- Cards de pedidos y solicitudes --- */
+/* --- Cards de solicitudes --- */
 .pedido-card {
   background: var(--bg2);
   border: 1px solid var(--border);

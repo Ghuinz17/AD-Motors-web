@@ -282,7 +282,8 @@ async function handleLogin(e) {
     if (error) throw error;
     showToast("¡Bienvenido de vuelta!", "success");
     setTimeout(() => {
-      window.location.href = safeRedirect("../index.html");
+      const r = new URLSearchParams(window.location.search).get("redirect");
+      window.location.href = r || "../index.html";
     }, 1200);
   } catch (err) {
     if (err.message?.includes("Invalid") || err.message?.includes("invalid"))
@@ -400,7 +401,8 @@ async function handleVerifyOtp(e) {
 
     showToast("¡Cuenta verificada! Bienvenido", "success");
     setTimeout(() => {
-      window.location.href = safeRedirect("../index.html");
+      const r = new URLSearchParams(window.location.search).get("redirect");
+      window.location.href = r || "../index.html";
     }, 1200);
   } catch (err) {
     showToast("Código incorrecto o expirado", "error");
@@ -444,7 +446,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   db.auth.getUser().then(({ data: { user } }) => {
     if (user) {
-      window.location.href = safeRedirect("../index.html");
+      const r = new URLSearchParams(window.location.search).get("redirect");
+      window.location.href = r || "../index.html";
     }
   });
 

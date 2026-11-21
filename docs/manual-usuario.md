@@ -2,7 +2,7 @@
 
 ## ¿Qué es AD Motor's?
 
-AD Motor's es una plataforma para comprar vehículos de ocasión. Desde la web puedes explorar el catálogo, reservar el vehículo que te interese y solicitar una visita para verlo en persona. Todo sin necesidad de llamar ni desplazarte hasta saber qué coches hay disponibles.
+AD Motor's es una plataforma para comprar vehículos de ocasión. Desde la web puedes explorar el catálogo y solicitar una visita para ver el vehículo que te interese en persona. Todo sin necesidad de llamar ni desplazarte hasta saber qué coches hay disponibles.
 
 ---
 
@@ -11,10 +11,9 @@ AD Motor's es una plataforma para comprar vehículos de ocasión. Desde la web p
 | Pantalla | Descripción |
 |---|---|
 | **Inicio** | Catálogo de vehículos con buscador y filtros |
-| **Detalle de vehículo** | Fotos, ficha técnica, precio y opciones de reserva |
+| **Detalle de vehículo** | Fotos, ficha técnica, precio y opción de solicitar visita |
 | **Iniciar sesión / Registrarse** | Acceso a tu cuenta |
-| **Mis reservas** | Historial de vehículos reservados |
-| **Solicitudes de visita** | Visitas y citas de pago solicitadas |
+| **Solicitudes de visita** | Visitas solicitadas |
 | **Mi cuenta** | Datos personales, cambio de email y contraseña |
 | **Soporte y ayuda** | Formulario de contacto con el equipo |
 | **Términos y condiciones** | Información legal |
@@ -51,8 +50,6 @@ En la pantalla principal encontrarás todos los vehículos disponibles. Puedes:
 - Usar los filtros para acotar por tipo de combustible, precio máximo, año o color.
 - Cambiar el orden de los resultados (más reciente, menor precio, mayor precio).
 
-Los vehículos marcados como **RESERVADO** no están disponibles en este momento.
-
 ---
 
 ## Cómo ver el detalle de un vehículo
@@ -62,46 +59,19 @@ Haz clic sobre cualquier tarjeta del catálogo. Verás:
 - Galería de fotos (puedes hacer clic en cualquier imagen para ampliarla).
 - Ficha técnica completa: marca, modelo, año, kilometraje, combustible y color.
 - Precio con IVA incluido.
-- Botones para reservar o solicitar una visita.
-
----
-
-## Cómo reservar un vehículo
-
-1. En la página de detalle, pulsa **Reservar vehículo**.
-2. Lee la información sobre la bonificación de 350 €:
-   - Los 350 € se descuentan del precio final.
-   - El vehículo queda reservado a tu nombre durante 1 mes.
-   - Si no completas la compra en ese plazo, perderás el importe de la reserva y el vehículo volverá a estar disponible.
-3. Elige cómo pagar la bonificación:
-   - **Pagar bonificación y reservar**: pasarela de pago con tarjeta, PayPal o Bizum.
-   - **Reservar sin pago online**: el equipo de AD Motor's se pondrá en contacto contigo.
-4. Una vez realizada la reserva, deberás acordar una cita obligatoriamente:
-   - **Solicitar visita al concesionario**: elige fecha, hora y teléfono de contacto.
-   - **Acordar día para el pago**: si prefieres ir directamente a pagar.
-
-> **Importante**: La reserva tiene un costo de 350 €, los cuales serán descontados del precio final. Una vez hecha la reserva tienes un plazo máximo de un mes para finalizar con la compra del vehículo, de lo contrario, pasado el plazo el vehículo volverá a estar disponible y se perderá el monto de la reserva.
+- Botón para solicitar una visita.
 
 ---
 
 ## Cómo solicitar una visita
 
-Si quieres ver el vehículo antes de decidirte, puedes solicitar una visita sin necesidad de reservar:
+Si quieres ver el vehículo antes de decidirte, puedes solicitar una visita sin compromiso:
 
 1. En la página de detalle, pulsa **Solicitar visita**.
 2. Rellena tu nombre, teléfono, fecha y hora preferida.
 3. La fecha debe ser a partir del día siguiente.
 4. Pulsa **Solicitar**.
 5. Recibirás un email de confirmación y el equipo se pondrá en contacto contigo para confirmar la disponibilidad.
-
----
-
-## Cómo ver tus reservas
-
-1. Inicia sesión en tu cuenta.
-2. Haz clic en tu nombre o en el menú.
-3. Accede a **Mis reservas**.
-4. Verás todas tus reservas con su estado (Pendiente, Confirmada, Completada o Cancelada).
 
 ---
 

@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Detalle — AD Motors</title>
   <link rel="icon" href="../assets/admotors.png">
   <link rel="stylesheet" href="../css/base.css">
@@ -42,7 +41,6 @@
   </div>
   <nav class="drawer-nav">
     <div class="drawer-nav-item" data-href="index.html"><span class="ni"><i class="fa-solid fa-house"></i></span> Inicio</div>
-    <div class="drawer-nav-item" data-href="pages/perfil.html?tab=reservas"><span class="ni"><i class="fa-solid fa-box"></i></span> Mis reservas</div>
     <div class="drawer-nav-item" data-href="pages/perfil.html?tab=solicitudes"><span class="ni"><i class="fa-solid fa-calendar-days"></i></span> Mis solicitudes</div>
     <div class="drawer-nav-item" data-href="pages/perfil.html?tab=cuenta"><span class="ni"><i class="fa-solid fa-gear"></i></span> Mi cuenta</div>
   
@@ -61,11 +59,6 @@
     <span><i class="fa-solid fa-chevron-right" style="font-size:.7rem"></i></span>
     <span id="breadcrumbName">Vehículo</span>
   </nav>
-
-  <!-- Badge reservado -->
-  <div id="reservadoBadge" class="hidden" style="margin-bottom:1rem">
-    <span class="badge badge-danger" style="font-size:.85rem;padding:.5rem 1rem"><i class="fa-solid fa-lock"></i> Vehículo reservado — No disponible para compra</span>
-  </div>
 
   <!-- GALERÍA -->
   <div class="detail-gallery anim-up">
@@ -109,264 +102,15 @@
         <div class="detail-price-iva">IVA incluido</div>
 
         <div class="detail-actions">
-          <!-- Botón reservar -->
-          <button id="btnRealizarCompra" class="btn btn-primary btn-full btn-lg">
-            <i class="fa-solid fa-car"></i> Reservar vehículo
-          </button>
-
-          <!-- Botón solicitar visita -->
-          <button id="btnSolicitarVisita" class="btn btn-outline btn-full">
+          <button id="btnSolicitarVisita" class="btn btn-primary btn-full btn-lg">
             <i class="fa-regular fa-calendar-days"></i> Solicitar visita
           </button>
         </div>
-
-        <p style="font-size:.72rem;color:var(--text3);text-align:center;margin-top:1rem;line-height:1.6">
-          <i class="fa-solid fa-lock"></i> Transacción segura &nbsp;·&nbsp; <i class="fa-solid fa-shield-halved"></i> Datos protegidos
-        </p>
       </div>
     </div>
   </div>
 
 </main>
-
-<!-- MODAL CONFIRMAR RESERVA -->
-<div id="modalConfirmarCompra" class="modal-overlay">
-  <div class="modal">
-    <div style="text-align:center;margin-bottom:1.5rem">
-      <div style="margin-bottom:.75rem"><i class="fa-solid fa-car" style="font-size:3rem;color:var(--primary)"></i></div>
-      <h3 class="modal-title">Reservar vehículo</h3>
-      <p class="modal-subtitle">Para reservar este vehículo y que no esté disponible para otros clientes, abona la señal de reserva.</p>
-    </div>
-
-    <!-- Vehículo -->
-    <div style="background:var(--bg3);border-radius:var(--r-sm);padding:1rem;margin-bottom:.75rem">
-      <div style="font-size:.75rem;color:var(--text2);margin-bottom:.25rem">Vehículo</div>
-      <div id="modalVehiculoNombre" style="font-weight:700;color:var(--text);font-size:.95rem">—</div>
-    </div>
-
-    <!-- Precio vehículo -->
-    <div style="background:var(--bg3);border-radius:var(--r-sm);padding:1rem;margin-bottom:.75rem;display:flex;justify-content:space-between;align-items:center">
-      <span style="color:var(--text2);font-size:.875rem">Precio del vehículo</span>
-      <strong id="modalPrecioVehiculo" style="color:var(--text);font-size:1rem">—</strong>
-    </div>
-
-    <!-- Bonificación de reserva -->
-    <div style="background:var(--primary-lt);border:1px solid var(--primary);border-radius:var(--r-sm);padding:1rem;margin-bottom:.75rem;display:flex;justify-content:space-between;align-items:center">
-      <div>
-        <div style="font-size:.75rem;color:var(--primary);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Bonificación de reserva</div>
-        <div style="font-size:.75rem;color:var(--text2);margin-top:2px">Se reserva 1 mes · Se descuenta del precio final</div>
-      </div>
-      <strong style="color:var(--primary);font-size:1.4rem;font-weight:800">350,00 €</strong>
-    </div>
-
-    <!-- Aviso 1 mes -->
-    <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);border-radius:var(--r-sm);padding:.875rem 1rem;margin-bottom:1.25rem;font-size:.8rem;color:#fca5a5;line-height:1.6">
-      <i class="fa-solid fa-triangle-exclamation" style="color:var(--danger);margin-right:.4rem"></i>
-      <strong>Importante:</strong> La reserva tiene un costo de 350€, los cuales serán descontados del precio final. Una vez hecha la reserva tiene un plazo máximo de un mes para finalizar con la compra del vehículo, de lo contrario, pasado el plazo el vehículo volverá a estar disponible y se perderá el monto de la reserva.
-    </div>
-
-    <div style="display:flex;flex-direction:column;gap:.625rem">
-      <!-- Botón pagar señal → pasarela -->
-      <button id="btnIrPasarela" class="btn btn-primary btn-full btn-lg">
-        <i class="fa-regular fa-credit-card"></i> Pagar bonificación y reservar
-      </button>
-      <!-- Botón reservar directo (sin pago online) -->
-      <button id="btnConfirmarCompra" class="btn btn-outline btn-full">
-        <i class="fa-solid fa-check"></i> Reservar sin pago online
-      </button>
-      <button class="btn btn-secondary btn-full btn-sm" onclick="closeModal('modalConfirmarCompra')">Cancelar</button>
-    </div>
-
-    <p style="font-size:.72rem;color:var(--text3);text-align:center;margin-top:.875rem;line-height:1.5">
-      <i class="fa-solid fa-shield-halved"></i> Transacción segura · Los 350 € se descuentan del precio final · No reembolsable si no se completa la compra
-    </p>
-  </div>
-</div>
-
-<!-- MODAL PASARELA DE PAGO -->
-<div id="modalPasarela" class="modal-overlay">
-  <div class="modal" style="max-width:520px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
-      <div>
-        <h3 class="modal-title"><i class="fa-solid fa-lock" style="color:var(--success);margin-right:.5rem"></i>Pasarela de pago</h3>
-        <p style="font-size:.8rem;color:var(--text2);margin-top:.25rem">Bonificación de reserva · <strong style="color:var(--primary)">350,00 €</strong></p>
-      </div>
-      <button onclick="closeModal('modalPasarela')" style="background:none;border:none;color:var(--text3);font-size:1.2rem;cursor:pointer;padding:.25rem"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-
-    <!-- Selector método de pago -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;margin-bottom:1.5rem">
-      <div class="pay-method active" onclick="selectPayMethod('card')" id="method-card">
-        <i class="fa-regular fa-credit-card"></i>
-        <span>Tarjeta</span>
-      </div>
-      <div class="pay-method" onclick="selectPayMethod('paypal')" id="method-paypal">
-        <i class="fa-brands fa-paypal"></i>
-        <span>PayPal</span>
-      </div>
-      <div class="pay-method" onclick="selectPayMethod('bizum')" id="method-bizum">
-        <i class="fa-solid fa-mobile-screen-button"></i>
-        <span>Bizum</span>
-      </div>
-    </div>
-
-    <!-- Panel tarjeta -->
-    <div id="panel-card">
-      <!-- Tarjeta visual -->
-      <div style="background:linear-gradient(135deg,#1e3a5f,#0d1a2d);border-radius:12px;padding:1.25rem;color:#fff;margin-bottom:1.25rem;position:relative;overflow:hidden;min-height:130px">
-        <div style="position:absolute;width:160px;height:160px;border-radius:50%;background:rgba(59,130,246,.12);top:-50px;right:-50px"></div>
-        <div style="width:34px;height:24px;background:linear-gradient(135deg,#fbbf24,#f59e0b);border-radius:4px;margin-bottom:1rem"></div>
-        <div id="cardNumDisplay" style="font-family:monospace;font-size:1.1rem;letter-spacing:3px;margin-bottom:.75rem;color:rgba(255,255,255,.9)">•••• •••• •••• ••••</div>
-        <div style="display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.6)">
-          <div><div>Titular</div><div id="cardNameDisplay" style="color:#fff;font-weight:600;font-size:.85rem;margin-top:2px">NOMBRE APELLIDO</div></div>
-          <div style="text-align:right"><div>Caduca</div><div id="cardExpDisplay" style="color:#fff;font-weight:600;font-size:.85rem;margin-top:2px">MM/AA</div></div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Número de tarjeta</label>
-        <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-credit-card"></i></span>
-          <input type="text" id="pCardNum" class="form-input" placeholder="0000 0000 0000 0000" maxlength="19" inputmode="numeric"oninput="let v=this.value.replace(/\D/g,'').slice(0,16);this.value=v.replace(/(.{4})/g,'$1 ').trim();document.getElementById('cardNumDisplay').textContent=(v+'•'.repeat(16-v.length)).replace(/(.{4})/g,'$1 ').trim()">
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Titular</label>
-        <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-user"></i></span>
-          <input type="text" id="pCardName" class="form-input" placeholder="Como aparece en la tarjeta" style="text-transform:uppercase" oninput="this.value=this.value.replace(/[^a-zA-Z\s]/g,'').toUpperCase()" maxlength="50"
-            oninput="this.value=this.value.toUpperCase();document.getElementById('cardNameDisplay').textContent=this.value||'NOMBRE APELLIDO'">
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-        <div class="form-group">
-          <label class="form-label">Caducidad</label>
-          <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-calendar"></i></span>
-            <input type="text" id="pCardExp" class="form-input" placeholder="MM/AA" maxlength="5" inputmode="numeric"oninput="let v=this.value.replace(/\D/g,'').slice(0,4);if(v.length>=2)v=v.slice(0,2)+'/'+v.slice(2);this.value=v;document.getElementById('cardExpDisplay').textContent=v||'MM/AA'">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">CVV</label>
-          <div class="input-wrap"><span class="input-icon"><i class="fa-solid fa-lock"></i></span>
-            <input type="password" id="pCardCvv" class="form-input" placeholder="•••" maxlength="4" inputmode="numeric" onkeypress="return /[0-9]/.test(String.fromCharCode(event.which||event.keyCode))" oninput="this.value=this.value.replace(/[^0-9]/g,'')">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Panel PayPal -->
-    <div id="panel-paypal" style="display:none">
-      <div style="text-align:center;padding:1.5rem;background:var(--bg3);border-radius:var(--r);margin-bottom:1.25rem">
-        <i class="fa-brands fa-paypal" style="font-size:3rem;color:#003087;margin-bottom:.75rem"></i>
-        <p style="font-size:.875rem;color:var(--text2);line-height:1.6">Serás redirigido a PayPal para completar el pago de forma segura.</p>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Email de PayPal</label>
-        <div class="input-wrap"><span class="input-icon"><i class="fa-regular fa-envelope"></i></span>
-          <input type="email" id="pPaypalEmail" class="form-input" placeholder="tu@email.com" autocomplete="email" oninput="this.value=this.value.replace(/\s/g,'')" maxlength="100">
-        </div>
-      </div>
-    </div>
-
-    <!-- Panel Bizum -->
-    <div id="panel-bizum" style="display:none">
-      <div style="text-align:center;padding:1.5rem;background:var(--bg3);border-radius:var(--r);margin-bottom:1.25rem">
-        <div style="font-size:2rem;font-weight:900;color:#00b259;margin-bottom:.5rem">bizum</div>
-        <p style="font-size:.875rem;color:var(--text2);line-height:1.6">Introduce tu número de teléfono asociado a Bizum.</p>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Teléfono Bizum</label>
-        <div class="input-wrap"><span class="input-icon"><i class="fa-solid fa-mobile-screen-button"></i></span>
-          <input type="tel" id="pBizumTel" class="form-input" placeholder="600 000 000" inputmode="tel" maxlength="15"
-            onkeypress="return soloTelefono(event)" oninput="this.value=this.value.replace(/[^0-9+\s]/g,'')">
-        </div>
-      </div>
-    </div>
-
-    <!-- Info simulado -->
-    <div style="background:var(--primary-lt);border-radius:var(--r-sm);padding:.75rem 1rem;margin-bottom:1.25rem;font-size:.78rem;color:var(--primary);display:flex;gap:.5rem">
-      <i class="fa-solid fa-lock"></i>
-      <span>Pago simulado · No se realizará ningún cargo real</span>
-    </div>
-
-    <button id="btnPagarSenal" class="btn btn-primary btn-full btn-lg" onclick="handlePagarSenal()">
-      <i class="fa-solid fa-lock"></i> Pagar 350,00 €
-    </button>
-  </div>
-</div>
-<!-- MODAL CITA POST-RESERVA -->
-<div id="modalCitaReserva" class="modal-overlay">
-  <div class="modal" style="max-width:480px">
-    <div style="text-align:center;margin-bottom:1.5rem">
-      <div style="margin-bottom:.75rem">
-        <i class="fa-solid fa-circle-check" style="font-size:3rem;color:var(--success)"></i>
-      </div>
-      <h3 class="modal-title">Reserva realizada</h3>
-      <p class="modal-subtitle" style="color:var(--danger);font-weight:600">Debes acordar una cita para continuar</p>
-    </div>
-    <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:var(--r-sm);padding:1rem;margin-bottom:1.5rem;font-size:.875rem;color:var(--text2);line-height:1.6;text-align:center">
-      <i class="fa-solid fa-triangle-exclamation" style="color:var(--danger);margin-right:.4rem"></i>
-      Para completar la compra es obligatorio acordar una fecha para ver el vehículo y realizar el pago.
-    </div>
-    <div style="display:flex;flex-direction:column;gap:.75rem">
-      <button class="btn btn-primary btn-full btn-lg" onclick="closeModal('modalCitaReserva');openModal('modalVisita')">
-        <i class="fa-regular fa-calendar-days"></i> Solicitar visita al concesionario
-      </button>
-      <button class="btn btn-outline btn-full btn-lg" onclick="closeModal('modalCitaReserva');openModal('modalFechaPago')">
-        <i class="fa-regular fa-credit-card"></i> Acordar día para el pago
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL FECHA PAGO -->
-<div id="modalFechaPago" class="modal-overlay">
-  <div class="modal" style="max-width:440px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
-      <div>
-        <h3 class="modal-title"><i class="fa-regular fa-credit-card" style="color:var(--primary);margin-right:.5rem"></i>Acordar día de pago</h3>
-        <p class="modal-subtitle">Selecciona cuándo quieres venir a pagar</p>
-      </div>
-      <button onclick="closeModal('modalFechaPago')" style="background:none;border:none;color:var(--text3);font-size:1.2rem;cursor:pointer"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-    <form id="formFechaPago" novalidate>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-        <div class="form-group">
-          <label class="form-label">Fecha <span>*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon"><i class="fa-regular fa-calendar"></i></span>
-            <input type="date" id="fechaPagoFecha" class="form-input" style="padding-left:2.5rem">
-          </div>
-          <div class="form-error" id="fechaPagoFechaError"></div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Hora <span>*</span></label>
-          <div class="input-wrap">
-            <span class="input-icon"><i class="fa-regular fa-clock"></i></span>
-            <input type="time" id="fechaPagoHora" class="form-input" style="padding-left:2.5rem" min="09:00" max="20:00" value="10:00">
-          </div>
-          <div class="form-error" id="fechaPagoHoraError"></div>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Teléfono de contacto <span>*</span></label>
-        <div class="input-wrap">
-          <span class="input-icon"><i class="fa-solid fa-mobile-screen-button"></i></span>
-          <input type="tel" id="fechaPagoTel" class="form-input" placeholder="600 000 000" inputmode="tel" maxlength="15" onkeypress="return soloTelefono(event)" oninput="this.value=this.value.replace(/[^0-9+\s]/g,'')">
-        </div>
-        <div class="form-error" id="fechaPagoTelError"></div>
-      </div>
-      <div style="background:var(--primary-lt);border-radius:var(--r-sm);padding:.875rem 1rem;font-size:.8rem;color:var(--primary);margin-bottom:1.25rem">
-        <i class="fa-solid fa-circle-info"></i> Nos pondremos en contacto contigo para confirmar la disponibilidad.
-      </div>
-      <div style="display:flex;gap:.75rem">
-        <button type="button" class="btn btn-secondary btn-full" onclick="closeModal('modalFechaPago');openModal('modalCitaReserva')">
-          <i class="fa-solid fa-arrow-left"></i> Volver
-        </button>
-        <button type="submit" id="btnConfirmarFechaPago" class="btn btn-primary btn-full">
-          <i class="fa-solid fa-check"></i> Confirmar
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
 
 <div id="modalVisita" class="modal-overlay">
   <div class="modal">

@@ -83,9 +83,9 @@ async function handleSoporte(e) {
     // Inicializar segunda cuenta de EmailJS para soporte
     emailjs.init(EMAILJS_PUBLIC_KEY_SOPORTE);
 
-    // El destinatario (email del administrador) se configura directamente
-    // en la plantilla de EmailJS, nunca en el código del navegador.
     await emailjs.send(EMAILJS_SERVICE_ID_SOPORTE, EMAILJS_TEMPLATE_SOPORTE, {
+      to_email: ADMIN_EMAIL,
+      admin_email: ADMIN_EMAIL,
       nombre: email,
       vehiculo: tipoLabels[tipo] || tipo,
       icono: "!",
@@ -106,7 +106,8 @@ async function handleSoporte(e) {
     closeModal("modalSoporte");
     document.getElementById("formSoporte")?.reset();
     showToast("Mensaje enviado. Te responderemos pronto", "success");
-  } catch {
+  } catch (err) {
+    console.error("Error soporte:", err);
     showToast("Error al enviar. Inténtalo de nuevo", "error");
   } finally {
     setLoading(btn, false);

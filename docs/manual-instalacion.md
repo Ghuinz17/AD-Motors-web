@@ -49,11 +49,6 @@ CREATE TABLE usuario (
   phone      varchar
 );
 
--- Administradores (el UUID debe coincidir con auth.users.id)
-CREATE TABLE administradores (
-  id_usuario uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE
-);
-
 -- Tabla de vehículos
 CREATE TABLE vehiculo (
   id_vehiculo         text PRIMARY KEY,
@@ -65,8 +60,7 @@ CREATE TABLE vehiculo (
   tipo_combustible    varchar,
   kilometraje         integer,
   color               varchar,
-  reservado           boolean DEFAULT false,
-  fecha_reserva       timestamptz,
+  estado              varchar DEFAULT 'activo',
   fecha_creacion      timestamptz DEFAULT now(),
   fecha_actualizacion timestamptz DEFAULT now()
 );
@@ -79,28 +73,7 @@ CREATE TABLE vehiculo_imagenes (
   created_at  timestamptz DEFAULT now()
 );
 
--- Compras / reservas
-CREATE TABLE compra (
-  id_compra       uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  id_usuario      uuid REFERENCES usuario(id_usuario),
-  id_metodo_pago  uuid,
-  total           numeric,
-  estado          varchar DEFAULT 'PENDIENTE',
-  fecha           timestamptz DEFAULT now()
-);
-
-ALTER TABLE compra ALTER COLUMN id_metodo_pago DROP NOT NULL;
-
--- Detalle de compra
-CREATE TABLE detallecompra (
-  id_detalle      uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  id_compra       uuid REFERENCES compra(id_compra),
-  id_vehiculo     text REFERENCES vehiculo(id_vehiculo),
-  cantidad        integer DEFAULT 1,
-  precio_unitario numeric
-);
-
--- Solicitudes de visita y citas
+-- Solicitudes de visita
 CREATE TABLE solicitudes_revision (
   id               uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   id_vehiculo      text REFERENCES vehiculo(id_vehiculo),
@@ -120,28 +93,34 @@ CREATE TABLE solicitudes_revision (
 
 ### 2.3 Activar Row Level Security (RLS)
 
-Ejecuta el script completo [`supabase/seguridad-rls.sql`](../supabase/seguridad-rls.sql) en el **SQL Editor** de Supabase.
-
-Ese script:
-
-- elimina las políticas antiguas y permisivas;
-- activa RLS en todas las tablas;
-- crea la función `es_admin()`;
-- permite a cada usuario leer y modificar **solo sus propios datos**;
-- mantiene el catálogo de vehículos como lectura pública;
-- reserva la escritura de vehículos, imágenes y solicitudes a los administradores;
-- restringe la escritura del bucket `ad-motors-images` a los administradores.
-
-> ⚠️ **No uses políticas `USING (true)`** en `usuario`, `compra`, `detallecompra`, `solicitudes_revision` ni en las escrituras de `vehiculo`.
-> Eso permitiría a cualquier visitante leer nombres, teléfonos y fechas de otros clientes, o modificar el catálogo.
->
-> El script es idempotente: puedes volver a ejecutarlo después de cambiar políticas.
-
-Para dar permisos de administrador, inserta el UUID del usuario en la tabla:
-
 ```sql
-INSERT INTO administradores (id_usuario)
-VALUES ('UUID-DEL-USUARIO-ADMIN');
+-- RLS en todas las tablas
+ALTER TABLE usuario           ENABLE ROW LEVEL SECURITY;
+ALTER TABLE vehiculo          ENABLE ROW LEVEL SECURITY;
+ALTER TABLE vehiculo_imagenes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE solicitudes_revision ENABLE ROW LEVEL SECURITY;
+
+-- Políticas de usuario
+CREATE POLICY "usuario_select" ON usuario FOR SELECT USING (auth.uid() = id_usuario);
+CREATE POLICY "usuario_insert" ON usuario FOR INSERT WITH CHECK (auth.uid() = id_usuario);
+CREATE POLICY "usuario_update" ON usuario FOR UPDATE USING (auth.uid() = id_usuario);
+CREATE POLICY "usuario_delete" ON usuario FOR DELETE USING (auth.uid() = id_usuario);
+
+-- Vehículos públicos
+CREATE POLICY "vehiculo_public_select" ON vehiculo FOR SELECT USING (true);
+CREATE POLICY "vehiculo_insert" ON vehiculo FOR INSERT WITH CHECK (true);
+CREATE POLICY "vehiculo_update" ON vehiculo FOR UPDATE USING (true);
+CREATE POLICY "vehiculo_delete" ON vehiculo FOR DELETE USING (true);
+
+-- Imágenes públicas
+CREATE POLICY "imagenes_public" ON vehiculo_imagenes FOR SELECT USING (true);
+CREATE POLICY "imagenes_insert" ON vehiculo_imagenes FOR INSERT WITH CHECK (true);
+CREATE POLICY "imagenes_delete" ON vehiculo_imagenes FOR DELETE USING (true);
+
+-- Solicitudes
+CREATE POLICY "solicitudes_select" ON solicitudes_revision FOR SELECT USING (true);
+CREATE POLICY "solicitudes_insert" ON solicitudes_revision FOR INSERT WITH CHECK (true);
+CREATE POLICY "solicitudes_update" ON solicitudes_revision FOR UPDATE USING (true) WITH CHECK (true);
 ```
 
 ### 2.4 Trigger para eliminar usuario de auth al borrar de la tabla
@@ -192,12 +171,11 @@ Ve a **Authentication → Email Templates** y pega el HTML de los archivos de la
 
 1. Crea una cuenta en [emailjs.com](https://emailjs.com).
 2. Ve a **Email Services** y conecta tu cuenta de Gmail.
-3. Crea dos plantillas con el HTML de `web/email-templates/emailjs-unificada.html`.
-4. En las plantillas de reserva/visita, configura el campo **To email** como `{{to_email}}` (el email del cliente).
+3. Crea una plantilla con el HTML de `web/email-templates/emailjs-unificada.html`.
+4. En cada plantilla, configura el campo **To email** como `{{to_email}}`.
 5. Crea una segunda cuenta de EmailJS para el formulario de soporte.
-6. En la plantilla de soporte, escribe **directamente** el email del administrador en el campo **To email**. No lo envíes como variable desde el navegador.
+6. En la segunda cuenta, crea una plantilla con el HTML de `emailjs-soporte.html`.
 7. Anota los IDs de servicio, plantillas y clave pública de ambas cuentas.
-8. En **Account → Security**, limita los dominios permitidos (Allowed origins) al dominio real de la web y activa los límites de envío.
 
 ---
 
@@ -211,17 +189,14 @@ const SUPABASE_ANON_KEY = 'TU_CLAVE_ANONIMA';
 
 const EMAILJS_PUBLIC_KEY              = 'TU_PUBLIC_KEY';
 const EMAILJS_SERVICE_ID              = 'service_xxxxxxx';
-const EMAILJS_TEMPLATE_COMPRA         = 'template_xxxxxxx';
 const EMAILJS_TEMPLATE_VISITA_CLIENTE = 'template_xxxxxxx';
 
 const EMAILJS_PUBLIC_KEY_SOPORTE  = 'TU_SEGUNDA_PUBLIC_KEY';
 const EMAILJS_SERVICE_ID_SOPORTE  = 'service_xxxxxxx';
 const EMAILJS_TEMPLATE_SOPORTE    = 'template_xxxxxxx';
-```
 
-> **No guardes el email del administrador en `config.js`.** Se configura en la plantilla de EmailJS y así no aparece en el código fuente ni en el navegador.
->
-> La clave pública de EmailJS y la clave anon de Supabase son públicas por diseño. No son secretos: la seguridad depende de las restricciones de dominio de EmailJS y de las políticas RLS de Supabase.
+const ADMIN_EMAIL = 'tuemail@gmail.com';
+```
 
 ### App móvil — crear `.env.local` en la raíz de `ADMotors/`
 
@@ -235,14 +210,6 @@ EXPO_PUBLIC_SUPABASE_KEY=TU_CLAVE_ANONIMA
 ## 5. Ejecutar la web en local
 
 La web es estática — no necesita servidor. Abre `web/index.html` directamente en el navegador o usa una extensión como **Live Server** en VS Code.
-
-Para probar la versión de producción (minificada):
-
-```bash
-npm install
-npm run build
-npx serve dist
-```
 
 ---
 
@@ -287,9 +254,8 @@ Una vez completado el build, descarga el APK desde [expo.dev](https://expo.dev) 
 1. Sube el proyecto a un repositorio de GitHub.
 2. Ve a [vercel.com](https://vercel.com) e importa el repositorio.
 3. Configura el directorio raíz como la carpeta `web/`.
-4. Vercel leerá `vercel.json` y ejecutará `npm run build`; la salida es `dist/`.
-5. Pulsa **Deploy**.
-6. Copia la URL generada y configúrala en Supabase → **Authentication → URL Configuration**.
+4. Pulsa **Deploy**.
+5. Copia la URL generada y configúrala en Supabase → **Authentication → URL Configuration**.
 
 ---
 

@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>Mi perfil — AD Motors</title>
   <link rel="icon" href="../assets/admotors.png">
   <link rel="stylesheet" href="../css/base.css">
@@ -38,8 +36,7 @@
   </div>
   <nav class="drawer-nav">
     <div class="drawer-nav-item" data-href="index.html"><span class="ni"><i class="fa-solid fa-house"></i></span> Inicio</div>
-    <div class="drawer-nav-item active" data-page="perfil"><span class="ni"><i class="fa-solid fa-box"></i></span> Mis reservas</div>
-    <div class="drawer-nav-item" data-page="solicitudes"><span class="ni"><i class="fa-solid fa-calendar-days"></i></span> Mis solicitudes</div>
+    <div class="drawer-nav-item active" data-page="solicitudes"><span class="ni"><i class="fa-solid fa-calendar-days"></i></span> Mis solicitudes</div>
     <div class="drawer-nav-item" data-page="cuenta"><span class="ni"><i class="fa-solid fa-gear"></i></span> Mi cuenta</div>
   
     <div class="drawer-nav-item" onclick="openModal('modalSoporte');document.getElementById('drawer')?.classList.remove('open');document.getElementById('drawerOverlay')?.classList.remove('open')">
@@ -62,15 +59,8 @@
 
   <!-- TABS -->
   <div class="profile-tabs">
-    <button class="profile-tab" data-tab="reservas"><i class="fa-solid fa-box"></i> Mis reservas</button>
     <button class="profile-tab" data-tab="solicitudes"><i class="fa-regular fa-calendar-days"></i> Solicitudes</button>
     <button class="profile-tab" data-tab="cuenta"><i class="fa-solid fa-gear"></i> Mi cuenta</button>
-  </div>
-
-  <!-- TAB PEDIDOS -->
-  <div id="tab-reservas" class="tab-content">
-    <div class="section-title" style="margin-bottom:1.25rem">Mis reservas</div>
-    <div id="pedidosList"></div>
   </div>
 
   <!-- TAB SOLICITUDES -->
@@ -141,7 +131,7 @@
     <div class="danger-zone">
       <div class="settings-section-title" style="color:var(--danger)"><i class="fa-solid fa-triangle-exclamation"></i> Zona de peligro</div>
       <p style="font-size:.875rem;color:var(--text2);margin-bottom:1rem">
-        Eliminar tu cuenta es una acción irreversible. Se borrarán todos tus datos, pedidos y solicitudes.
+        Eliminar tu cuenta es una acción irreversible. Se borrarán todos tus datos y solicitudes.
       </p>
       <button id="btnDeleteAccount" class="btn btn-danger btn-sm"><i class="fa-regular fa-trash-can"></i> Eliminar mi cuenta</button>
     </div>
@@ -171,6 +161,7 @@
 <div id="toastContainer" class="toast-container"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script src="../js/config.js"></script>
 <script src="../js/ui.js"></script>
 <script src="../js/perfil.js"></script>

@@ -51,35 +51,21 @@ AD Motor's es una plataforma de dos capas:
 ┌─────────────────────────────────────────────────────────────────────┐
 │  usuario                                                            │
 │  id_usuario (uuid, PK, FK → auth.users) | nombre | email | phone   │
+└────────────────────────┬────────────────────────────────────────────┘
+                         │ 1:N
+                         ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  solicitudes_revision                                               │
+│  id (uuid, PK) | id_vehiculo (FK) | id_usuario (FK)                 │
+│  nombre_asistente | telefono | fecha_visita | hora_visita           │
+│  estado | tipo (visita) | marca_modelo                             │
 └─────────────────────────────────────────────────────────────────────┘
-          │ 1:N                            │ 1:N
-          ▼                                ▼
-┌──────────────────────┐      ┌────────────────────────────────────────┐
-│  compra              │      │  solicitudes_revision                  │
-│  id_compra (uuid,PK) │      │  id (uuid, PK)                        │
-│  id_usuario (FK)     │      │  id_vehiculo (FK)                     │
-│  total               │      │  id_usuario (FK)                      │
-│  estado              │      │  nombre_asistente                     │
-│  fecha               │      │  telefono                             │
-│  id_metodo_pago      │      │  fecha_visita | hora_visita           │
-└────────┬─────────────┘      │  estado | tipo (visita/pago)         │
-         │ 1:N                │  marca_modelo                         │
-         ▼                    └────────────────────────────────────────┘
-┌──────────────────────┐
-│  detallecompra       │
-│  id_detalle (PK)     │
-│  id_compra (FK)      │
-│  id_vehiculo (FK)    │
-│  cantidad            │
-│  precio_unitario     │
-└──────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────┐
 │  vehiculo                                                           │
 │  id_vehiculo (text, PK) | marca | modelo | precio                  │
 │  ano_fabricacion | tipo_combustible | kilometraje | color           │
-│  descripcion | reservado (bool) | fecha_reserva                    │
-│  fecha_creacion | fecha_actualizacion                               │
+│  descripcion | estado | fecha_creacion | fecha_actualizacion      │
 └────────────────────────────┬────────────────────────────────────────┘
                              │ 1:N
                              ▼
@@ -89,7 +75,7 @@ AD Motor's es una plataforma de dos capas:
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-Todas las tablas tienen **Row Level Security (RLS)** activado. Los usuarios solo pueden leer y modificar sus propios registros; los administradores se identifican con la función `public.es_admin()` y son los únicos que pueden escribir en el catálogo, ver todas las compras y gestionar las solicitudes. Las políticas endurecidas están en [`supabase/seguridad-rls.sql`](../supabase/seguridad-rls.sql). Las imágenes se almacenan en el bucket `ad-motors-images` de Supabase Storage, con lectura pública y escritura restringida a administradores.
+Todas las tablas tienen **Row Level Security (RLS)** activado. Los usuarios solo pueden leer y modificar sus propios registros. Las imágenes se almacenan en el bucket `ad-motors-images` de Supabase Storage.
 
 ---
 
@@ -138,21 +124,19 @@ web/
 │   ├── index.css                # Catálogo y tarjetas de vehículos
 │   ├── auth.css                 # Formularios de autenticación
 │   ├── detalle.css              # Página de detalle de vehículo
-│   ├── perfil.css               # Perfil de usuario
-│   └── pago.css                 # Pasarela de pago
+│   └── perfil.css               # Perfil de usuario
 ├── js/
 │   ├── config.js                # Credenciales Supabase y EmailJS
 │   ├── ui.js                    # Utilidades UI compartidas
 │   ├── main.js                  # Catálogo, filtros y búsqueda
 │   ├── auth.js                  # Login, registro y OTP
-│   ├── detalle.js               # Detalle, reserva y solicitudes
-│   ├── perfil.js                # Perfil, reservas y configuración
+│   ├── detalle.js               # Detalle y solicitudes de visita
+│   ├── perfil.js                # Perfil, solicitudes y configuración
 │   └── soporte.js               # Formulario de soporte
 ├── pages/
 │   ├── auth.html
 │   ├── detalle.html
 │   ├── perfil.html
-│   ├── pago.html
 │   ├── reset-password.html
 │   └── terminos.html
 └── email-templates/
@@ -212,7 +196,7 @@ ADMotors/
 |---|---|---|
 | **CREATE** | El administrador rellena el formulario con marca, modelo, precio, año, combustible, kilometraje, color y fotos. Se inserta en la tabla `vehiculo` y las imágenes en `vehiculo_imagenes` vía Supabase Storage. | `anadirVehiculoScreen` |
 | **READ** | Se obtienen todos los vehículos ordenados por fecha de creación. En el detalle se cargan también las imágenes asociadas. | `listVehiculosScreen`, `detalleVehiculoScreen` |
-| **UPDATE** | El administrador modifica los campos del vehículo. También puede republicar un vehículo reservado (cambia `reservado = false`). | `editarVehiculoScreen`, `detalleVehiculoScreen` |
+| **UPDATE** | El administrador modifica los campos del vehículo y su estado (activo, reservado o vendido). | `editarVehiculoScreen`, `detalleVehiculoScreen` |
 | **DELETE** | Se eliminan primero las imágenes del Storage y luego la fila de la base de datos. | `detalleVehiculoScreen` |
 
 ### Usuarios (web)
@@ -224,19 +208,11 @@ ADMotors/
 | **UPDATE** | El usuario puede cambiar nombre, teléfono, email y contraseña desde la sección "Mi cuenta". |
 | **DELETE** | Al eliminar la cuenta se borra la fila de `usuario`, lo que activa un trigger que borra también el registro en `auth.users`. |
 
-### Reservas / Compras (web)
-
-| Operación | Descripción |
-|---|---|
-| **CREATE** | Al reservar se inserta en `compra` y `detallecompra`. El vehículo se marca como `reservado = true`. Se envía email de confirmación. |
-| **READ** | El usuario ve sus reservas en la sección "Mis reservas" del perfil. |
-| **UPDATE** | El administrador puede republicar el vehículo (cambia `reservado = false`) si la reserva no se completa. |
-
 ### Solicitudes de visita (web + app)
 
 | Operación | Descripción |
 |---|---|
-| **CREATE** | El cliente rellena el formulario de visita o cita de pago. Se inserta en `solicitudes_revision` con campo `tipo` (visita/pago). |
+| **CREATE** | El cliente rellena el formulario de visita. Se inserta en `solicitudes_revision` con `tipo = 'visita'`. |
 | **READ** | El administrador ve todas las solicitudes en la app móvil con filtros por estado. |
 | **UPDATE** | El administrador acepta o rechaza cada solicitud cambiando el campo `estado`. |
 
@@ -248,10 +224,9 @@ Las capturas de pantalla del funcionamiento real de la aplicación se encuentran
 
 - Catálogo de vehículos (escritorio y móvil)
 - Proceso de registro y verificación OTP
-- Detalle de vehículo y modal de reserva
-- Modal de información sobre la bonificación (350 €)
+- Detalle de vehículo y galería de imágenes
 - Formulario de solicitud de visita
-- Perfil de usuario con reservas
+- Perfil de usuario con solicitudes
 - Panel de solicitudes en la app Android
 - Notificación push al recibir una nueva solicitud
 - Formularios de soporte
@@ -264,9 +239,7 @@ Las capturas de pantalla del funcionamiento real de la aplicación se encuentran
 
 1. Conectar el repositorio de GitHub a Vercel desde [vercel.com](https://vercel.com).
 2. Configurar el directorio raíz como `web/` (o la carpeta que contenga `index.html`).
-3. El proyecto incluye `vercel.json`: Vercel ejecuta `npm run build` y publica `dist/`.
-   - El build minifica JS/CSS, elimina `console.*` y no genera source maps.
-   - Para probarlo en local: `npm install && npm run build`.
+3. No se requiere paso de build — es un sitio estático.
 4. Tras el despliegue, copiar la URL generada (p. ej. `https://admotors.vercel.app`).
 5. En Supabase → **Authentication → URL Configuration**:
    - **Site URL**: `https://admotors.vercel.app`

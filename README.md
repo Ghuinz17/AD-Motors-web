@@ -12,7 +12,7 @@
 
 ## 📱 Descripción
 
-**AD Motor's Web** es la plataforma pública del concesionario. Permite a los clientes explorar el catálogo de vehículos disponibles, realizar reservas, solicitar visitas personales y gestionar su cuenta. Incluye un sistema de autenticación por OTP, pasarela de pago simulada y un formulario de soporte.
+**AD Motor's Web** es la plataforma pública del concesionario. Permite a los clientes explorar el catálogo de vehículos disponibles, solicitar visitas personales y gestionar su cuenta. Incluye un sistema de autenticación por OTP y un formulario de soporte.
 
 ---
 
@@ -20,10 +20,9 @@
 
 - 🔍 Catálogo con búsqueda y filtros avanzados
 - 🚗 Detalle de vehículo con galería de imágenes y lightbox
-- 💳 Reserva de vehículo con señal de 25 € (tarjeta, PayPal, Bizum)
 - 📅 Solicitud de visita con selección de fecha y hora
 - 🔐 Autenticación por email con código OTP de 8 dígitos
-- 👤 Perfil de usuario con historial de pedidos y solicitudes
+- 👤 Perfil de usuario con historial de solicitudes
 - ✉️ Notificaciones por email automáticas (EmailJS + Supabase)
 - 🌙 Tema claro y oscuro
 - 📞 Formulario de soporte y ayuda
@@ -50,13 +49,12 @@
 1. Navega por el catálogo de vehículos
 2. Regístrate o inicia sesión con tu email
 3. Confirma tu cuenta con el código de 8 dígitos que recibirás por correo
-4. Reserva un vehículo o solicita una visita personal
-5. Gestiona tus pedidos y solicitudes desde tu perfil
+4. Solicita una visita personal
+5. Gestiona tus solicitudes desde tu perfil
 
 ### Para el administrador
 - Los vehículos se gestionan desde la **app móvil de administración**
 - Las solicitudes de visita se aceptan o rechazan desde la app
-- Los vehículos reservados se pueden volver a publicar desde la app
 
 ---
 
@@ -65,7 +63,6 @@
 La plataforma envía emails automáticos para los siguientes eventos:
 
 - ✅ Confirmación de cuenta (OTP)
-- 🚗 Confirmación de reserva
 - 📅 Solicitud de visita registrada
 - 🔑 Restablecimiento de contraseña
 - ✉️ Cambio de dirección de correo
@@ -87,30 +84,6 @@ Tras el despliegue, configura en Supabase:
 - 📋 [Documentación técnica](docs/documentacion-tecnica.md)
 - 👤 [Manual de usuario](docs/manual-usuario.md)
 - ⚙️ [Manual de instalación](docs/manual-instalacion.md)
-- 🔐 [Guía de seguridad](docs/seguridad.md)
-
----
-
-## 🔐 Seguridad
-
-Antes de publicar cambios, ejecuta en Supabase el script
-[`supabase/seguridad-rls.sql`](supabase/seguridad-rls.sql). Es la barrera real
-que impide que un usuario vea datos de otros clientes.
-
-La clave `anon` de Supabase y la clave pública de EmailJS son públicas por
-diseño. **Nunca** incluyas la clave `service_role`, contraseñas ni datos
-personales en el frontend: todo lo que se envía al navegador se puede ver con
-F12.
-
-Para generar la versión minificada (sin `console.*` y sin source maps):
-
-```bash
-npm install
-npm run build
-```
-
-El resultado se publica desde `dist/`. La minificación dificulta la lectura,
-pero no sustituye a RLS: el código del navegador siempre se puede inspeccionar.
 
 ## 📝 Licencia
 

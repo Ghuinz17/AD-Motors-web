@@ -1,44 +1,5 @@
 // Tema, Header, Toast
 
-/* ---- SEGURIDAD: helpers compartidos ---- */
-
-// Escapa texto antes de insertarlo con innerHTML.
-// Evita XSS y que datos de la BD se interpreten como HTML.
-function escapeHtml(value) {
-  return String(value ?? "").replace(
-    /[&<>"']/g,
-    (char) =>
-      ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-      })[char],
-  );
-}
-
-// Sanitiza identificadores antes de interpolarlos dentro de un
-// onclick/atributo JavaScript. Los UUID solo necesitan letras, números,
-// guiones y guiones bajos.
-function safeId(value) {
-  return String(value ?? "").replace(/[^a-zA-Z0-9_-]/g, "");
-}
-
-// Solo permite redirecciones dentro del propio sitio.
-// Evita que un enlace manipulado lleve al usuario a un dominio externo.
-function safeRedirect(fallback) {
-  const raw = new URLSearchParams(window.location.search).get("redirect");
-  if (!raw) return fallback;
-  try {
-    const url = new URL(raw, window.location.href);
-    if (url.origin !== window.location.origin) return fallback;
-    return url.pathname + url.search + url.hash;
-  } catch {
-    return fallback;
-  }
-}
-
 /* ---- TEMA ---- */
 function initTheme() {
   const saved = localStorage.getItem("adm-theme") || "dark";
@@ -81,7 +42,7 @@ function showToast(msg, type = "info", duration = 3500) {
   };
   const toast = document.createElement("div");
   toast.className = `toast ${type}`;
-  toast.innerHTML = `<span>${icons[type] || icons.info}</span><span>${escapeHtml(msg)}</span>`;
+  toast.innerHTML = `<span>${icons[type] || icons.info}</span><span>${msg}</span>`;
   container.appendChild(toast);
   setTimeout(() => {
     toast.style.opacity = "0";

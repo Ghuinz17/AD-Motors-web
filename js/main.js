@@ -4,24 +4,20 @@ let allVehiculos = [];
 
 async function loadVehiculos() {
   try {
-    // Solo columnas públicas. Nunca `*`: evita enviar al navegador
-    // columnas internas como `device_id` o fechas de gestión.
     const { data, error } = await db
       .from("vehiculo")
-      .select(
-        "id_vehiculo,marca,modelo,descripcion,precio,ano_fabricacion,tipo_combustible,kilometraje,color,reservado,fecha_creacion,vehiculo_imagenes(imagen)",
-      )
+      .select("*, vehiculo_imagenes(imagen)")
       .order("fecha_creacion", { ascending: false });
 
     if (error) throw error;
     allVehiculos = data || [];
 
     const stat = document.getElementById("statTotal");
-    if (stat)
-      stat.textContent = allVehiculos.filter((v) => !v.reservado).length;
+    if (stat) stat.textContent = allVehiculos.length;
 
     applyFilters();
-  } catch {
+  } catch (err) {
+    console.error(err);
     showToast("Error al cargar vehículos", "error");
     document.getElementById("vehiculosGrid").innerHTML = `
       <div class="no-results" style="grid-column:1/-1">
@@ -44,8 +40,8 @@ function applyFilters() {
   const orden = document.getElementById("filterOrden")?.value || "fecha_desc";
 
   let filtered = allVehiculos.filter((v) => {
-    if (v.reservado) return false;
-    const vNombre = [v.marca, v.modelo].filter(Boolean).join(" ");
+    const vNombre =
+      v.marca && v.modelo ? `${v.marca} ${v.modelo}` : v.marca_modelo || "";
     if (search && !vNombre.toLowerCase().includes(search)) return false;
     if (combustible && v.tipo_combustible !== combustible) return false;
     if (color && !v.color?.toLowerCase().includes(color)) return false;
@@ -104,36 +100,36 @@ function renderVehiculos(list) {
 
   grid.innerHTML = list
     .map((v, i) => {
-      const img = escapeHtml(getImageUrl(v));
+      const img = getImageUrl(v);
       const badge = getCombustibleBadge(v.tipo_combustible);
-      const nombre = escapeHtml(
-        v.marca && v.modelo ? `${v.marca} ${v.modelo}` : "Vehículo",
-      );
-      const id = safeId(v.id_vehiculo);
+      const nombre =
+        v.marca && v.modelo
+          ? `${v.marca} ${v.modelo}`
+          : v.marca_modelo || "Vehículo";
       return `
-      <article class="vehicle-card" style="animation-delay:${i * 0.06}s" onclick="goToDetail('${id}')">
+      <article class="vehicle-card" style="animation-delay:${i * 0.06}s" onclick="goToDetail('${v.id_vehiculo}')">
         <div class="vehicle-img-wrap">
           <img src="${img}" alt="${nombre}" loading="lazy"
                onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'200\\'><rect fill=\\'%23242424\\' width=\\'300\\' height=\\'200\\'/><text fill=\\'%23555\\' font-size=\\'14\\' x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\'>Sin imagen</text></svg>'">
           <div class="vehicle-badge">
-            <span class="badge ${badge.cls}">${escapeHtml(badge.label)}</span>
+            <span class="badge ${badge.cls}">${badge.label}</span>
           </div>
         </div>
         <div class="vehicle-body">
           <div style="display:flex;justify-content:space-between;align-items:flex-start">
             <div>
               <div class="vehicle-name">${nombre}</div>
-              <div class="vehicle-year">${escapeHtml(v.ano_fabricacion)}</div>
+              <div class="vehicle-year">${v.ano_fabricacion}</div>
             </div>
-            ${v.color ? `<span style="font-size:.76rem;background:var(--bg3);padding:2px 8px;border-radius:20px;color:var(--text2)">${escapeHtml(v.color)}</span>` : ""}
+            ${v.color ? `<span style="font-size:.76rem;background:var(--bg3);padding:2px 8px;border-radius:20px;color:var(--text2)">${v.color}</span>` : ""}
           </div>
           <div class="vehicle-specs">
-            <div class="vehicle-spec"><i class="fa-solid fa-gauge-high"></i> ${Number(v.kilometraje || 0).toLocaleString("es-ES")} km</div>
-            <div class="vehicle-spec"><i class="fa-solid fa-gas-pump"></i> ${escapeHtml(v.tipo_combustible)}</div>
+            <div class="vehicle-spec"><i class="fa-solid fa-gauge-high"></i> ${v.kilometraje?.toLocaleString()} km</div>
+            <div class="vehicle-spec"><i class="fa-solid fa-gas-pump"></i> ${v.tipo_combustible}</div>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:flex-end">
             <div>
-              <div class="vehicle-price">${Number(v.precio || 0).toLocaleString("es-ES")} €</div>
+              <div class="vehicle-price">${v.precio?.toLocaleString("es-ES")} €</div>
               <div class="vehicle-price-sub">IVA incluido</div>
             </div>
             <span style="color:var(--primary);font-size:.85rem;font-weight:700">Ver más <i class="fa-solid fa-chevron-right"></i></span>
