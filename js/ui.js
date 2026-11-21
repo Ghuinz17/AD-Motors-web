@@ -24,6 +24,17 @@ function updateThemeIcon(theme) {
         : '<i class="fa-solid fa-moon"></i>';
 }
 
+/* ---- Helpers compartidos ---- */
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c],
+  );
+}
+
+function safeId(value) {
+  return String(value ?? "").replace(/[^\w\-:.]/g, "");
+}
+
 /* ---- TOAST ---- */
 function showToast(msg, type = "info", duration = 3500) {
   let container = document.getElementById("toastContainer");
@@ -82,6 +93,14 @@ function initHeader() {
       loginBtn?.classList.add("hidden");
       userAvatar?.classList.remove("hidden");
 
+      // Icono de administración solo para las cuentas autorizadas en la BD
+      const btnAdmin = document.getElementById("btnAdmin");
+      if (btnAdmin) {
+        db.rpc("es_admin").then(({ data, error }) => {
+          if (!error && data === true) btnAdmin.classList.remove("hidden");
+        });
+      }
+
       // Iniciales del avatar: usar nombre si está disponible
       const metaNombre = user.user_metadata?.nombre || user.email || "U";
       const initials = metaNombre.substring(0, 2).toUpperCase();
@@ -110,6 +129,7 @@ function initHeader() {
     } else {
       loginBtn?.classList.remove("hidden");
       userAvatar?.classList.add("hidden");
+      document.getElementById("btnAdmin")?.classList.add("hidden");
       // Mostrar estado no autenticado en el drawer
       const drawerName = document.getElementById("drawerName");
       const drawerEmail = document.getElementById("drawerEmail");
