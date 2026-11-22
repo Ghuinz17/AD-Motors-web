@@ -102,15 +102,17 @@ function renderVehiculos(list) {
     .map((v, i) => {
       const img = getImageUrl(v);
       const badge = getCombustibleBadge(v.tipo_combustible);
+      const estadoRibbon = estadoRibbonHTML(v.estado);
       const nombre =
         v.marca && v.modelo
           ? `${v.marca} ${v.modelo}`
           : v.marca_modelo || "Vehículo";
       return `
-      <article class="vehicle-card" style="animation-delay:${i * 0.06}s" onclick="goToDetail('${v.id_vehiculo}')">
+      <article class="vehicle-card ${estadoRibbon ? 'con-estado' : ''}" style="animation-delay:${i * 0.06}s" onclick="goToDetail('${v.id_vehiculo}')">
         <div class="vehicle-img-wrap">
           <img src="${img}" alt="${nombre}" loading="lazy"
                onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'200\\'><rect fill=\\'%23242424\\' width=\\'300\\' height=\\'200\\'/><text fill=\\'%23555\\' font-size=\\'14\\' x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\'>Sin imagen</text></svg>'">
+          ${estadoRibbon}
           <div class="vehicle-badge">
             <span class="badge ${badge.cls}">${badge.label}</span>
           </div>

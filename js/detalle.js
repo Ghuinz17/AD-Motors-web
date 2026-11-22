@@ -51,6 +51,13 @@ function renderPage() {
 
   renderGallery();
 
+  // Estado (vendido / reservado) visible para todos los usuarios
+  const galleryMain = document.querySelector('.gallery-main');
+  if (galleryMain) {
+    galleryMain.querySelector('.status-ribbon-wrap')?.remove();
+    galleryMain.insertAdjacentHTML('beforeend', estadoRibbonHTML(vehiculo.estado));
+  }
+
   setValue('detailName', nombreCompleto);
   setValue('detailYear', vehiculo.ano_fabricacion);
   setValue('detailPrice', vehiculo.precio?.toLocaleString('es-ES') + ' €');

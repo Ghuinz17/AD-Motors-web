@@ -28,6 +28,7 @@ let imgExistentes = [];   // [{ id, imagen, url }] ya guardadas del vehículo en
 let imgABorrar    = [];   // ids de imagen marcadas para borrar al guardar
 let imgNuevas     = [];   // [File] seleccionadas y pendientes de subir
 let eliminarId    = null; // id pendiente de confirmar eliminación
+let visitas       = [];   // solicitudes de visita cargadas desde la BD
 
 // ─── Acceso: solo usuarios presentes en la tabla administradores ────────────
 async function comprobarAdmin() {
@@ -44,6 +45,7 @@ async function comprobarAdmin() {
     check.classList.add('hidden');
     document.getElementById('adminContent').classList.remove('hidden');
     await cargarVehiculos();
+    await cargarVisitas();
   } catch (_) {
     denegar('No se pudo comprobar el acceso');
   }
@@ -322,6 +324,82 @@ async function confirmarEliminar() {
   } finally {
     setLoading(btn, false);
   }
+}
+
+// ─── Solicitudes de visita: contacto con el cliente ─────────────────────────
+async function cargarVisitas() {
+  const campos = 'id,marca_modelo,nombre_asistente,telefono,fecha_visita,hora_visita,estado,fecha_creacion';
+  let { data, error } = await db
+    .from('solicitudes_revision')
+    .select(`${campos},usuario(email,nombre)`)
+    .eq('tipo', 'visita')
+    .order('fecha_creacion', { ascending: false });
+
+  // Si la BD no tiene relación declarada con usuario, reintentamos sin el join
+  if (error) {
+    ({ data, error } = await db
+      .from('solicitudes_revision')
+      .select(campos)
+      .eq('tipo', 'visita')
+      .order('fecha_creacion', { ascending: false }));
+  }
+
+  if (error) { showToast('No se pudieron cargar las solicitudes de visita', 'error'); return; }
+  visitas = data || [];
+  renderVisitas();
+}
+
+function renderVisitas() {
+  const cont = document.getElementById('visitasList');
+  if (!cont) return;
+
+  const count = document.getElementById('visitasCount');
+  if (count) count.textContent = `${visitas.length} solicitud${visitas.length !== 1 ? 'es' : ''}`;
+
+  if (!visitas.length) {
+    cont.innerHTML = '<div class="admin-check">Todavía no hay solicitudes de visita.</div>';
+    return;
+  }
+
+  cont.innerHTML = visitas.map(s => {
+    const nombre   = esc(s.nombre_asistente || 'Sin nombre');
+    const vehiculo = esc(s.marca_modelo || 'Vehículo no especificado');
+    const tel      = (s.telefono || '').replace(/[^\d+]/g, '');
+    const digits   = tel.replace(/\D/g, '');
+    const fecha    = s.fecha_visita
+      ? new Date(s.fecha_visita + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
+      : '—';
+    const hora     = (s.hora_visita || '').slice(0, 5) || '—';
+    const usr      = Array.isArray(s.usuario) ? s.usuario[0] : s.usuario;
+    const email    = usr?.email || '';
+
+    const llamar = tel
+      ? `<a class="btn btn-secondary btn-sm" href="tel:${tel}"><i class="fa-solid fa-phone"></i> Llamar</a>`
+      : '';
+    const whats = digits
+      ? `<a class="btn btn-success btn-sm" href="https://wa.me/${digits}" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>`
+      : '';
+    let correo = '';
+    if (email) {
+      const asunto = encodeURIComponent('Confirmación de visita — AD Motors');
+      const cuerpo = encodeURIComponent(
+        `Hola ${s.nombre_asistente || ''},\n\nTe contactamos desde AD Motors para confirmar tu visita al vehículo ${s.marca_modelo || ''} el ${fecha} a las ${hora}.\n\nGracias.`
+      );
+      correo = `<a class="btn btn-outline btn-sm" href="mailto:${encodeURIComponent(email)}?subject=${asunto}&body=${cuerpo}"><i class="fa-regular fa-envelope"></i> Email</a>`;
+    }
+
+    return `
+      <div class="admin-visita">
+        <div class="admin-visita-info">
+          <div class="admin-visita-name"><i class="fa-regular fa-user"></i> ${nombre}</div>
+          <div class="admin-visita-meta"><i class="fa-solid fa-car"></i> ${vehiculo}</div>
+          <div class="admin-visita-meta"><i class="fa-regular fa-calendar"></i> ${fecha} · ${hora}</div>
+          ${tel ? `<div class="admin-visita-meta"><i class="fa-solid fa-phone"></i> ${esc(tel)}</div>` : ''}
+          ${email ? `<div class="admin-visita-meta"><i class="fa-regular fa-envelope"></i> ${esc(email)}</div>` : ''}
+        </div>
+        <div class="admin-visita-actions">${llamar}${whats}${correo}</div>
+      </div>`;
+  }).join('');
 }
 
 // ─── Arranque ───────────────────────────────────────────────────────────────

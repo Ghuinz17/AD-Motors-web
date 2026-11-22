@@ -638,6 +638,32 @@ ul {
   color: #f87171;
 }
 
+/* --- Estado del vehículo: reservado / vendido (visible para todos) --- */
+.status-ribbon-wrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+.status-ribbon {
+  position: absolute;
+  top: 14px;
+  left: -26px;
+  width: 110px;
+  padding: .2rem 0;
+  text-align: center;
+  color: #fff;
+  font-size: .55rem;
+  font-weight: 800;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  transform: rotate(-45deg);
+  box-shadow: 0 2px 6px rgba(0,0,0,.3);
+}
+.status-ribbon.status-reservado { background: #f97316; }
+.status-ribbon.status-vendido   { background: #dc2626; }
+
 /* --- Toast --- */
 .toast-container {
   position: fixed;

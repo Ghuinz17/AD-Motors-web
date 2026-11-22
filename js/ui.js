@@ -35,6 +35,14 @@ function safeId(value) {
   return String(value ?? "").replace(/[^\w\-:.]/g, "");
 }
 
+/* ---- Estado del vehículo: visible para todos los usuarios ---- */
+function estadoRibbonHTML(estado) {
+  const labels = { reservado: "Reservado", vendido: "Vendido" };
+  const label = labels[estado];
+  if (!label) return "";
+  return `<div class="status-ribbon-wrap"><span class="status-ribbon status-${safeId(estado)}">${label}</span></div>`;
+}
+
 /* ---- TOAST ---- */
 function showToast(msg, type = "info", duration = 3500) {
   let container = document.getElementById("toastContainer");
