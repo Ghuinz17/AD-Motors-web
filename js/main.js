@@ -177,8 +177,8 @@ function getImageUrl(v) {
 
 function getCombustibleBadge(tipo) {
   const map = {
-    GASOLINA: { cls: "badge-warning", label: "Gasolina" },
-    DIESEL: { cls: "badge-neutral", label: "Diésel" },
+    GASOLINA: { cls: "badge-gasolina", label: "Gasolina" },
+    DIESEL: { cls: "badge-diesel", label: "Diésel" },
     ELECTRICO: { cls: "badge-success", label: "Eléctrico" },
     HIBRIDO: { cls: "badge-primary", label: "Híbrido" },
   };

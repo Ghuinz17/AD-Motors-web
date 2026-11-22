@@ -625,6 +625,19 @@ ul {
   background: var(--bg3);
   color: var(--text2);
 }
+/* Combustibles: texto blanco en ambos temas */
+.badge-gasolina {
+  background: var(--primary-h); /* mismo azul del híbrido, intensificado */
+  color: #fff;
+}
+.badge-diesel {
+  background: #4b5563;
+  color: #fff;
+}
+[data-theme="dark"] .badge-diesel {
+  background: #374151;
+  color: #fff;
+}
 [data-theme="dark"] .badge-success {
   background: #14532d;
   color: #4ade80;
