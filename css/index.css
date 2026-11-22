@@ -271,6 +271,28 @@
   color: var(--text3);
   font-weight: 600;
 }
+.vehicle-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.vehicle-card-title {
+  min-width: 0; /* permite que el nombre se ajuste sin empujar el color */
+  flex: 1;
+}
+.vehicle-color-chip {
+  flex-shrink: 0;
+  white-space: nowrap;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.76rem;
+  background: var(--bg3);
+  padding: 2px 8px;
+  border-radius: 20px;
+  color: var(--text2);
+}
 .vehicle-specs {
   display: flex;
   gap: 1rem;

@@ -16,6 +16,14 @@ async function loadVehiculos() {
     const stat = document.getElementById("statTotal");
     if (stat) stat.textContent = allVehiculos.length;
 
+    // Solo vehículos disponibles: se excluyen vendidos y reservados.
+    const disponibles = allVehiculos.filter(v => {
+      const estado = String(v.estado || "").toLowerCase();
+      return estado !== "vendido" && estado !== "reservado" && v.reservado !== true;
+    }).length;
+    const statDisp = document.getElementById("statDisponibles");
+    if (statDisp) statDisp.textContent = disponibles;
+
     applyFilters();
   } catch (err) {
     console.error(err);
@@ -126,12 +134,12 @@ function renderVehiculos(list) {
           </div>
         </div>
         <div class="vehicle-body">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start">
-            <div>
+          <div class="vehicle-card-top">
+            <div class="vehicle-card-title">
               <div class="vehicle-name">${nombre}</div>
               <div class="vehicle-year">${v.ano_fabricacion}</div>
             </div>
-            ${v.color ? `<span style="font-size:.76rem;background:var(--bg3);padding:2px 8px;border-radius:20px;color:var(--text2)">${escapeHtml(v.color)}</span>` : ""}
+            ${v.color ? `<span class="vehicle-color-chip" title="${escapeHtml(v.color)}">${escapeHtml(v.color)}</span>` : ""}
           </div>
           <div class="vehicle-specs">
             <div class="vehicle-spec"><i class="fa-solid fa-gauge-high"></i> ${v.kilometraje?.toLocaleString()} km</div>
