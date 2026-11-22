@@ -179,8 +179,8 @@ function getCombustibleBadge(tipo) {
   const map = {
     GASOLINA: { cls: "badge-gasolina", label: "Gasolina" },
     DIESEL: { cls: "badge-diesel", label: "Diésel" },
-    ELECTRICO: { cls: "badge-success", label: "Eléctrico" },
-    HIBRIDO: { cls: "badge-primary", label: "Híbrido" },
+    ELECTRICO: { cls: "badge-electrico", label: "Eléctrico" },
+    HIBRIDO: { cls: "badge-hibrido", label: "Híbrido" },
   };
   return map[tipo] || { cls: "badge-neutral", label: tipo };
 }
