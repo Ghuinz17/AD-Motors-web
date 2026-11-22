@@ -137,6 +137,20 @@ Después de las policies anteriores, ejecuta también [`supabase/cuenta-y-catalo
 
 Es idempotente: se puede volver a ejecutar sin perder datos.
 
+#### Si sale `permission denied for table administradores`
+
+Significa que la función `es_admin()` se evalúa con los permisos del usuario en lugar de los del propietario, o que `authenticated` no puede leer `administradores`. Vuelve a ejecutar el script completo y comprueba:
+
+```sql
+select has_table_privilege('authenticated', 'public.administradores', 'SELECT');
+-- debe devolver true
+
+select proname, prosecdef from pg_proc where proname = 'es_admin';
+-- prosecdef debe ser true (SECURITY DEFINER)
+```
+
+Tras corregirlo, prueba a cambiar el teléfono desde **Mi cuenta**; el error debería desaparecer. Si usas un panel de administración, recuerda que `js/ui.js` también llama a `es_admin()` para mostrar el botón de administrador.
+
 ### 2.4 Trigger para eliminar usuario de auth al borrar de la tabla
 
 ```sql

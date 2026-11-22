@@ -604,6 +604,7 @@ ul {
   font-weight: 800;
   letter-spacing: 0.4px;
   text-transform: uppercase;
+  border: 1px solid transparent; /* mantiene el mismo tamaño en todas las insignias */
 }
 .badge-primary {
   background: var(--primary-lt);
@@ -625,18 +626,26 @@ ul {
   background: var(--bg3);
   color: var(--text2);
 }
-/* Combustibles: texto blanco en ambos temas */
+/* Combustibles: borde oscuro, centro más claro y blanco apagado */
 .badge-gasolina {
-  background: var(--primary-h); /* mismo azul del híbrido, intensificado */
-  color: #fff;
+  background: #3b82f6; /* azul de la familia del híbrido, más claro */
+  border: 1px solid #1e40af;
+  color: #e5e7eb;
 }
 .badge-diesel {
-  background: #4b5563;
-  color: #fff;
+  background: #5b6472;
+  border: 1px solid #374151;
+  color: #e5e7eb;
+}
+[data-theme="dark"] .badge-gasolina {
+  background: #3b82f6;
+  border: 1px solid #1e3a8a;
+  color: #e5e7eb;
 }
 [data-theme="dark"] .badge-diesel {
-  background: #374151;
-  color: #fff;
+  background: #4b5563;
+  border: 1px solid #1f2937;
+  color: #e5e7eb;
 }
 [data-theme="dark"] .badge-success {
   background: #14532d;
