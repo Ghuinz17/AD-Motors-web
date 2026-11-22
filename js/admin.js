@@ -11,6 +11,7 @@ const BUCKET = 'ad-motors-images';
 const MAX_IMG_BYTES = 5 * 1024 * 1024;
 const TIPOS_IMG = ['image/jpeg', 'image/png', 'image/webp'];
 const COMBUSTIBLES = ['GASOLINA', 'DIESEL', 'HIBRIDO', 'ELECTRICO'];
+const TRANSMISIONES = ['MANUAL', 'AUTOMATICA'];
 
 // Alias local del helper global definido en ui.js
 const esc = (value) => escapeHtml(value);
@@ -29,6 +30,7 @@ let imgABorrar    = [];   // ids de imagen marcadas para borrar al guardar
 let imgNuevas     = [];   // [File] seleccionadas y pendientes de subir
 let eliminarId    = null; // id pendiente de confirmar eliminación
 let visitas       = [];   // solicitudes de visita cargadas desde la BD
+let arrastrandoId = null; // fila que se está arrastrando
 
 // ─── Acceso: solo usuarios presentes en la tabla administradores ────────────
 async function comprobarAdmin() {
@@ -60,7 +62,8 @@ function denegar(msg) {
 async function cargarVehiculos() {
   const { data, error } = await db
     .from('vehiculo')
-    .select('id_vehiculo,marca,modelo,descripcion,precio,ano_fabricacion,tipo_combustible,kilometraje,color,estado,reservado,fecha_creacion,fecha_actualizacion,vehiculo_imagenes(id,imagen)')
+    .select('id_vehiculo,marca,modelo,descripcion,precio,ano_fabricacion,tipo_combustible,transmision,potencia,orden,kilometraje,color,estado,reservado,fecha_creacion,fecha_actualizacion,vehiculo_imagenes(id,imagen)')
+    .order('orden', { ascending: true })
     .order('fecha_creacion', { ascending: false });
 
   if (error) { showToast('No se pudieron cargar los vehículos', 'error'); return; }
@@ -87,7 +90,8 @@ function renderLista() {
     const nombre = esc(`${v.marca || ''} ${v.modelo || ''}`.trim() || 'Vehículo');
     const id = safeId(v.id_vehiculo);
     return `
-      <div class="admin-row">
+      <div class="admin-row" draggable="true" data-id="${esc(v.id_vehiculo)}">
+        <div class="admin-drag" title="Arrastrar para ordenar"><i class="fa-solid fa-grip-vertical"></i></div>
         <div class="admin-thumb">
           ${statusRibbonHTML(v.estado)}
           ${img ? `<img src="${esc(img)}" alt="${nombre}" loading="lazy">` : ''}
@@ -95,11 +99,13 @@ function renderLista() {
         <div class="admin-info">
           <div class="admin-name">${nombre}</div>
           <div class="admin-meta">
-            ${esc(v.ano_fabricacion)} · ${Number(v.kilometraje || 0).toLocaleString('es-ES')} km · ${esc(v.tipo_combustible)}${v.color ? ' · ' + esc(v.color) : ''}
+            ${esc(v.ano_fabricacion)} · ${Number(v.kilometraje || 0).toLocaleString('es-ES')} km · ${esc(v.tipo_combustible)} · ${esc(formatoTransmision(v.transmision))} · ${esc(formatoPotencia(v.potencia))}${v.color ? ' · ' + esc(v.color) : ''}
           </div>
           <div class="admin-price">${Number(v.precio || 0).toLocaleString('es-ES')} €</div>
         </div>
         <div class="admin-actions">
+          <button class="btn btn-outline btn-orden" onclick="moverVehiculo('${id}',-1)" title="Subir en el orden"><i class="fa-solid fa-arrow-up"></i></button>
+          <button class="btn btn-outline btn-orden" onclick="moverVehiculo('${id}',1)" title="Bajar en el orden"><i class="fa-solid fa-arrow-down"></i></button>
           <button class="btn btn-secondary btn-estado ${v.estado === 'reservado' ? 'on-reservado' : ''}" onclick="alternarEstado('${id}','reservado')">
             <i class="fa-solid fa-bookmark"></i> Reservado
           </button>
@@ -111,6 +117,82 @@ function renderLista() {
         </div>
       </div>`;
   }).join('');
+
+  conectarArrastre();
+}
+
+// ─── Orden personalizado: arrastrar o subir/bajar ────────────────────────────
+function conectarArrastre() {
+  const cont = document.getElementById('adminList');
+  if (!cont) return;
+
+  cont.querySelectorAll('.admin-row').forEach(row => {
+    row.addEventListener('dragstart', e => {
+      arrastrandoId = row.dataset.id;
+      row.classList.add('arrastrando');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', arrastrandoId);
+    });
+    row.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (row.dataset.id !== arrastrandoId) row.classList.add('drop-target');
+    });
+    row.addEventListener('dragleave', () => row.classList.remove('drop-target'));
+    row.addEventListener('drop', e => {
+      e.preventDefault();
+      row.classList.remove('drop-target');
+      const desde = arrastrandoId || e.dataTransfer.getData('text/plain');
+      const hasta = row.dataset.id;
+      if (!desde || desde === hasta) return;
+      reordenarFila(desde, hasta);
+    });
+    row.addEventListener('dragend', () => {
+      arrastrandoId = null;
+      cont.querySelectorAll('.admin-row').forEach(r => r.classList.remove('arrastrando', 'drop-target'));
+    });
+  });
+}
+
+function reordenarFila(desdeId, hastaId) {
+  const desde = vehiculos.findIndex(v => v.id_vehiculo === desdeId);
+  const hasta = vehiculos.findIndex(v => v.id_vehiculo === hastaId);
+  if (desde < 0 || hasta < 0) return;
+  const [movido] = vehiculos.splice(desde, 1);
+  vehiculos.splice(hasta, 0, movido);
+  arrastrandoId = null;
+  renderLista();
+  guardarOrden();
+}
+
+function moverVehiculo(id, delta) {
+  const desde = vehiculos.findIndex(v => v.id_vehiculo === id);
+  const hasta = desde + delta;
+  if (desde < 0 || hasta < 0 || hasta >= vehiculos.length) return;
+  [vehiculos[desde], vehiculos[hasta]] = [vehiculos[hasta], vehiculos[desde]];
+  renderLista();
+  guardarOrden();
+}
+
+async function guardarOrden() {
+  const ids = vehiculos.map(v => v.id_vehiculo);
+
+  // Vía rápida: una sola transacción en la base de datos.
+  const { error } = await db.rpc('reordenar_vehiculos', { p_ids: ids });
+  if (!error) { showToast('Orden guardado', 'success'); return; }
+
+  // Compatibilidad si todavía no se aplicó la migración SQL.
+  for (let i = 0; i < ids.length; i++) {
+    const { error: e } = await db.from('vehiculo')
+      .update({ orden: i + 1 })
+      .eq('id_vehiculo', ids[i]);
+    if (e) {
+      showToast('No se pudo guardar el orden: ' + e.message, 'error');
+      await cargarVehiculos();
+      return;
+    }
+  }
+  showToast('Orden guardado', 'success');
 }
 
 // ─── Estado rápido: pulsar de nuevo el estado activo lo quita ──────────────
@@ -145,6 +227,8 @@ function abrirFormulario(id) {
   setVal('vPrecio',       v?.precio ?? '');
   setVal('vKm',           v?.kilometraje ?? '');
   setVal('vColor',        v?.color || '');
+  setVal('vTransmision',  v?.transmision || 'MANUAL');
+  setVal('vPotencia',     v?.potencia ?? '');
   setVal('vCombustible',  v?.tipo_combustible || 'GASOLINA');
   setVal('vEstado',       v?.estado || '');
 
@@ -221,6 +305,14 @@ function validar() {
   const km = parseInt(getVal('vKm'), 10);
   if (!/^\d+$/.test(getVal('vKm')) || km < 0) { marcarError('vKm', 'Kilometraje válido (solo números)'); ok = false; }
 
+  const potencia = parseInt(getVal('vPotencia'), 10);
+  if (!/^\d+$/.test(getVal('vPotencia')) || potencia < 1 || potencia > 2000) {
+    marcarError('vPotencia', 'Potencia en CV (1–2000)'); ok = false;
+  }
+
+  if (!TRANSMISIONES.includes(getVal('vTransmision'))) {
+    marcarError('vTransmision', 'Elige una transmisión'); ok = false;
+  }
   if (!COMBUSTIBLES.includes(getVal('vCombustible'))) ok = false;
   return ok;
 }
@@ -241,10 +333,17 @@ async function guardarVehiculo(e) {
     precio:              parseFloat(getVal('vPrecio').replace(',', '.')),
     kilometraje:         parseInt(getVal('vKm'), 10),
     color:               getVal('vColor') || null,
+    transmision:         getVal('vTransmision'),
+    potencia:            parseInt(getVal('vPotencia'), 10),
     tipo_combustible:    getVal('vCombustible'),
     estado:              getVal('vEstado') || null,
     fecha_actualizacion: new Date().toISOString(),
   };
+
+  // Los vehículos nuevos entran arriba del todo; después se reordenan a mano.
+  if (!editandoId) {
+    fila.orden = vehiculos.reduce((min, v) => Math.min(min, Number(v.orden ?? 0)), 0) - 1;
+  }
 
   try {
     let id = editandoId;
@@ -411,7 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('btnConfirmarEliminar')?.addEventListener('click', confirmarEliminar);
 
   // Solo dígitos en año, kilometraje y precio
-  [['vAno', /[^0-9]/g], ['vKm', /[^0-9]/g], ['vPrecio', /[^0-9.,]/g]].forEach(([id, re]) => {
+  [['vAno', /[^0-9]/g], ['vKm', /[^0-9]/g], ['vPotencia', /[^0-9]/g], ['vPrecio', /[^0-9.,]/g]].forEach(([id, re]) => {
     document.getElementById(id)?.addEventListener('input', e => { e.target.value = e.target.value.replace(re, ''); });
   });
 

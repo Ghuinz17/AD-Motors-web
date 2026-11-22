@@ -106,6 +106,22 @@
           <input type="text" id="vColor" class="form-input no-icon" maxlength="30" placeholder="Ej: Rojo">
         </div>
         <div class="form-group">
+          <label class="form-label" for="vTransmision">Transmisión <span>*</span></label>
+          <select id="vTransmision" class="form-input no-icon">
+            <option value="MANUAL">Manual</option>
+            <option value="AUTOMATICA">Automática</option>
+          </select>
+          <div class="form-error" id="vTransmisionError"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="vPotencia">Potencia <span>*</span></label>
+          <div class="input-wrap">
+            <input type="text" id="vPotencia" class="form-input no-icon" inputmode="numeric" maxlength="4" placeholder="Ej: 150" style="padding-right:3rem">
+            <span class="input-suffix" title="CV">CV</span>
+          </div>
+          <div class="form-error" id="vPotenciaError"></div>
+        </div>
+        <div class="form-group">
           <label class="form-label" for="vCombustible">Combustible <span>*</span></label>
           <select id="vCombustible" class="form-input no-icon">
             <option value="GASOLINA">Gasolina</option>

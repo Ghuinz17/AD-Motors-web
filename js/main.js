@@ -7,6 +7,7 @@ async function loadVehiculos() {
     const { data, error } = await db
       .from("vehiculo")
       .select("*, vehiculo_imagenes(imagen)")
+      .order("orden", { ascending: true })
       .order("fecha_creacion", { ascending: false });
 
     if (error) throw error;
@@ -32,18 +33,20 @@ function applyFilters() {
   const search =
     document.getElementById("searchInput")?.value.toLowerCase().trim() || "";
   const combustible = document.getElementById("filterCombustible")?.value || "";
+  const transmision = document.getElementById("filterTransmision")?.value || "";
   const color =
     document.getElementById("filterColor")?.value.toLowerCase().trim() || "";
   const anoMin = parseInt(document.getElementById("filterAnoMin")?.value) || 0;
   const precioMax =
     parseFloat(document.getElementById("filterPrecioMax")?.value) || Infinity;
-  const orden = document.getElementById("filterOrden")?.value || "fecha_desc";
+  const orden = document.getElementById("filterOrden")?.value || "orden";
 
   let filtered = allVehiculos.filter((v) => {
     const vNombre =
       v.marca && v.modelo ? `${v.marca} ${v.modelo}` : v.marca_modelo || "";
     if (search && !vNombre.toLowerCase().includes(search)) return false;
     if (combustible && v.tipo_combustible !== combustible) return false;
+    if (transmision && v.transmision !== transmision) return false;
     if (color && !v.color?.toLowerCase().includes(color)) return false;
     if (anoMin && v.ano_fabricacion < anoMin) return false;
     if (v.precio > precioMax) return false;
@@ -61,8 +64,12 @@ function applyFilters() {
         return b.ano_fabricacion - a.ano_fabricacion;
       case "ano_asc":
         return a.ano_fabricacion - b.ano_fabricacion;
-      default:
+      case "fecha_desc":
         return new Date(b.fecha_creacion) - new Date(a.fecha_creacion);
+      default:
+        // Orden personalizado definido por el administrador (arrastrando).
+        return (Number(a.orden ?? 0) - Number(b.orden ?? 0)) ||
+               new Date(b.fecha_creacion) - new Date(a.fecha_creacion);
     }
   });
 
@@ -76,10 +83,11 @@ function applyFilters() {
 function clearFilters() {
   document.getElementById("searchInput").value = "";
   document.getElementById("filterCombustible").value = "";
+  document.getElementById("filterTransmision").value = "";
   document.getElementById("filterColor").value = "";
   document.getElementById("filterAnoMin").value = "";
   document.getElementById("filterPrecioMax").value = "";
-  document.getElementById("filterOrden").value = "fecha_desc";
+  document.getElementById("filterOrden").value = "orden";
   applyFilters();
 }
 
@@ -114,7 +122,7 @@ function renderVehiculos(list) {
                onerror="this.src='data:image/svg+xml,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'300\\' height=\\'200\\'><rect fill=\\'%23242424\\' width=\\'300\\' height=\\'200\\'/><text fill=\\'%23555\\' font-size=\\'14\\' x=\\'50%\\' y=\\'50%\\' dominant-baseline=\\'middle\\' text-anchor=\\'middle\\'>Sin imagen</text></svg>'">
           ${estadoRibbon}
           <div class="vehicle-badge">
-            <span class="badge ${badge.cls}">${badge.label}</span>
+            <span class="badge ${badge.cls}">${escapeHtml(badge.label)}</span>
           </div>
         </div>
         <div class="vehicle-body">
@@ -123,11 +131,13 @@ function renderVehiculos(list) {
               <div class="vehicle-name">${nombre}</div>
               <div class="vehicle-year">${v.ano_fabricacion}</div>
             </div>
-            ${v.color ? `<span style="font-size:.76rem;background:var(--bg3);padding:2px 8px;border-radius:20px;color:var(--text2)">${v.color}</span>` : ""}
+            ${v.color ? `<span style="font-size:.76rem;background:var(--bg3);padding:2px 8px;border-radius:20px;color:var(--text2)">${escapeHtml(v.color)}</span>` : ""}
           </div>
           <div class="vehicle-specs">
             <div class="vehicle-spec"><i class="fa-solid fa-gauge-high"></i> ${v.kilometraje?.toLocaleString()} km</div>
-            <div class="vehicle-spec"><i class="fa-solid fa-gas-pump"></i> ${v.tipo_combustible}</div>
+            <div class="vehicle-spec"><i class="fa-solid fa-gas-pump"></i> ${escapeHtml(v.tipo_combustible || "")}</div>
+            <div class="vehicle-spec"><i class="fa-solid fa-gear"></i> ${escapeHtml(formatoTransmision(v.transmision))}</div>
+            <div class="vehicle-spec"><i class="fa-solid fa-bolt"></i> ${escapeHtml(formatoPotencia(v.potencia))}</div>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:flex-end">
             <div>

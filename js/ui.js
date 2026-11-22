@@ -35,6 +35,19 @@ function safeId(value) {
   return String(value ?? "").replace(/[^\w\-:.]/g, "");
 }
 
+/* ---- Transmisión y potencia ---- */
+function formatoTransmision(valor) {
+  if (valor === "AUTOMATICA") return "Automática";
+  if (valor === "MANUAL") return "Manual";
+  return valor || "—";
+}
+
+function formatoPotencia(valor) {
+  if (valor === null || valor === undefined || valor === "") return "—";
+  const numero = Number(valor);
+  return Number.isFinite(numero) ? `${numero.toLocaleString("es-ES")} CV` : "—";
+}
+
 /* ---- Estado del vehículo: visible para todos los usuarios ---- */
 function estadoRibbonHTML(estado) {
   const labels = { reservado: "Reservado", vendido: "Vendido" };

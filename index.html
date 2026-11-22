@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>AD Motors — Vehículos de ocasión</title>
+  <title>AD Motor´s — Vehículos de ocasión</title>
   <link rel="icon" href="assets/admotors.png">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/header.css">
@@ -39,7 +39,7 @@
     <div class="header-inner">
       <a href="index.html" class="logo">
         <img src="assets/admotors.png" alt="AD Motors">
-        AD <span>Motors</span>
+        AD <span>Motor´s</span>
       </a>
       <div class="header-actions">
         <button id="btnTheme" class="btn-icon" title="Cambiar tema"><i class="fa-solid fa-moon"></i></button>
@@ -134,6 +134,14 @@
           </select>
         </div>
         <div class="filter-group">
+          <label class="filter-label">Transmisión</label>
+          <select id="filterTransmision" class="filter-select" onchange="applyFilters()">
+            <option value="">Todas</option>
+            <option value="MANUAL">Manual</option>
+            <option value="AUTOMATICA">Automática</option>
+          </select>
+        </div>
+        <div class="filter-group">
           <label class="filter-label">Color</label>
           <input type="text" id="filterColor" class="filter-input" placeholder="Ej: Rojo" oninput="applyFilters()">
         </div>
@@ -151,6 +159,7 @@
         <div class="filter-group">
           <label class="filter-label">Ordenar por</label>
           <select id="filterOrden" class="filter-select" onchange="applyFilters()">
+            <option value="orden">Orden destacado</option>
             <option value="fecha_desc">Más recientes</option>
             <option value="precio_asc">Precio: menor a mayor</option>
             <option value="precio_desc">Precio: mayor a menor</option>

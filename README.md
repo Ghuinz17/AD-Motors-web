@@ -18,8 +18,10 @@
 
 ## ✅ Características principales
 
-- 🔍 Catálogo con búsqueda y filtros avanzados
+- 🔍 Catálogo con búsqueda y filtros avanzados (combustible, transmisión, color, año y precio)
 - 🚗 Detalle de vehículo con galería de imágenes y lightbox
+- ⚙️ Transmisión (manual/automática) y potencia en CV en cada vehículo
+- 🔀 Orden destacado del catálogo, ajustable arrastrando en el modo administrador
 - 📅 Solicitud de visita con selección de fecha y hora
 - 🔐 Autenticación por email con código OTP de 8 dígitos
 - 👤 Perfil de usuario con historial de solicitudes

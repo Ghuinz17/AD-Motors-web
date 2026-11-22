@@ -47,8 +47,8 @@ Si has olvidado tu contraseña, contacta con nosotros desde el formulario de sop
 En la pantalla principal encontrarás todos los vehículos disponibles. Puedes:
 
 - Escribir en el buscador la marca o modelo que te interesa.
-- Usar los filtros para acotar por tipo de combustible, precio máximo, año o color.
-- Cambiar el orden de los resultados (más reciente, menor precio, mayor precio).
+- Usar los filtros para acotar por tipo de combustible, transmisión (manual o automática), precio máximo, año o color.
+- Cambiar el orden de los resultados. Por defecto se muestra el **orden destacado** que fija el concesionario; también puedes elegir más recientes, precio o año.
 
 ---
 
@@ -57,7 +57,7 @@ En la pantalla principal encontrarás todos los vehículos disponibles. Puedes:
 Haz clic sobre cualquier tarjeta del catálogo. Verás:
 
 - Galería de fotos (puedes hacer clic en cualquier imagen para ampliarla).
-- Ficha técnica completa: marca, modelo, año, kilometraje, combustible y color.
+- Ficha técnica completa: marca, modelo, año, kilometraje, combustible, transmisión, potencia en CV y color.
 - Precio con IVA incluido.
 - Botón para solicitar una visita.
 
@@ -93,6 +93,15 @@ Si quieres ver el vehículo antes de decidirte, puedes solicitar una visita sin 
    - Cambiar tu dirección de correo electrónico (recibirás un enlace de confirmación en el nuevo email).
    - Cambiar tu contraseña.
    - Eliminar tu cuenta (acción irreversible — se borrarán todos tus datos).
+
+---
+
+## Cómo ordenar los vehículos (modo administrador)
+
+1. Accede a **Administración** desde el menú de tu perfil.
+2. Arrastra una fila desde el tirador <i class="fa-solid fa-grip-vertical"></i> hasta la posición deseada, o usa los botones de subir/bajar.
+3. El orden se guarda automáticamente y es el que se muestra por defecto en el catálogo público.
+4. Al crear un vehículo nuevo, este entra arriba del todo; colócalo donde quieras con el arrastre.
 
 ---
 

@@ -65,16 +65,18 @@ function renderPage() {
 
   // Specs
   const specs = [
-    { icon: 'fa-calendar',    label: 'Año',         value: vehiculo.ano_fabricacion },
-    { icon: 'fa-gauge-high',  label: 'Kilometraje', value: vehiculo.kilometraje?.toLocaleString('es-ES') + ' km' },
-    { icon: 'fa-gas-pump',    label: 'Combustible', value: vehiculo.tipo_combustible },
-    { icon: 'fa-palette',     label: 'Color',       value: vehiculo.color || '—' },
+    { icon: 'fa-calendar',    label: 'Año',          value: vehiculo.ano_fabricacion },
+    { icon: 'fa-gauge-high',  label: 'Kilometraje',  value: vehiculo.kilometraje?.toLocaleString('es-ES') + ' km' },
+    { icon: 'fa-gas-pump',    label: 'Combustible',  value: vehiculo.tipo_combustible },
+    { icon: 'fa-gear',        label: 'Transmisión',  value: formatoTransmision(vehiculo.transmision) },
+    { icon: 'fa-bolt',        label: 'Potencia',     value: formatoPotencia(vehiculo.potencia) },
+    { icon: 'fa-palette',     label: 'Color',        value: vehiculo.color || '—' },
   ];
   const specsCont = document.getElementById('specsList');
   if (specsCont) specsCont.innerHTML = specs.map(s => `
     <div class="spec-row">
       <div class="spec-label"><i class="fa-solid fa-${s.icon}"></i>${s.label}</div>
-      <div class="spec-value">${s.value}</div>
+      <div class="spec-value">${escapeHtml(s.value)}</div>
     </div>`).join('');
 
   // Animaciones de entrada

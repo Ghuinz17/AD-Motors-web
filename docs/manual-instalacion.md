@@ -60,6 +60,9 @@ CREATE TABLE vehiculo (
   tipo_combustible    varchar,
   kilometraje         integer,
   color               varchar,
+  transmision         varchar,      -- MANUAL | AUTOMATICA
+  potencia            integer,      -- CV
+  orden               integer DEFAULT 0,
   estado              varchar DEFAULT 'activo',
   fecha_creacion      timestamptz DEFAULT now(),
   fecha_actualizacion timestamptz DEFAULT now()
@@ -123,6 +126,17 @@ CREATE POLICY "solicitudes_insert" ON solicitudes_revision FOR INSERT WITH CHECK
 CREATE POLICY "solicitudes_update" ON solicitudes_revision FOR UPDATE USING (true) WITH CHECK (true);
 ```
 
+### 2.3.1 Cuenta de usuario, nuevos campos y orden
+
+Después de las policies anteriores, ejecuta también [`supabase/cuenta-y-catalogo.sql`](../supabase/cuenta-y-catalogo.sql). Este script:
+
+- restaura las policies `usuario_update_own` y `usuario_delete_own` (junto con las de inserción/lectura y sus versiones de administrador) para que el usuario pueda cambiar sus datos y eliminar su cuenta;
+- crea la RPC `eliminar_mi_cuenta()` que borra el usuario de Auth;
+- añade `transmision`, `potencia` y `orden` si no existen, y concede permisos sobre las columnas nuevas (importante si se usaron `grant` columna por columna);
+- crea la RPC `reordenar_vehiculos(p_ids text[])`, que guarda de una sola vez el orden que el administrador ajusta arrastrando en el panel.
+
+Es idempotente: se puede volver a ejecutar sin perder datos.
+
 ### 2.4 Trigger para eliminar usuario de auth al borrar de la tabla
 
 ```sql
@@ -164,6 +178,8 @@ Ve a **Authentication → Email Templates** y pega el HTML de los archivos de la
 - **Change email** → `supabase-cambiar-email.html`
 - **Email changed** → `supabase-email-cambiado.html`
 - **Password changed** → `supabase-contrasena-cambiada.html`
+
+Para que el usuario pueda cambiar su correo y contraseña desde **Mi cuenta**, mantén activada la confirmación de email y añade la URL de `pages/perfil.html` a **Redirect URLs** (apartado 9). El cambio de correo solo se aplica cuando el usuario confirma el enlace enviado al nuevo email.
 
 ---
 

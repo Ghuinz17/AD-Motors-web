@@ -65,6 +65,7 @@ AD Motor's es una plataforma de dos capas:
 │  vehiculo                                                           │
 │  id_vehiculo (text, PK) | marca | modelo | precio                  │
 │  ano_fabricacion | tipo_combustible | kilometraje | color           │
+│  transmision (MANUAL/AUTOMATICA) | potencia (CV) | orden           │
 │  descripcion | estado | fecha_creacion | fecha_actualizacion      │
 └────────────────────────────┬────────────────────────────────────────┘
                              │ 1:N
@@ -75,7 +76,7 @@ AD Motor's es una plataforma de dos capas:
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-Todas las tablas tienen **Row Level Security (RLS)** activado. Los usuarios solo pueden leer y modificar sus propios registros. Las imágenes se almacenan en el bucket `ad-motors-images` del almacenamiento.
+Todas las tablas tienen **Row Level Security (RLS)** activado. Los usuarios solo pueden leer y modificar sus propios registros (políticas `usuario_*_own`, incluidas `usuario_update_own` y `usuario_delete_own`, restauradas por `supabase/cuenta-y-catalogo.sql`). Las imágenes se almacenan en el bucket `ad-motors-images` del almacenamiento.
 
 ---
 
@@ -150,6 +151,12 @@ web/
     └── supabase-telefono-cambiado.html
 ```
 
+### Backend (SQL)
+```
+supabase/
+└── cuenta-y-catalogo.sql   # policies de cuenta, columnas nuevas y RPC de orden
+```
+
 ### App móvil
 ```
 ADMotors/
@@ -194,9 +201,9 @@ ADMotors/
 
 | Operación | Descripción | Pantalla |
 |---|---|---|
-| **CREATE** | El administrador rellena el formulario con marca, modelo, precio, año, combustible, kilometraje, color y fotos. Se inserta en la tabla `vehiculo` y las imágenes en `vehiculo_imagenes` mediante el almacenamiento. | `anadirVehiculoScreen` |
-| **READ** | Se obtienen todos los vehículos ordenados por fecha de creación. En el detalle se cargan también las imágenes asociadas. | `listVehiculosScreen`, `detalleVehiculoScreen` |
-| **UPDATE** | El administrador modifica los campos del vehículo y su estado (activo, reservado o vendido). | `editarVehiculoScreen`, `detalleVehiculoScreen` |
+| **CREATE** | El administrador rellena el formulario con marca, modelo, precio, año, combustible, transmisión, potencia (CV), kilometraje, color y fotos. Se inserta en la tabla `vehiculo` y las imágenes en `vehiculo_imagenes` mediante el almacenamiento. | panel web `admin.html` |
+| **READ** | Se obtienen todos los vehículos ordenados por el campo `orden` (el que fija el administrador), con fecha de creación como desempate. En el detalle se cargan también las imágenes asociadas. | `index.html`, `pages/detalle.html`, `admin.html` |
+| **UPDATE** | El administrador modifica los campos del vehículo y su estado (activo, reservado o vendido), y puede reordenar el catálogo arrastrando las filas o con los botones de subir/bajar; la RPC `reordenar_vehiculos()` persiste el orden. | `admin.html` |
 | **DELETE** | Se eliminan primero las imágenes del Storage y luego la fila de la base de datos. | `detalleVehiculoScreen` |
 
 ### Usuarios (web)
@@ -205,8 +212,8 @@ ADMotors/
 |---|---|
 | **CREATE** | Registro con email, nombre, teléfono y contraseña. El sistema de autenticación envía un OTP de 8 dígitos. Tras verificarlo, se crea la fila en la tabla `usuario`. |
 | **READ** | El perfil carga los datos del usuario desde la tabla `usuario` con fallback a `user_metadata`. |
-| **UPDATE** | El usuario puede cambiar nombre, teléfono, email y contraseña desde la sección "Mi cuenta". |
-| **DELETE** | Al eliminar la cuenta se borra la fila de `usuario`, lo que activa un trigger que borra también el registro en `auth.users`. |
+| **UPDATE** | El usuario puede cambiar nombre, teléfono, email y contraseña desde la sección "Mi cuenta". Requiere la policy `usuario_update_own` (ver `supabase/cuenta-y-catalogo.sql`). |
+| **DELETE** | Se llama a la RPC `eliminar_mi_cuenta()`, que borra el registro de `auth.users` y, por CASCADE, la fila de `usuario`. Como respaldo se mantiene el trigger que borra de Auth al borrar de `usuario`. |
 
 ### Solicitudes de visita (web + app)
 

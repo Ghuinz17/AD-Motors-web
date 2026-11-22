@@ -142,7 +142,8 @@ async function handleUpdatePerfil(e) {
     if (error) throw error;
 
     // Actualizar también user_metadata para que el drawer lo muestre sin recargar
-    await db.auth.updateUser({ data: { nombre, phone: tel } });
+    const { error: metaError } = await db.auth.updateUser({ data: { nombre, phone: tel } });
+    if (metaError) showToast('Datos guardados, pero no se pudo refrescar la sesión: ' + metaError.message, 'info');
 
     setValue('profileName', nombre);
     const initial = document.getElementById('profileInitial');
@@ -217,14 +218,23 @@ async function handleDeleteAccount() {
   setLoading(btn, true);
   try {
     const { data: { user } } = await db.auth.getUser();
-    // 1. Borrar de tabla usuario → el trigger borra también de auth.users
-    await db.from('usuario').delete().eq('id_usuario', user.id);
+    if (!user) throw new Error('Sesión caducada. Vuelve a iniciar sesión.');
+
+    // 1. La RPC borra auth.users y, por CASCADE, la fila de usuario.
+    //    Si todavía no se ha aplicado la migración, se intenta la vía antigua:
+    //    borrar de usuario y dejar que el trigger elimine el usuario de Auth.
+    const { error: rpcError } = await db.rpc('eliminar_mi_cuenta');
+    if (rpcError) {
+      const { error } = await db.from('usuario').delete().eq('id_usuario', user.id);
+      if (error) throw error;
+    }
+
     // 2. Cerrar sesión localmente
     await db.auth.signOut();
     showToast('Cuenta eliminada correctamente', 'info');
     setTimeout(() => window.location.href = '../index.html', 1500);
   } catch(err) {
-    showToast('Error al eliminar: ' + err.message, 'error');
+    showToast('Error al eliminar: ' + (err.message || 'sin permisos para borrar la cuenta'), 'error');
   } finally {
     setLoading(btn, false);
   }

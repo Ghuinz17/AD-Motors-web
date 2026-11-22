@@ -46,9 +46,19 @@
   animation: fadeInUp 0.5s 0.1s ease both;
 }
 .hero-title span {
-  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  /* Azul metálico: reflejos claros y oscuros alternados */
+  background: linear-gradient(105deg,
+    #4c7cb0 0%,
+    #bcd8f2 16%,
+    #3a6a9e 34%,
+    #9ec6eb 52%,
+    #2d5480 72%,
+    #82b1df 88%,
+    #3c6d9f 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .45));
 }
 .hero-sub {
   font-size: 1.1rem;
