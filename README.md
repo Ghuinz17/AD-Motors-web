@@ -1,9 +1,9 @@
 # 🌐 AD Motor's — Plataforma Web
 
-**Plataforma web para la gestión y venta de vehículos de segunda mano, desarrollada con HTML, CSS y JavaScript vanilla con Supabase como backend.**
+**Plataforma web para la gestión y venta de vehículos de segunda mano, desarrollada con HTML, CSS y JavaScript vanilla con un servicio de base de datos en la nube como backend.**
 
-[![Supabase](https://img.shields.io/badge/Supabase-2.45.1-green)](https://supabase.com/)
-[![EmailJS](https://img.shields.io/badge/EmailJS-3.x-blue)](https://emailjs.com/)
+![Backend](https://img.shields.io/badge/Backend-PostgreSQL-green)
+![Correo](https://img.shields.io/badge/Correo-transaccional-blue)
 [![Font%20Awesome](https://img.shields.io/badge/Font%20Awesome-6.5-purple)](https://fontawesome.com/)
 [![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black)](https://vercel.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
@@ -23,7 +23,7 @@
 - 📅 Solicitud de visita con selección de fecha y hora
 - 🔐 Autenticación por email con código OTP de 8 dígitos
 - 👤 Perfil de usuario con historial de solicitudes
-- ✉️ Notificaciones por email automáticas (EmailJS + Supabase)
+- ✉️ Notificaciones por email automáticas (servicio de correo + backend)
 - 🌙 Tema claro y oscuro
 - 📞 Formulario de soporte y ayuda
 - 📱 Diseño completamente responsive
@@ -35,8 +35,8 @@
 | Capa | Tecnología |
 |---|---|
 | Frontend | HTML5, CSS3, JavaScript ES6+ |
-| Backend | Supabase (PostgreSQL, Auth, Storage) |
-| Email | EmailJS |
+| Backend | Servicio de base de datos en la nube (PostgreSQL, Auth, Storage) |
+| Email | Servicio de correo transaccional |
 | Iconos | Font Awesome 6 |
 | Tipografía | Google Fonts — Barlow, Barlow Condensed |
 | Despliegue | Vercel |
@@ -73,7 +73,7 @@ La plataforma envía emails automáticos para los siguientes eventos:
 
 La web está desplegada como sitio estático en **Vercel**.
 
-Tras el despliegue, configura en Supabase:
+Tras el despliegue, configura en el panel de tu backend:
 - **Authentication > URL Configuration** — establece la URL del sitio
 - **Redirect URLs** — añade el dominio de Vercel
 

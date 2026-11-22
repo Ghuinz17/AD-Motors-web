@@ -1,8 +1,11 @@
 // Configuración global AD Motors
 
 // --- Supabase ---
-const SUPABASE_URL      = 'https://mgbftvxlqinxrthswqih.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1nYmZ0dnhscWlueHJ0aHN3cWloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjkwMjQyNDQsImV4cCI6MjA4NDYwMDI0NH0.f6c8-_Yc59Y2D3JNk5PV6rxYFBHxg0nT9ng6IElbuBU';
+// Valores codificados para que no aparezcan en claro al ver el código fuente.
+// Esto no es seguridad: el acceso real lo controlan las políticas RLS.
+const decodeConfig = (value) => atob(value);
+const SUPABASE_URL      = decodeConfig('aHR0cHM6Ly9tZ2JmdHZ4bHFpbnhydGhzd3FpaC5zdXBhYmFzZS5jbw==');
+const SUPABASE_ANON_KEY = decodeConfig('ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnBjM01pT2lKemRYQmhZbUZ6WlNJc0luSmxaaUk2SW0xblltWjBkbmhzY1dsdWVISjBhSE4zY1dsb0lpd2ljbTlzWlNJNkltRnViMjRpTENKcFlYUWlPakUzTmprd01qUXlORFFzSW1WNGNDSTZNakE0TkRZd01ESTBOSDAuZjZjOC1fWWM1OVkyRDNKTms1UFY2cnhZRkJIeGcwblQ5bmc2SUVsYnVCVQ==');
 
 // --- EmailJS — Cuenta principal (visitas) ---
 const EMAILJS_PUBLIC_KEY              = 'UM986XzXpgyzXW_vs';

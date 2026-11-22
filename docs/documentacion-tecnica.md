@@ -4,10 +4,10 @@
 
 AD Motor's es una plataforma de dos capas:
 
-- **Frontend web** — aplicación estática (HTML, CSS, JavaScript vanilla) servida desde Vercel. No existe servidor propio: toda la lógica se ejecuta en el navegador del cliente y se comunica directamente con Supabase mediante su SDK de JavaScript.
-- **App móvil de administración** — aplicación Android desarrollada con React Native y Expo. Comparte el mismo backend de Supabase.
-- **Backend** — Supabase actúa como backend completo: base de datos PostgreSQL, sistema de autenticación por OTP, almacenamiento de imágenes (Storage) y canal de eventos en tiempo real (Realtime).
-- **Email** — dos cuentas de EmailJS gestionan el envío de correos transaccionales desde el navegador sin servidor propio.
+- **Frontend web** — aplicación estática (HTML, CSS, JavaScript vanilla) servida desde Vercel. No existe servidor propio: toda la lógica se ejecuta en el navegador del cliente y se comunica directamente con el backend mediante su SDK de JavaScript.
+- **App móvil de administración** — aplicación Android desarrollada con React Native y Expo. Comparte el mismo backend.
+- **Backend** — el servicio de base de datos actúa como backend completo: base de datos PostgreSQL, sistema de autenticación por OTP, almacenamiento de imágenes (Storage) y canal de eventos en tiempo real (Realtime).
+- **Email** — dos cuentas de correo gestionan el envío de correos transaccionales desde el navegador sin servidor propio.
 
 ```
 ┌─────────────────────┐     ┌──────────────────────┐
@@ -19,7 +19,7 @@ AD Motor's es una plataforma de dos capas:
          │     HTTPS / WebSocket       │
          ▼                             ▼
 ┌─────────────────────────────────────────────────┐
-│                  SUPABASE                        │
+│                  BACKEND                         │
 │                                                  │
 │  ┌──────────────┐  ┌──────────┐  ┌───────────┐  │
 │  │  PostgreSQL  │  │   Auth   │  │  Storage  │  │
@@ -32,7 +32,7 @@ AD Motor's es una plataforma de dos capas:
          │
          ▼
 ┌─────────────────────┐
-│      EmailJS        │
+│   Correo automático │
 │  (correos automát.) │
 └─────────────────────┘
 ```
@@ -43,7 +43,7 @@ AD Motor's es una plataforma de dos capas:
 
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
-│  auth.users (Supabase Auth)                                          │
+│  auth.users (Auth)                                                   │
 │  id | email | created_at | user_metadata                            │
 └────────────────────────┬─────────────────────────────────────────────┘
                          │ 1:1
@@ -75,7 +75,7 @@ AD Motor's es una plataforma de dos capas:
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-Todas las tablas tienen **Row Level Security (RLS)** activado. Los usuarios solo pueden leer y modificar sus propios registros. Las imágenes se almacenan en el bucket `ad-motors-images` de Supabase Storage.
+Todas las tablas tienen **Row Level Security (RLS)** activado. Los usuarios solo pueden leer y modificar sus propios registros. Las imágenes se almacenan en el bucket `ad-motors-images` del almacenamiento.
 
 ---
 
@@ -85,11 +85,11 @@ Todas las tablas tienen **Row Level Security (RLS)** activado. Los usuarios solo
 | Capa | Tecnología | Versión |
 |---|---|---|
 | Frontend | HTML5, CSS3, JavaScript ES6+ | — |
-| Backend | Supabase JS Client | 2.x |
-| Autenticación | Supabase Auth (OTP) | — |
-| Base de datos | PostgreSQL (via Supabase) | 15 |
-| Almacenamiento | Supabase Storage | — |
-| Email | EmailJS | 3.x |
+| Backend | Cliente JS del backend | 2.x |
+| Autenticación | Auth (OTP) | — |
+| Base de datos | PostgreSQL | 15 |
+| Almacenamiento | Storage | — |
+| Email | Servicio de correo | 3.x |
 | Iconos | Font Awesome | 6.5 |
 | Tipografía | Google Fonts (Barlow) | — |
 | Despliegue | Vercel | — |
@@ -101,7 +101,7 @@ Todas las tablas tienen **Row Level Security (RLS)** activado. Los usuarios solo
 | Plataforma | Expo | 51.0.39 |
 | Lenguaje | TypeScript | 5.3.3 |
 | Navegación | React Navigation Native Stack | — |
-| Backend | Supabase JS Client | 2.45.1 |
+| Backend | Cliente JS del backend | 2.45.1 |
 | Imágenes | expo-image-picker | 15.1.0 |
 | Notificaciones | expo-notifications | — |
 | Iconos | @expo/vector-icons (Ionicons) | 14.0.3 |
@@ -126,7 +126,7 @@ web/
 │   ├── detalle.css              # Página de detalle de vehículo
 │   └── perfil.css               # Perfil de usuario
 ├── js/
-│   ├── config.js                # Credenciales Supabase y EmailJS
+│   ├── config.js                # Configuración del backend y del correo
 │   ├── ui.js                    # Utilidades UI compartidas
 │   ├── main.js                  # Catálogo, filtros y búsqueda
 │   ├── auth.js                  # Login, registro y OTP
@@ -159,7 +159,7 @@ ADMotors/
 ├── tsconfig.json
 └── src/
     ├── config/
-    │   └── supabase.ts          # Cliente Supabase
+    │   └── backend.ts           # Cliente del backend
     ├── types/
     │   └── index.ts             # Interfaces y tipos TypeScript
     ├── services/
@@ -194,7 +194,7 @@ ADMotors/
 
 | Operación | Descripción | Pantalla |
 |---|---|---|
-| **CREATE** | El administrador rellena el formulario con marca, modelo, precio, año, combustible, kilometraje, color y fotos. Se inserta en la tabla `vehiculo` y las imágenes en `vehiculo_imagenes` vía Supabase Storage. | `anadirVehiculoScreen` |
+| **CREATE** | El administrador rellena el formulario con marca, modelo, precio, año, combustible, kilometraje, color y fotos. Se inserta en la tabla `vehiculo` y las imágenes en `vehiculo_imagenes` mediante el almacenamiento. | `anadirVehiculoScreen` |
 | **READ** | Se obtienen todos los vehículos ordenados por fecha de creación. En el detalle se cargan también las imágenes asociadas. | `listVehiculosScreen`, `detalleVehiculoScreen` |
 | **UPDATE** | El administrador modifica los campos del vehículo y su estado (activo, reservado o vendido). | `editarVehiculoScreen`, `detalleVehiculoScreen` |
 | **DELETE** | Se eliminan primero las imágenes del Storage y luego la fila de la base de datos. | `detalleVehiculoScreen` |
@@ -203,7 +203,7 @@ ADMotors/
 
 | Operación | Descripción |
 |---|---|
-| **CREATE** | Registro con email, nombre, teléfono y contraseña. Supabase Auth envía un OTP de 8 dígitos. Tras verificarlo, se crea la fila en la tabla `usuario`. |
+| **CREATE** | Registro con email, nombre, teléfono y contraseña. El sistema de autenticación envía un OTP de 8 dígitos. Tras verificarlo, se crea la fila en la tabla `usuario`. |
 | **READ** | El perfil carga los datos del usuario desde la tabla `usuario` con fallback a `user_metadata`. |
 | **UPDATE** | El usuario puede cambiar nombre, teléfono, email y contraseña desde la sección "Mi cuenta". |
 | **DELETE** | Al eliminar la cuenta se borra la fila de `usuario`, lo que activa un trigger que borra también el registro en `auth.users`. |
@@ -241,7 +241,7 @@ Las capturas de pantalla del funcionamiento real de la aplicación se encuentran
 2. Configurar el directorio raíz como `web/` (o la carpeta que contenga `index.html`).
 3. No se requiere paso de build — es un sitio estático.
 4. Tras el despliegue, copiar la URL generada (p. ej. `https://admotors.vercel.app`).
-5. En Supabase → **Authentication → URL Configuration**:
+5. En el panel de tu backend → **Authentication → URL Configuration**:
    - **Site URL**: `https://admotors.vercel.app`
    - **Redirect URLs**: `https://admotors.vercel.app/**`
 

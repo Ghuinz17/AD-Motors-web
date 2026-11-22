@@ -11,8 +11,8 @@ Antes de comenzar asegúrate de tener instalado:
 | Git | Cualquiera | [git-scm.com](https://git-scm.com) |
 | Expo CLI | Última versión | `npm install -g expo-cli` |
 | EAS CLI | Última versión | `npm install -g eas-cli` |
-| Cuenta Supabase | Gratuita | [supabase.com](https://supabase.com) |
-| Cuenta EmailJS | Gratuita | [emailjs.com](https://emailjs.com) |
+| Cuenta de base de datos | Gratuita | Alta en el proveedor elegido |
+| Cuenta de correo transaccional | Gratuita | Alta en el proveedor elegido |
 
 ---
 
@@ -29,16 +29,16 @@ El repositorio contiene dos proyectos:
 
 ---
 
-## 2. Configurar Supabase
+## 2. Configurar el backend
 
 ### 2.1 Crear el proyecto
 
-1. Ve a [supabase.com](https://supabase.com) e inicia sesión.
+1. Accede al panel de tu proveedor de base de datos e inicia sesión.
 2. Crea un nuevo proyecto. Anota la **URL** y la **clave anónima** (anon key).
 
 ### 2.2 Crear las tablas
 
-Ve a **SQL Editor** en Supabase y ejecuta el siguiente SQL:
+Ve al **editor SQL** de tu proveedor y ejecuta el siguiente SQL:
 
 ```sql
 -- Tabla de usuarios
@@ -142,11 +142,11 @@ CREATE TRIGGER on_usuario_deleted
 
 ### 2.5 Crear el bucket de Storage
 
-1. Ve a **Storage** en Supabase.
+1. Ve a **Storage** en el panel de tu proveedor.
 2. Crea un bucket llamado `ad-motors-images`.
 3. Marca la opción **Public bucket**.
 
-### 2.6 Configurar SMTP para emails de Supabase
+### 2.6 Configurar SMTP para emails del backend
 
 1. Ve a **Authentication → Settings → SMTP**.
 2. Activa el SMTP personalizado y rellena:
@@ -156,7 +156,7 @@ CREATE TRIGGER on_usuario_deleted
    - Contraseña: contraseña de aplicación de Google
    - Nombre del remitente: `AD Motors`
 
-### 2.7 Configurar plantillas de email en Supabase
+### 2.7 Configurar plantillas de email en el backend
 
 Ve a **Authentication → Email Templates** y pega el HTML de los archivos de la carpeta `web/email-templates/`:
 - **Confirm signup** → `supabase-confirmar-registro.html`
@@ -167,13 +167,13 @@ Ve a **Authentication → Email Templates** y pega el HTML de los archivos de la
 
 ---
 
-## 3. Configurar EmailJS
+## 3. Configurar el envío de correos
 
-1. Crea una cuenta en [emailjs.com](https://emailjs.com).
+1. Crea una cuenta en tu proveedor de correo transaccional.
 2. Ve a **Email Services** y conecta tu cuenta de Gmail.
 3. Crea una plantilla con el HTML de `web/email-templates/emailjs-unificada.html`.
 4. En cada plantilla, configura el campo **To email** como `{{to_email}}`.
-5. Crea una segunda cuenta de EmailJS para el formulario de soporte.
+5. Crea una segunda cuenta en el proveedor de correo para el formulario de soporte.
 6. En la segunda cuenta, crea una plantilla con el HTML de `emailjs-soporte.html`.
 7. Anota los IDs de servicio, plantillas y clave pública de ambas cuentas.
 
@@ -181,11 +181,12 @@ Ve a **Authentication → Email Templates** y pega el HTML de los archivos de la
 
 ## 4. Variables de entorno y configuración
 
-### Web — editar `web/js/config.js`
+### Web — editar `js/config.js`
 
 ```js
-const SUPABASE_URL      = 'https://TU_PROYECTO.supabase.co';
-const SUPABASE_ANON_KEY = 'TU_CLAVE_ANONIMA';
+const decodeConfig      = (value) => atob(value);
+const SUPABASE_URL      = decodeConfig('URL_CODIFICADA_EN_BASE64');
+const SUPABASE_ANON_KEY = decodeConfig('CLAVE_CODIFICADA_EN_BASE64');
 
 const EMAILJS_PUBLIC_KEY              = 'TU_PUBLIC_KEY';
 const EMAILJS_SERVICE_ID              = 'service_xxxxxxx';
@@ -201,7 +202,7 @@ const ADMIN_EMAIL = 'tuemail@gmail.com';
 ### App móvil — crear `.env.local` en la raíz de `ADMotors/`
 
 ```env
-EXPO_PUBLIC_SUPABASE_URL=https://TU_PROYECTO.supabase.co
+EXPO_PUBLIC_SUPABASE_URL=https://TU_PROYECTO.DOMINIO
 EXPO_PUBLIC_SUPABASE_KEY=TU_CLAVE_ANONIMA
 ```
 
@@ -255,13 +256,13 @@ Una vez completado el build, descarga el APK desde [expo.dev](https://expo.dev) 
 2. Ve a [vercel.com](https://vercel.com) e importa el repositorio.
 3. Configura el directorio raíz como la carpeta `web/`.
 4. Pulsa **Deploy**.
-5. Copia la URL generada y configúrala en Supabase → **Authentication → URL Configuration**.
+5. Copia la URL generada y configúrala en el panel de autenticación de tu backend → **URL Configuration**.
 
 ---
 
-## 9. Configurar URL en Supabase tras el despliegue
+## 9. Configurar URL en el backend tras el despliegue
 
-1. Ve a **Supabase → Authentication → URL Configuration**.
+1. Ve a **Authentication → URL Configuration** en el panel de tu backend.
 2. **Site URL**: `https://tu-proyecto.vercel.app`
 3. **Redirect URLs**: `https://tu-proyecto.vercel.app/**`
 4. Guarda los cambios.
