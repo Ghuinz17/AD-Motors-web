@@ -279,7 +279,13 @@ async function handleRegister(e) {
     showOtpStep();
     showToast("Código enviado a tu correo", "success");
   } catch (err) {
-    showToast("Error: " + err.message, "error");
+    const status = Number(err?.status || err?.statusCode || 0);
+    const msg    = String(err?.message || '');
+    if (status === 500 || status === 504 || /sending (confirmation|magic link|recovery) email|timed out|timeout/i.test(msg)) {
+      showToast('No se pudo enviar el correo. Revisa el SMTP de Supabase o inténtalo en unos minutos.', 'error');
+    } else {
+      showToast('Error: ' + msg, 'error');
+    }
   } finally {
     setLoading(btn, false);
   }

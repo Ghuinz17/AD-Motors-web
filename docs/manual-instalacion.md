@@ -184,6 +184,23 @@ CREATE TRIGGER on_usuario_deleted
    - Contraseña: contraseña de aplicación de Google
    - Nombre del remitente: `AD Motors`
 
+#### Si sale `Error sending email change email` (500)
+
+Supabase oculta el motivo real y solo devuelve ese mensaje genérico. Para ver la causa:
+
+1. Ve a **Logs** en el panel de Supabase.
+2. Filtra **Log Type: Auth** y **Level: error** (importante: no **Edge**).
+3. Abre la línea del `PUT /auth/v1/user` y mira el campo `error` del **Raw JSON**.
+
+Causas habituales según ese campo:
+
+- `535 …` → usuario/contraseña SMTP incorrectos (genera una contraseña de aplicación nueva en Gmail).
+- `550 …` → el remitente no está verificado o el proveedor rechaza el destino.
+- `4xx` → límite temporal de envío; espera y vuelve a intentarlo.
+- `unencrypted connection` o errores TLS → usa el puerto `587` con STARTTLS o `465`.
+
+Tras corregirlo, solicita un enlace nuevo desde **Mi cuenta**: el intento anterior que falló ya no sirve.
+
 ### 2.7 Configurar plantillas de email en el backend
 
 Ve a **Authentication → Email Templates** y pega el HTML de los archivos de la carpeta `web/email-templates/`:

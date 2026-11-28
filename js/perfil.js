@@ -180,11 +180,17 @@ async function handleUpdateEmail(e) {
     document.getElementById('emailEnviadoAviso')?.classList.remove('hidden');
     showToast('Revisa tu bandeja de entrada — se ha enviado un enlace de confirmación al nuevo correo', 'success');
   } catch(err) {
-    // Mensaje de error más claro
-    if (err.message?.includes('rate')) {
+    // Los fallos de envío de Supabase llegan como 500/504 con un mensaje
+    // genérico ("Error sending email change email"). La causa real está en
+    // Logs → Auth de Supabase, no aquí.
+    const status = Number(err?.status || err?.statusCode || 0);
+    const msg    = String(err?.message || '');
+    if (status === 429 || /rate|too many/i.test(msg)) {
       showToast('Demasiados intentos, espera unos minutos', 'error');
+    } else if (status === 500 || status === 504 || /sending email|timed out|timeout/i.test(msg)) {
+      showToast('No se pudo enviar el correo. Revisa el SMTP de Supabase o inténtalo en unos minutos.', 'error');
     } else {
-      showToast('Error: ' + err.message, 'error');
+      showToast('Error: ' + msg, 'error');
     }
   } finally { setLoading(btn, false); }
 }
