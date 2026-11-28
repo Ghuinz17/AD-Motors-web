@@ -13,16 +13,17 @@ async function loadVehiculos() {
     if (error) throw error;
     allVehiculos = data || [];
 
-    const stat = document.getElementById("statTotal");
-    if (stat) stat.textContent = allVehiculos.length;
+    const conteo = { disponible: 0, reservado: 0, vendido: 0 };
+    allVehiculos.forEach(v => { conteo[estadoVehiculo(v)]++; });
 
-    // Solo vehículos disponibles: se excluyen vendidos y reservados.
-    const disponibles = allVehiculos.filter(v => {
-      const estado = String(v.estado || "").toLowerCase();
-      return estado !== "vendido" && estado !== "reservado" && v.reservado !== true;
-    }).length;
-    const statDisp = document.getElementById("statDisponibles");
-    if (statDisp) statDisp.textContent = disponibles;
+    [
+      ["statDisponibles", "disponible"],
+      ["statReservados", "reservado"],
+      ["statVendidos", "vendido"],
+    ].forEach(([id, estado]) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = conteo[estado];
+    });
 
     applyFilters();
   } catch (err) {
@@ -118,7 +119,7 @@ function renderVehiculos(list) {
     .map((v, i) => {
       const img = getImageUrl(v);
       const badge = getCombustibleBadge(v.tipo_combustible);
-      const estadoRibbon = estadoRibbonHTML(v.estado);
+      const estadoRibbon = estadoRibbonHTML(v);
       const nombre =
         v.marca && v.modelo
           ? `${v.marca} ${v.modelo}`

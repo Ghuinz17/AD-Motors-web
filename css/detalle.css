@@ -189,6 +189,22 @@
   gap: 0.75rem;
   margin-top: 1.5rem;
 }
+.aviso-no-disponible {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--bg3);
+  color: var(--text2);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+.aviso-no-disponible i {
+  color: var(--primary);
+  margin-top: 0.1rem;
+}
 
 /* --- Lightbox --- */
 .lightbox {

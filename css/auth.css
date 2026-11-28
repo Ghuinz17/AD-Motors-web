@@ -243,3 +243,40 @@
     gap: 0.3rem;
   }
 }
+
+/* --- Teléfono con prefijo internacional --- */
+.phone-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+.phone-prefix-wrap {
+  position: relative;
+  flex: 0 0 78px;
+}
+.phone-plus {
+  position: absolute;
+  left: 0.7rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text3);
+  font-weight: 700;
+  pointer-events: none;
+}
+.phone-prefix-input {
+  padding-left: 1.5rem !important;
+  padding-right: 0.5rem !important;
+  text-align: center;
+}
+.phone-number-wrap {
+  flex: 1;
+  min-width: 0;
+}
+.phone-number-wrap .form-input {
+  padding-left: 2.5rem;
+}
+@media (max-width: 400px) {
+  .phone-prefix-wrap {
+    flex-basis: 68px;
+  }
+}

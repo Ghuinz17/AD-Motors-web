@@ -154,6 +154,7 @@ function validateRegister() {
   clearAllErrors();
   const nombre = document.getElementById("regNombre")?.value.trim();
   const email = document.getElementById("regEmail")?.value.trim();
+  const prefijo = document.getElementById("regPrefijo")?.value.trim();
   const telefono = document.getElementById("regTelefono")?.value.trim();
   const pw = document.getElementById("regPassword")?.value;
   const pw2 = document.getElementById("regPassword2")?.value;
@@ -173,8 +174,18 @@ function validateRegister() {
       ok = false;
     }
   }
-  if (!telefono || !/^[0-9+\s]{9,15}$/.test(telefono)) {
-    showError("regTelefono", "Teléfono no válido (mín. 9 dígitos)");
+  if (!prefijo || !/^\d{1,3}$/.test(prefijo)) {
+    showError("regPrefijo", "Prefijo de 1 a 3 dígitos");
+    ok = false;
+  }
+  const minDigitos = prefijo === "34" ? 9 : 6;
+  if (!telefono || !/^\d+$/.test(telefono) || telefono.length < minDigitos || telefono.length > 15) {
+    showError(
+      "regTelefono",
+      prefijo === "34"
+        ? "Introduce un teléfono de 9 dígitos (sin +34)"
+        : "Introduce un teléfono válido (6-15 dígitos)",
+    );
     ok = false;
   }
   if (!pw) {
@@ -228,7 +239,11 @@ async function handleRegister(e) {
   const btn = document.getElementById("btnRegister");
   const nombre = document.getElementById("regNombre").value.trim();
   const email = document.getElementById("regEmail").value.trim();
-  const tel = document.getElementById("regTelefono").value.trim();
+  const prefijo = document.getElementById("regPrefijo").value.trim();
+  const tel = telefonoConPrefijo(
+    prefijo,
+    document.getElementById("regTelefono").value.trim(),
+  );
   const pw = document.getElementById("regPassword").value;
 
   // Guardar para usar tras el OTP
@@ -388,7 +403,9 @@ async function handleVerifyOtp(e) {
     if (user) {
       // Usamos las variables globales o
       const nombreFinal = pendingNombre || user.user_metadata?.nombre || "";
-      const telFinal = pendingTel || user.user_metadata?.phone || "";
+      const telFinal = normalizarTelefono(
+        pendingTel || user.user_metadata?.phone || "",
+      );
 
       // Inserción en la tabla de base de datos
       await db.from("usuario").upsert({
@@ -500,7 +517,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll('input[type="tel"]').forEach((input) => {
     input.addEventListener("input", (e) => {
       const cursor = e.target.selectionStart;
-      const clean = e.target.value.replace(/[^0-9+\s]/g, "");
+      const soloDigitos = e.target.id === "regTelefono";
+      const clean = e.target.value.replace(
+        soloDigitos ? /[^0-9]/g : /[^0-9+\s]/g,
+        "",
+      );
       if (e.target.value !== clean) {
         e.target.value = clean;
         // Restaurar posición del cursor
@@ -531,14 +552,18 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       // Permitir dígitos (teclado normal y numérico)
       if (/^[0-9]$/.test(e.key)) return;
-      // Permitir + solo al principio
-      if (e.key === "+" && e.target.selectionStart === 0) return;
-      // Permitir espacio
-      if (e.key === " ") return;
+      const soloDigitos = e.target.id === "regTelefono";
+      // Permitir + solo al principio (excepto en el registro, que usa la casilla del prefijo)
+      if (!soloDigitos && e.key === "+" && e.target.selectionStart === 0) return;
+      // Permitir espacio (excepto en el registro)
+      if (!soloDigitos && e.key === " ") return;
       // Bloquear todo lo demás
       e.preventDefault();
     });
     input.setAttribute("inputmode", "tel");
-    input.setAttribute("pattern", "[0-9+\\s]*");
+    input.setAttribute(
+      "pattern",
+      input.id === "regTelefono" ? "[0-9]*" : "[0-9+\\s]*",
+    );
   });
 });

@@ -26,7 +26,7 @@ async function initPerfil() {
         id_usuario: user.id,
         nombre:     metaNombre,
         email:      user.email,
-        phone:      user.user_metadata?.phone || '',
+        phone:      normalizarTelefono(user.user_metadata?.phone || ''),
       });
       const { data } = await db.from('usuario').select('*').eq('id_usuario', user.id).single();
       userData = data;
@@ -40,7 +40,7 @@ async function initPerfil() {
 
   // Rellenar campos de edición
   setVal('settingNombre',   userData?.nombre   || metaNombre);
-  setVal('settingTelefono', userData?.phone    || user.user_metadata?.phone || '');
+  setVal('settingTelefono', normalizarTelefono(userData?.phone || user.user_metadata?.phone || ''));
   setVal('settingEmail',    user.email);
 
   // Activar tab según query param
@@ -124,7 +124,7 @@ async function handleUpdatePerfil(e) {
   e.preventDefault();
   const btn    = document.getElementById('btnUpdatePerfil');
   const nombre = document.getElementById('settingNombre')?.value.trim();
-  const tel    = document.getElementById('settingTelefono')?.value.trim();
+  const tel    = normalizarTelefono(document.getElementById('settingTelefono')?.value.trim());
 
   if (!nombre) { showToast('Introduce tu nombre', 'error'); return; }
 

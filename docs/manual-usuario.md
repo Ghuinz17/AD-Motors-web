@@ -24,7 +24,7 @@ AD Motor's es una plataforma para comprar vehículos de ocasión. Desde la web p
 
 1. Haz clic en **Iniciar sesión** en el menú superior derecho.
 2. Selecciona la pestaña **Registrarse**.
-3. Rellena tu nombre completo, email, teléfono y contraseña.
+3. Rellena tu nombre completo, email, teléfono y contraseña. En el teléfono, indica el prefijo del país en la casilla con «+» (1-3 dígitos, por defecto 34) y después el número; para España se guarda sin el +34.
 4. La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula y un número.
 5. Acepta los términos y condiciones y pulsa **Crear cuenta**.
 6. Recibirás un código de 8 dígitos en tu correo. Introdúcelo en los campos que aparecen.
@@ -59,7 +59,7 @@ Haz clic sobre cualquier tarjeta del catálogo. Verás:
 - Galería de fotos (puedes hacer clic en cualquier imagen para ampliarla).
 - Ficha técnica completa: marca, modelo, año, kilometraje, combustible, transmisión, potencia en CV y color.
 - Precio con IVA incluido.
-- Botón para solicitar una visita.
+- Botón para solicitar una visita. Si el vehículo está reservado o vendido, el botón se sustituye por un aviso y no se pueden pedir visitas.
 
 ---
 
@@ -72,6 +72,8 @@ Si quieres ver el vehículo antes de decidirte, puedes solicitar una visita sin 
 3. La fecha debe ser a partir del día siguiente.
 4. Pulsa **Solicitar**.
 5. Recibirás un email de confirmación y el equipo se pondrá en contacto contigo para confirmar la disponibilidad.
+
+Solo se pueden solicitar visitas de vehículos disponibles. Además, el teléfono se guarda normalizado: sin el +34 en números de España.
 
 ---
 

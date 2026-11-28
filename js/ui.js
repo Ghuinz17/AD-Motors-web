@@ -35,6 +35,27 @@ function safeId(value) {
   return String(value ?? "").replace(/[^\w\-:.]/g, "");
 }
 
+/* ---- Teléfono ---- */
+// Quita espacios/formatos y el prefijo de España (+34 / 0034 / 34).
+// Para otros países conserva el "+" delante del prefijo internacional.
+function normalizarTelefono(value) {
+  let tel = String(value ?? "").replace(/[\s\-().]/g, "");
+  if (tel.startsWith("+34")) return tel.slice(3).replace(/\D/g, "");
+  if (tel.startsWith("0034")) return tel.slice(4).replace(/\D/g, "");
+  if (/^34\d{9}$/.test(tel)) return tel.slice(2);
+  if (tel.startsWith("+")) return "+" + tel.slice(1).replace(/\D/g, "");
+  return tel.replace(/\D/g, "");
+}
+
+// Compone el valor que se guarda: España se almacena sin prefijo;
+// otros países se almacenan como +<prefijo><número>.
+function telefonoConPrefijo(prefijo, numero) {
+  const codigo = String(prefijo ?? "").replace(/\D/g, "");
+  const tel = normalizarTelefono(numero).replace(/^\+/, "");
+  if (!codigo || codigo === "34") return tel;
+  return `+${codigo}${tel}`;
+}
+
 /* ---- Transmisión y potencia ---- */
 function formatoTransmision(valor) {
   if (valor === "AUTOMATICA") return "Automática";
@@ -49,11 +70,25 @@ function formatoPotencia(valor) {
 }
 
 /* ---- Estado del vehículo: visible para todos los usuarios ---- */
-function estadoRibbonHTML(estado) {
+// Criterio único para contadores, cintas y bloqueo de visitas.
+// El flag antiguo `reservado = true` también cuenta como reservado.
+function estadoVehiculo(vehiculo) {
+  const estado = String(vehiculo?.estado || "").toLowerCase();
+  if (estado === "vendido") return "vendido";
+  if (estado === "reservado" || vehiculo?.reservado === true) return "reservado";
+  return "disponible";
+}
+
+function vehiculoDisponible(vehiculo) {
+  return estadoVehiculo(vehiculo) === "disponible";
+}
+
+function estadoRibbonHTML(vehiculo) {
+  const estado = estadoVehiculo(vehiculo);
   const labels = { reservado: "Reservado", vendido: "Vendido" };
   const label = labels[estado];
   if (!label) return "";
-  return `<div class="status-ribbon-wrap"><span class="status-ribbon status-${safeId(estado)}">${label}</span></div>`;
+  return `<div class="status-ribbon-wrap"><span class="status-ribbon status-${estado}">${label}</span></div>`;
 }
 
 /* ---- TOAST ---- */

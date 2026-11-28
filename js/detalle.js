@@ -55,7 +55,26 @@ function renderPage() {
   const galleryMain = document.querySelector('.gallery-main');
   if (galleryMain) {
     galleryMain.querySelector('.status-ribbon-wrap')?.remove();
-    galleryMain.insertAdjacentHTML('beforeend', estadoRibbonHTML(vehiculo.estado));
+    galleryMain.insertAdjacentHTML('beforeend', estadoRibbonHTML(vehiculo));
+  }
+
+  // Vendido o reservado: sin botón de visita, con aviso en su lugar.
+  const btnVisita = document.getElementById('btnSolicitarVisita');
+  const aviso = document.getElementById('avisoNoDisponible');
+  const avisoTexto = document.getElementById('avisoNoDisponibleTexto');
+  if (!vehiculoDisponible(vehiculo)) {
+    btnVisita?.classList.add('hidden');
+    if (aviso) {
+      if (avisoTexto) {
+        avisoTexto.textContent = estadoVehiculo(vehiculo) === 'vendido'
+          ? 'Este vehículo ya está vendido y no admite solicitudes de visita.'
+          : 'Este vehículo está reservado y no admite solicitudes de visita.';
+      }
+      aviso.classList.remove('hidden');
+    }
+  } else {
+    btnVisita?.classList.remove('hidden');
+    aviso?.classList.add('hidden');
   }
 
   setValue('detailName', nombreCompleto);
@@ -132,6 +151,10 @@ function closeLightbox() { document.getElementById('lightbox')?.classList.remove
 
 // ---- SOLICITUD VISITA ----
 async function handleSolicitarVisita() {
+  if (!vehiculo || !vehiculoDisponible(vehiculo)) {
+    showToast('Este vehículo no admite solicitudes de visita', 'error');
+    return;
+  }
   if (!currentUser) {
     showToast('Debes iniciar sesión para solicitar una visita', 'error');
     setTimeout(() => window.location.href = `auth.html?redirect=${encodeURIComponent(window.location.href)}`, 1500);
@@ -234,6 +257,25 @@ async function handleSubmitVisita(e) {
     showFieldError('visitaHora', 'Selecciona una hora'); ok = false;
   }
   if (!ok) return;
+
+  // Revalidar en BD por si el vehículo se vendió/reservó con el modal abierto.
+  try {
+    const { data: fresco, error: errorEstado } = await db
+      .from('vehiculo')
+      .select('*')
+      .eq('id_vehiculo', vehiculoId)
+      .single();
+    if (errorEstado) throw errorEstado;
+    if (!vehiculoDisponible(fresco)) {
+      closeModal('modalVisita');
+      showToast('Este vehículo ya no admite solicitudes de visita', 'error');
+      return;
+    }
+    vehiculo = { ...vehiculo, ...fresco };
+  } catch(err) {
+    showToast('No se pudo comprobar la disponibilidad del vehículo', 'error');
+    return;
+  }
 
   // Limpiar errores si todo OK y lanzar inputs en verde
   ['visitaNombre','visitaTelefono','visitaFecha','visitaHora'].forEach(id => {
