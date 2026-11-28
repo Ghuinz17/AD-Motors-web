@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Confirmando cuenta — AD Motor´s</title>
+  <link rel="icon" href="assets/admotors.png">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0d0d0d;
+      color: #94a3b8;
+      font-family: system-ui, sans-serif;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <p>Redirigiendo a la confirmación…<br>
+    <a href="pages/confirm.html">Haz clic aquí si no se redirige automáticamente</a>
+  </p>
+
+  <script>
+    // Las plantillas de Supabase apuntan a /confirm.html, pero la página está en /pages/.
+    // Conservamos query y hash (los tokens de verificación van en el hash).
+    const destino = 'pages/confirm.html' + window.location.search + window.location.hash;
+    const enlace = document.querySelector('a');
+    if (enlace) enlace.href = destino;
+    window.location.replace(destino);
+  </script>
+</body>
+
+</html>

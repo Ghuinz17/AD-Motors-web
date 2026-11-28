@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Confirmando cuenta — AD Motor´s</title>
-  <link rel="icon" href="assets/admotors.png">
-  <link rel="stylesheet" href="css/base.css">
+  <link rel="icon" href="../assets/admotors.png">
+  <link rel="stylesheet" href="../css/base.css">
   <style>
     .confirm-page {
       min-height: 100vh;
@@ -81,10 +81,10 @@
           Tu cuenta ha sido verificada correctamente. Ya puedes acceder a AD Motor´s y disfrutar de todos nuestros
           servicios.
         </div>
-        <a href="index.html" class="btn btn-primary btn-full btn-lg">
+        <a href="../index.html" class="btn btn-primary btn-full btn-lg">
           🚗 Ir al catálogo de vehículos
         </a>
-        <a href="pages/auth.html" class="btn btn-secondary btn-full" style="margin-top:.625rem">
+        <a href="auth.html" class="btn btn-secondary btn-full" style="margin-top:.625rem">
           Iniciar sesión
         </a>
       </div>
@@ -97,7 +97,7 @@
           El enlace de confirmación ha expirado o ya fue utilizado. Inicia sesión de nuevo y solicita un nuevo enlace de
           verificación.
         </div>
-        <a href="pages/auth.html" class="btn btn-primary btn-full btn-lg">
+        <a href="auth.html" class="btn btn-primary btn-full btn-lg">
           Ir a iniciar sesión
         </a>
       </div>
@@ -107,8 +107,8 @@
   <!-- Toast container -->
   <div id="toastContainer" class="toast-container"></div>
 
-  <script src="js/vendor/db-client.js"></script>
-  <script src="js/config.js"></script>
+  <script src="../js/vendor/db-client.js"></script>
+  <script src="../js/config.js"></script>
   <script>
     (async function () {
       // Supabase pasa los parámetros de confirmación como hash en la URL
@@ -151,7 +151,7 @@
           show('stateSuccess');
 
           // Redirigir automáticamente después de 3 segundos
-          setTimeout(() => { window.location.href = 'index.html'; }, 3000);
+          setTimeout(() => { window.location.href = '../index.html'; }, 3000);
         } catch (err) {
           document.getElementById('errorMsg').textContent = err.message || 'Error al confirmar la cuenta.';
           show('stateError');
@@ -163,7 +163,7 @@
       const { data: { session } } = await db.auth.getSession();
       if (session) {
         show('stateSuccess');
-        setTimeout(() => { window.location.href = 'index.html'; }, 3000);
+        setTimeout(() => { window.location.href = '../index.html'; }, 3000);
       } else {
         show('stateError');
       }

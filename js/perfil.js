@@ -158,6 +158,7 @@ async function handleUpdateEmail(e) {
   e.preventDefault();
   const btn      = document.getElementById('btnUpdateEmail');
   const newEmail = document.getElementById('settingEmail')?.value.trim();
+  document.getElementById('emailEnviadoAviso')?.classList.add('hidden');
 
   if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
     showToast('Introduce un email válido', 'error'); return;
@@ -170,10 +171,13 @@ async function handleUpdateEmail(e) {
 
   setLoading(btn, true);
   try {
-    const { error } = await db.auth.updateUser({
-      email: newEmail,
-    });
+    const redirectTo = `${window.location.origin}/confirm.html`;
+    const { error } = await db.auth.updateUser(
+      { email: newEmail },
+      { emailRedirectTo: redirectTo },
+    );
     if (error) throw error;
+    document.getElementById('emailEnviadoAviso')?.classList.remove('hidden');
     showToast('Revisa tu bandeja de entrada — se ha enviado un enlace de confirmación al nuevo correo', 'success');
   } catch(err) {
     // Mensaje de error más claro
