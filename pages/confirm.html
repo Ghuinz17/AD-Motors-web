@@ -76,8 +76,8 @@
       <div id="stateSuccess" style="display:none">
         <div class="confirm-icon" style="animation: float 2s ease infinite"><i class="fa-solid fa-circle-check"
             style="color:var(--success)"></i></div>
-        <div class="confirm-title">¡Cuenta confirmada!</div>
-        <div class="confirm-sub">
+        <div class="confirm-title" id="successTitle">¡Cuenta confirmada!</div>
+        <div class="confirm-sub" id="successMsg">
           Tu cuenta ha sido verificada correctamente. Ya puedes acceder a AD Motor´s y disfrutar de todos nuestros
           servicios.
         </div>
@@ -111,18 +111,29 @@
   <script src="../js/config.js"></script>
   <script>
     (async function () {
-      // Supabase pasa los parámetros de confirmación como hash en la URL
-      const hash = window.location.hash.substring(1);
-      const params = new URLSearchParams(hash);
-
-      // Los parámetros pueden llegar también como venir como query params
+      // Supabase puede enviar los datos en el hash (#access_token=...) o en la query
+      // (?token_hash=...&type=email_change). Leemos ambos.
+      const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
       const queryParams = new URLSearchParams(window.location.search);
+      const get = (key) => hashParams.get(key) || queryParams.get(key);
 
-      const accessToken = params.get('access_token') || queryParams.get('access_token');
-      const refreshToken = params.get('refresh_token') || queryParams.get('refresh_token');
-      const type = params.get('type') || queryParams.get('type');
-      const errorCode = params.get('error') || queryParams.get('error');
-      const errorDesc = params.get('error_description') || queryParams.get('error_description');
+      const decode = (value) => {
+        if (!value) return '';
+        try { return decodeURIComponent(value.replace(/\+/g, ' ')); }
+        catch (_) { return value.replace(/\+/g, ' '); }
+      };
+
+      const accessToken  = get('access_token');
+      const refreshToken = get('refresh_token');
+      const tokenHash    = get('token_hash') || get('token');
+      const type         = get('type');
+      const code         = get('code');
+      const errorCode    = get('error') || get('error_code');
+      const errorDesc    = get('error_description') || get('message');
+
+      const errorMsg  = document.getElementById('errorMsg');
+      const successTitle = document.getElementById('successTitle');
+      const successMsg = document.getElementById('successMsg');
 
       function show(id) {
         ['stateLoading', 'stateSuccess', 'stateError'].forEach(s => {
@@ -130,42 +141,76 @@
         });
       }
 
-      // Si hay error en los params
-      if (errorCode) {
-        const msg = errorDesc?.replace(/\+/g, ' ') || 'El enlace no es válido.';
-        document.getElementById('errorMsg').textContent = msg;
+      function fail(message) {
+        errorMsg.textContent = message || 'El enlace de confirmación ha expirado o ya fue utilizado. Solicita uno nuevo desde Mi cuenta o desde Iniciar sesión.';
         show('stateError');
-        return;
       }
 
-      // Si tenemos token, establecer sesión
-      if (accessToken) {
-        try {
-          const { error } = await db.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken || '',
-          });
+      function ok(esCambioEmail) {
+        if (esCambioEmail) {
+          successTitle.textContent = '¡Correo actualizado!';
+          successMsg.textContent = 'Tu dirección de correo se ha cambiado correctamente. Ya puedes iniciar sesión con el nuevo correo.';
+        }
+        show('stateSuccess');
+        setTimeout(() => { window.location.href = esCambioEmail ? 'auth.html' : '../index.html'; }, 3000);
+      }
 
-          if (error) throw error;
-
-          show('stateSuccess');
-
-          // Redirigir automáticamente después de 3 segundos
-          setTimeout(() => { window.location.href = '../index.html'; }, 3000);
-        } catch (err) {
-          document.getElementById('errorMsg').textContent = err.message || 'Error al confirmar la cuenta.';
-          show('stateError');
+      // 1) Error devuelto por Supabase en la propia URL del correo.
+      if (errorCode) {
+        const texto = decode(errorDesc);
+        if (errorCode === 'otp_expired' || errorCode === 'access_denied') {
+          fail('El enlace ha caducado o ya se ha usado. Vuelve a solicitar uno nuevo; revisa también la carpeta de spam.');
+        } else {
+          fail(texto || 'El enlace no es válido. Solicita uno nuevo y revisa la carpeta de spam.');
         }
         return;
       }
 
-      // Si no hay token, intentar con la sesión actual
-      const { data: { session } } = await db.auth.getSession();
-      if (session) {
-        show('stateSuccess');
-        setTimeout(() => { window.location.href = '../index.html'; }, 3000);
-      } else {
-        show('stateError');
+      const esCambioEmail = String(type || '').toLowerCase().includes('email_change');
+
+      try {
+        // 2) Formato actual de las plantillas de Supabase: token_hash + type.
+        if (tokenHash) {
+          const tipo = (type || 'email_change').toLowerCase();
+          const { error } = await db.auth.verifyOtp({ token_hash: tokenHash, type: tipo });
+          if (error) throw error;
+          ok(esCambioEmail);
+          return;
+        }
+
+        // 3) Flujo PKCE: el correo trae ?code=... en lugar de token_hash.
+        if (code) {
+          const { error } = await db.auth.exchangeCodeForSession(code);
+          if (error) throw error;
+          ok(esCambioEmail);
+          return;
+        }
+
+        // 4) Plantillas antiguas: access_token + refresh_token en el hash.
+        if (accessToken) {
+          const { error } = await db.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken || '',
+          });
+          if (error) throw error;
+          ok(esCambioEmail);
+          return;
+        }
+
+        // 5) El usuario ya tiene sesión (p. ej. volvió a cargar la página).
+        const { data: { session } } = await db.auth.getSession();
+        if (session) {
+          ok(esCambioEmail);
+        } else {
+          fail();
+        }
+      } catch (err) {
+        const mensaje = String(err?.message || '');
+        if (/code verifier|pkce/i.test(mensaje)) {
+          fail('Abre el enlace en el mismo navegador desde el que solicitaste el cambio y vuelve a intentarlo.');
+        } else {
+          fail(mensaje || 'El enlace de confirmación ha expirado o ya fue utilizado. Solicita uno nuevo.');
+        }
       }
     })();
   </script>

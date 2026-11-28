@@ -195,6 +195,8 @@ Ve a **Authentication → Email Templates** y pega el HTML de los archivos de la
 
 Para que el usuario pueda cambiar su correo y contraseña desde **Mi cuenta**, mantén activada la confirmación de email y añade la URL de `pages/perfil.html` a **Redirect URLs** (apartado 9). El cambio de correo solo se aplica cuando el usuario confirma el enlace enviado al nuevo email.
 
+Importante: la plantilla **Change email** debe usar `{{ .ConfirmationURL }}` (recomendado) o, como mínimo, un enlace del tipo `{{ .SiteURL }}/confirm.html?token_hash={{ .TokenHash }}&type=email_change`. La página `confirm.html` acepta los tres formatos que envía Supabase: `token_hash` + `type`, `code` (PKCE) y `access_token` + `refresh_token` en el hash. Si el correo sigue llevando solo `{{ .SiteURL }}/confirm.html` sin parámetros, aparecerá «Enlace no válido». Añade también `https://<tu-dominio>/confirm.html` y `https://<tu-dominio>/pages/confirm.html` a **Redirect URLs**.
+
 ---
 
 ## 3. Configurar el envío de correos
