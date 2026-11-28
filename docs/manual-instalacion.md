@@ -210,7 +210,7 @@ Ve a **Authentication → Email Templates** y pega el HTML de estos archivos:
 
 El cambio de correo desde **Mi cuenta** **ya no usa** la plantilla **Change email** de Supabase: el enlace lo envía **EmailJS** con la plantilla unificada, así que no depende del SMTP de Gmail. Para activarlo:
 
-1. Ejecuta [`supabase/cambio-email-emailjs.sql`](../supabase/cambio-email-emailjs.sql) en el SQL Editor. Crea las columnas de solicitud pendiente, repara `es_admin()` y añade la RPC `confirmar_cambio_email()`.
+1. Ejecuta [`supabase/cambio-email-emailjs.sql`](../supabase/cambio-email-emailjs.sql) en el SQL Editor. Crea las columnas de solicitud pendiente, repara `es_admin()` y añade las RPC `solicitar_cambio_email()` y `confirmar_cambio_email()`. Ambas se ejecutan como propietario, por lo que no dependen de las políticas RLS que daban `permission denied for table administradores`.
 2. En `js/config.js`, `EMAILJS_TEMPLATE_CAMBIO_EMAIL` usa inicialmente la misma plantilla que las visitas (`template_du605di`). Si creas una plantilla específica en EmailJS, cambia solo ese ID.
 3. El enlace enviado apunta a `/confirm.html?emailjs_token=...`. Esa página calcula el SHA-256 del token y llama a la RPC; la BD guarda solo el hash y el enlace caduca en 24 horas y es de un solo uso.
 

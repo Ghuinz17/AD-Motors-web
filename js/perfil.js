@@ -180,13 +180,13 @@ async function handleUpdateEmail(e) {
     crypto.getRandomValues(bytes);
     const token = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
     const hash  = await sha256Hex(token);
-    const expira = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
 
-    const { error } = await db.from('usuario').update({
-      email_cambio_nuevo: newEmail,
-      email_cambio_hash:  hash,
-      email_cambio_expira: expira,
-    }).eq('id_usuario', user.id);
+    // RPC con SECURITY DEFINER: evita que las políticas RLS de usuario
+    // evalúen es_admin() y den "permission denied for administradores".
+    const { error } = await db.rpc('solicitar_cambio_email', {
+      p_nuevo_email: newEmail,
+      p_hash:        hash,
+    });
     if (error) throw error;
 
     const enlace = `${window.location.origin}/confirm.html?emailjs_token=${encodeURIComponent(token)}`;
