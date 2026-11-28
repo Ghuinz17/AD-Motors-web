@@ -35,6 +35,16 @@ function safeId(value) {
   return String(value ?? "").replace(/[^\w\-:.]/g, "");
 }
 
+// SHA-256 en hexadecimal. Se usa para no guardar el token de cambio de email
+// en claro: la BD guarda solo el hash y la web calcula el mismo hash al confirmar.
+async function sha256Hex(value) {
+  const bytes = new TextEncoder().encode(String(value));
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
 /* ---- Teléfono ---- */
 // Quita espacios/formatos y el prefijo de España (+34 / 0034 / 34).
 // Para otros países conserva el "+" delante del prefijo internacional.

@@ -154,6 +154,9 @@ async function handleUpdatePerfil(e) {
 }
 
 // ---- CAMBIAR EMAIL ----
+// El envío lo hace EmailJS (ya configurado para las visitas), no el SMTP de
+// Supabase. En la BD se guarda solo el hash del token; el token en claro va
+// únicamente dentro del enlace que recibe el nuevo correo.
 async function handleUpdateEmail(e) {
   e.preventDefault();
   const btn      = document.getElementById('btnUpdateEmail');
@@ -165,33 +168,55 @@ async function handleUpdateEmail(e) {
   }
 
   const { data: { user } } = await db.auth.getUser();
+  if (!user) { showToast('Sesión caducada. Vuelve a iniciar sesión.', 'error'); return; }
   if (newEmail === user.email) {
     showToast('El email es el mismo que el actual', 'error'); return;
   }
 
   setLoading(btn, true);
   try {
-    const redirectTo = `${window.location.origin}/confirm.html`;
-    const { error } = await db.auth.updateUser(
-      { email: newEmail },
-      { emailRedirectTo: redirectTo },
-    );
+    // Token aleatorio de 64 hexadecimales y su hash SHA-256.
+    const bytes = new Uint8Array(32);
+    crypto.getRandomValues(bytes);
+    const token = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+    const hash  = await sha256Hex(token);
+    const expira = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
+    const { error } = await db.from('usuario').update({
+      email_cambio_nuevo: newEmail,
+      email_cambio_hash:  hash,
+      email_cambio_expira: expira,
+    }).eq('id_usuario', user.id);
     if (error) throw error;
+
+    const enlace = `${window.location.origin}/confirm.html?emailjs_token=${encodeURIComponent(token)}`;
+    const nombre = user.user_metadata?.nombre || user.email?.split('@')[0] || 'Usuario';
+
+    try {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_CAMBIO_EMAIL, {
+        to_email:        newEmail,
+        admin_email:     ADMIN_EMAIL,
+        nombre,
+        vehiculo:        'AD Motor\'s',
+        icono:           '✉',
+        titulo:          'Confirma tu nuevo correo',
+        subtitulo:       'Verificación de cambio',
+        mensaje:         'Hemos recibido una solicitud para cambiar el correo de tu cuenta en AD Motor\'s. Confirma el enlace siguiente para completar el cambio.',
+        campo1_label:    'Nuevo correo',
+        campo1_valor:    newEmail,
+        campo2_label:    'Enlace de confirmación',
+        campo2_valor:    enlace,
+        nota_final:      'Confirma pulsando este enlace: ' + enlace + '. Si no fuiste tú, ignora este correo.',
+        fecha_solicitud: new Date().toLocaleString('es-ES'),
+      });
+    } catch (emailErr) {
+      throw new Error('El cambio se ha guardado, pero no se pudo enviar el correo con EmailJS. Vuelve a intentarlo.');
+    }
+
     document.getElementById('emailEnviadoAviso')?.classList.remove('hidden');
     showToast('Revisa tu bandeja de entrada — se ha enviado un enlace de confirmación al nuevo correo', 'success');
   } catch(err) {
-    // Los fallos de envío de Supabase llegan como 500/504 con un mensaje
-    // genérico ("Error sending email change email"). La causa real está en
-    // Logs → Auth de Supabase, no aquí.
-    const status = Number(err?.status || err?.statusCode || 0);
-    const msg    = String(err?.message || '');
-    if (status === 429 || /rate|too many/i.test(msg)) {
-      showToast('Demasiados intentos, espera unos minutos', 'error');
-    } else if (status === 500 || status === 504 || /sending email|timed out|timeout/i.test(msg)) {
-      showToast('No se pudo enviar el correo. Revisa el SMTP de Supabase o inténtalo en unos minutos.', 'error');
-    } else {
-      showToast('Error: ' + msg, 'error');
-    }
+    showToast('Error: ' + (err?.message || 'No se pudo solicitar el cambio'), 'error');
   } finally { setLoading(btn, false); }
 }
 

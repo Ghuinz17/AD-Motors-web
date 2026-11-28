@@ -12,6 +12,10 @@ const EMAILJS_PUBLIC_KEY              = 'UM986XzXpgyzXW_vs';
 const EMAILJS_SERVICE_ID              = 'service_58ve2lo';
 const EMAILJS_TEMPLATE_VISITA_CLIENTE = 'template_du605di';
 
+// Cambio de correo: usa la plantilla unificada por defecto. Si creas una
+// plantilla específica en EmailJS, cambia solo este ID.
+const EMAILJS_TEMPLATE_CAMBIO_EMAIL = 'template_du605di';
+
 // --- EmailJS — Segunda cuenta (soporte y ayuda) ---
 const EMAILJS_PUBLIC_KEY_SOPORTE  = 'MpbGWXxdeYPPzWhXy';
 const EMAILJS_SERVICE_ID_SOPORTE  = 'service_31fvthj';

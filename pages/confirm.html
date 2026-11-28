@@ -109,6 +109,7 @@
 
   <script src="../js/vendor/db-client.js"></script>
   <script src="../js/config.js"></script>
+  <script src="../js/ui.js"></script>
   <script>
     (async function () {
       // Supabase puede enviar los datos en el hash (#access_token=...) o en la query
@@ -128,6 +129,7 @@
       const tokenHash    = get('token_hash') || get('token');
       const type         = get('type');
       const code         = get('code');
+      const tokenEmailJS = get('emailjs_token');
       const errorCode    = get('error') || get('error_code');
       const errorDesc    = get('error_description') || get('message');
 
@@ -153,6 +155,30 @@
         }
         show('stateSuccess');
         setTimeout(() => { window.location.href = esCambioEmail ? 'auth.html' : '../index.html'; }, 3000);
+      }
+
+      // 0) Enlace enviado con EmailJS: el token llega en claro, la BD guardó
+      //    solo su SHA-256. La RPC aplica el cambio con permisos de propietario.
+      if (tokenEmailJS) {
+        try {
+          const hash = await sha256Hex(tokenEmailJS);
+          const { data: nuevoEmail, error } = await db.rpc('confirmar_cambio_email', { p_hash: hash });
+          if (error) throw error;
+          successTitle.textContent = '¡Correo actualizado!';
+          successMsg.textContent = `Tu dirección de correo se ha cambiado a ${nuevoEmail || 'la nueva dirección'}. Ya puedes iniciar sesión con ella.`;
+          show('stateSuccess');
+          setTimeout(() => { window.location.href = 'auth.html'; }, 4000);
+        } catch (err) {
+          const mensaje = String(err?.message || '');
+          if (/registrad|duplicate|unique/i.test(mensaje)) {
+            fail('Ese correo ya está registrado en otra cuenta. Elige otro.');
+          } else if (/caduc|válido|invalid/i.test(mensaje)) {
+            fail('El enlace no es válido o ha caducado. Vuelve a solicitar el cambio desde Mi cuenta.');
+          } else {
+            fail(mensaje || 'No se pudo confirmar el cambio de correo.');
+          }
+        }
+        return;
       }
 
       // 1) Error devuelto por Supabase en la propia URL del correo.

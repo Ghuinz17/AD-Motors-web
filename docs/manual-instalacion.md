@@ -203,16 +203,24 @@ Tras corregirlo, solicita un enlace nuevo desde **Mi cuenta**: el intento anteri
 
 ### 2.7 Configurar plantillas de email en el backend
 
-Ve a **Authentication → Email Templates** y pega el HTML de los archivos de la carpeta `web/email-templates/`:
-- **Confirm signup** → `supabase-confirmar-registro.html`
-- **Reset password** → `supabase-reset-password.html`
-- **Change email** → `supabase-cambiar-email.html`
-- **Email changed** → `supabase-email-cambiado.html`
-- **Password changed** → `supabase-contrasena-cambiada.html`
+Ve a **Authentication → Email Templates** y pega el HTML de estos archivos:
+- **Confirm signup** → `confirm-supabase.html`
+- **Password changed** → `cambiopass-supabase.html`
+- **Email changed** → `cambiocorreo-supabase.html` si la usas como notificación, o una plantilla propia
 
-Para que el usuario pueda cambiar su correo y contraseña desde **Mi cuenta**, mantén activada la confirmación de email y añade la URL de `pages/perfil.html` a **Redirect URLs** (apartado 9). El cambio de correo solo se aplica cuando el usuario confirma el enlace enviado al nuevo email.
+El cambio de correo desde **Mi cuenta** **ya no usa** la plantilla **Change email** de Supabase: el enlace lo envía **EmailJS** con la plantilla unificada, así que no depende del SMTP de Gmail. Para activarlo:
 
-Importante: la plantilla **Change email** debe usar `{{ .ConfirmationURL }}` (recomendado) o, como mínimo, un enlace del tipo `{{ .SiteURL }}/confirm.html?token_hash={{ .TokenHash }}&type=email_change`. La página `confirm.html` acepta los tres formatos que envía Supabase: `token_hash` + `type`, `code` (PKCE) y `access_token` + `refresh_token` en el hash. Si el correo sigue llevando solo `{{ .SiteURL }}/confirm.html` sin parámetros, aparecerá «Enlace no válido». Añade también `https://<tu-dominio>/confirm.html` y `https://<tu-dominio>/pages/confirm.html` a **Redirect URLs**.
+1. Ejecuta [`supabase/cambio-email-emailjs.sql`](../supabase/cambio-email-emailjs.sql) en el SQL Editor. Crea las columnas de solicitud pendiente, repara `es_admin()` y añade la RPC `confirmar_cambio_email()`.
+2. En `js/config.js`, `EMAILJS_TEMPLATE_CAMBIO_EMAIL` usa inicialmente la misma plantilla que las visitas (`template_du605di`). Si creas una plantilla específica en EmailJS, cambia solo ese ID.
+3. El enlace enviado apunta a `/confirm.html?emailjs_token=...`. Esa página calcula el SHA-256 del token y llama a la RPC; la BD guarda solo el hash y el enlace caduca en 24 horas y es de un solo uso.
+
+Los enlaces de **Confirm signup** y **Reset password** siguen pasando por `confirm.html`, que acepta `token_hash` + `type`, `code` (PKCE) y `access_token` + `refresh_token`. Añade a **Redirect URLs**:
+
+```text
+https://<tu-dominio>/confirm.html
+https://<tu-dominio>/pages/confirm.html
+https://<tu-dominio>/pages/perfil.html
+```
 
 ---
 
